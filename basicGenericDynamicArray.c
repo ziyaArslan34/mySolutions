@@ -70,7 +70,7 @@ void sortArray(type_t *type) {
 }
 
 size_t empty(const type_t *const type) {
-	if(type)
+	if(type && type->size)
 		return 0;
 	return type->size;
 }
@@ -176,19 +176,19 @@ int main() {
 		nested.x = rand()%99;
 		nested.y = rand()%99;
 
-		int ival = rand()%99;
+		int ival = rand()%99+1;
 		char cval = (char)rand()%(122-97+1)+97;
 
-		add(typeUser, &nested);
-		add(typeint, &ival);
-		add(typechar, &cval);
+		(void)add(typeUser, &nested);
+		(void)add(typeint, &ival);
+		(void)add(typechar, &cval);
 
 		char tmp[6];
 		size_t j;
 		for(j=0;j<5;j++)
 			tmp[j] = (char)rand()%(122-97+1)+97;
 		tmp[j] = '\0';
-		add(typestr, tmp);
+		(void)add(typestr, tmp);
 	}
 
 	if(!empty(typeint)) {
