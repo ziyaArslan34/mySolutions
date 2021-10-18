@@ -76,13 +76,16 @@ size_t empty(const type_t *const type) {
 }
 
 type_t *add(type_t *type, const void *data) {
+	char *dest = (char*)type->array;
+
 	if(type->size >= type->cap) {
 		type->cap *= 2;
 		type->array = realloc(type->array, type->cap*type->typeSize);
 
-		memcpy(type->array+type->size*type->typeSize, data, type->typeSize);
-	} else
-		memcpy(type->array+type->size*type->typeSize, data, type->typeSize);
+		memcpy(dest+type->size*type->typeSize, data, type->typeSize);
+	} else {
+		memcpy(dest+type->size*type->typeSize, data, type->typeSize);
+	}
 	++type->size;
 
 	return type;
@@ -91,7 +94,9 @@ type_t *add(type_t *type, const void *data) {
 void *getIndex(const type_t *const type, const size_t idx) {
 	if(idx >= type->size)
 		return NULL;
-	return (type->array+idx*type->typeSize);
+	const char *dest = (const char*)type->array;
+
+	return (void*)(dest+idx*type->typeSize);
 }
 
 size_t compare(const type_t *const type, const void *data1, const void *data2) {
@@ -102,8 +107,10 @@ size_t search(const type_t *const type, const void *data) {
 	if(!type->size)
 		return 0;
 
+	const char *dest = (const char*)type->array;
+
 	for(size_t i=0;i<type->size*type->typeSize;i += type->typeSize)
-		if(compare(type, (type->array+i), data))
+		if(compare(type, (dest+i), data))
 			return i;
 	return 0;
 }
@@ -112,7 +119,8 @@ type_t *del(type_t *type, const void *data) {
 	size_t src = search(type, data);
 
 	if(src) {
-		memcpy(type->array+src, 0, type->typeSize);
+		char *dest = (char*)type->array;
+		memcpy(dest+src, 0, type->typeSize);
 		return type;
 	}
 
@@ -126,21 +134,25 @@ void print(const type_t *const type) {
 	//printf("type->cap      : %zu\n", type->cap);
 	//printf("type->typeSize : %zu\n\n", type->typeSize);
 
+	const char *dest = (const char*)type->array;
+
 	for(size_t i=0;i<type->size*type->typeSize;i += type->typeSize) {
 		if(type->typeSize == sizeof(int))
-			PRINTINT(type->array, i);
+			PRINTINT(dest, i);
 		else if(type->typeSize == sizeof(char))
-			PRINTCHAR(type->array, i);
+			PRINTCHAR(dest, i);
 		else
-			PRINTSTR(type->array, i);
+			PRINTSTR(dest, i);
 	}
 	printf("\n");
 }
 
 void printUser(const type_t *const type) {
 	printf("user types\n");
+	const char *dest = (const char*)type->array;
+
 	for(size_t i=0;i<type->size*type->typeSize;i += type->typeSize)
-		printf("[%d][%d]\n",((struct test*)(type->array+i))->x, ((struct test*)(type->array+i))->y/*, ((struct test*)(type->array+i))->z*/);
+		printf("[%d][%d]\n",((struct test*)(dest+i))->x, ((struct test*)(dest+i))->y/*, ((struct test*)(type->array+i))->z*/);
 	printf("\n");
 }
 
@@ -179,7 +191,6 @@ int main() {
 		add(typestr, tmp);
 	}
 
-	int src = 122;
 	if(!empty(typeint)) {
 		print(typeint);
 		sortArray(typeint);
