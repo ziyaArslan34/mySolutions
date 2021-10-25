@@ -21,6 +21,7 @@ struct test { int x,y; };
 type_t*   init(const size_t, const size_t);
 type_t*   add(type_t *, const void *);
 void*     getIndex(const type_t *const , const size_t);
+void*     myCopy(void*, void*, const size_t, size_t);
 size_t    compare(const type_t *const, const void *, const void *);
 size_t    search(const type_t*const, const void *);
 int       elseCompare(const void*, const void*); // int and char vs
@@ -45,6 +46,20 @@ type_t *init(const size_t typeSize, const size_t cap) {
 	retVal->array = malloc(retVal->cap*retVal->typeSize);
 
 	return retVal;
+}
+
+void * myCopy(void *beg, void *destBeg, const size_t typeSize, size_t n) {
+        char *db = (char*)destBeg;
+        char *b = (char*)beg;
+
+        size_t size=0;
+
+        while(n--) {
+                memcpy(db+typeSize*size, b+typeSize*size, typeSize);
+                size++;
+        }
+
+        return (void*)(db+size-1);
 }
 
 int elseCompare(const void* val1, const void* val2) {
