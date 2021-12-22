@@ -36,7 +36,7 @@ type_t foo(const char *str, char expr) {
 		for(size_t j=i; (expr == 0 ? isAlpha(str[i++]) : str[i++] != expr) && j < len;j++)
 			tmp[idx++] = str[j];
 
-		tmp[idx++] = '\0';
+		tmp[idx] = '\0';
 
 		if(arr.size >= arr.cap) {
 			arr.cap *= 2;
@@ -46,7 +46,8 @@ type_t foo(const char *str, char expr) {
 				arr.array[m] = (char*)malloc(sizeof(char)*50);
 		}
 
-		strcpy(arr.array[arr.size++], tmp);
+		if(idx)
+			strcpy(arr.array[arr.size++], tmp);
 	}
 
 	return arr;
