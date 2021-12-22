@@ -15,16 +15,16 @@ type_t init() {
 	arr.array = (char**)malloc(sizeof(char*)*arr.cap);
 
 	for(size_t i=0;i<arr.cap;i++)
-		arr.array[i] = (char*)malloc(sizeof(char)*30);
+		arr.array[i] = (char*)malloc(sizeof(char)*50);
 
 	return arr;
 }
 
-int isAlpha(char ch) {
+static int isAlpha(char ch) {
 	return (ch >= 97 && ch <= 122) || (ch >= 65 && ch <= 90);
 }
 
-type_t foo(const char *str) {
+type_t foo(const char *str, char expr) {
 	type_t arr = init();
 
 	size_t len = strlen(str);
@@ -33,7 +33,7 @@ type_t foo(const char *str) {
 		char tmp[30];
 		size_t idx=0;
 
-		for(size_t j=i;isAlpha(str[i++]) && j < len;j++)
+		for(size_t j=i; (expr == 0 ? isAlpha(str[i++]) : str[i++] != expr) && j < len;j++)
 			tmp[idx++] = str[j];
 
 		tmp[idx++] = '\0';
@@ -43,7 +43,7 @@ type_t foo(const char *str) {
 			arr.array = (char**)realloc(arr.array, sizeof(char**)*arr.cap);
 
 			for(size_t m=arr.cap/2;m<arr.cap;m++)
-				arr.array[m] = (char*)malloc(sizeof(char)*30);
+				arr.array[m] = (char*)malloc(sizeof(char)*50);
 		}
 
 		strcpy(arr.array[arr.size++], tmp);
@@ -52,23 +52,31 @@ type_t foo(const char *str) {
 	return arr;
 }
 
+void printExpr(type_t *type) {
+	printf("\nsize : %zu\n", type->size);
+	for(size_t i=0;i<type->size;i++)
+		printf("%s   ", type->array[i]);
+	printf("\n\n");
+}
+
+
 void destroy(type_t *type) {
 	for(size_t i=0;i<type->size;i++) {
 		type->array[i] = NULL;
 		free(type->array[i]);
 	}
 
-	type->array = NULL;
 	free(type->array);
 }
 
 int main() {
-	type_t val = foo("exprone2exprtwo3exprthree.exprfour=exprfive+exprsix&exprseven(expreight>");
+	type_t val1 = foo("exprone2exprtwo3exprthree.exprfour=exprfive+exprsix&exprseven(expreight>exprnine[exprten]expreleven-exprtwerty", 0);
+	type_t val2 = foo("bir/iki/uc/pazartesi", '/');
 
-	printf("size: %zu\n", val.size);
 
-	for(size_t i=0;i<val.size;i++)
-		printf("%s\n", val.array[i]);
+	printExpr(&val1);
+	printExpr(&val2);
 
-	destroy(&val);
+	destroy(&val1);
+	destroy(&val2);
 }
