@@ -40,7 +40,7 @@ type_t foo(const char *str, char expr) {
 
 		if(arr.size >= arr.cap) {
 			arr.cap *= 2;
-			arr.array = (char**)realloc(arr.array, sizeof(char**)*arr.cap);
+			arr.array = (char**)realloc(arr.array, sizeof(char*)*arr.cap);
 
 			for(size_t m=arr.cap/2;m<arr.cap;m++)
 				arr.array[m] = (char*)malloc(sizeof(char)*50);
@@ -56,7 +56,7 @@ type_t foo(const char *str, char expr) {
 void printExpr(type_t *type) {
 	printf("\nsize : %zu\n", type->size);
 	for(size_t i=0;i<type->size;i++)
-		printf("%s   ", type->array[i]);
+		printf("%s ", type->array[i]);
 	printf("\n\n");
 }
 
@@ -71,7 +71,7 @@ void destroy(type_t *type) {
 }
 
 int main() {
-	type_t val1 = foo("exprone2exprtwo3exprthree.exprfour=exprfive+exprsix&exprseven(expreight>exprnine[exprten]expreleven-exprtwerty", 0);
+	type_t val1 = foo("exprone222222a3333exprtwo3exprthree.exprfour=exprfive+exprsix&exprseven(expreight>exprnine[exprten]expreleven-exprtwerty", 0);
 	type_t val2 = foo("bir/iki/uc/pazartesi", '/');
 
 
