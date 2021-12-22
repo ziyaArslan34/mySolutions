@@ -58,12 +58,12 @@ void destroy(type_t *type) {
 		free(type->array[i]);
 	}
 
+	type->array = NULL;
 	free(type->array);
 }
 
 int main() {
 	type_t val = foo("exprone2exprtwo3exprthree.exprfour=exprfive+exprsix&exprseven(expreight>");
-
 
 	printf("size: %zu\n", val.size);
 
