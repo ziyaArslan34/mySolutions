@@ -49,7 +49,7 @@ type_t foo(const char *str, const char *expr) {
 
 		if(arr.size >= arr.cap) {
 			arr.cap *= 2;
-			arr.array = (char**)realloc(arr.array, sizeof(char**)*arr.cap);
+			arr.array = (char**)realloc(arr.array, sizeof(char*)*arr.cap);
 		}
 
 		if(idx-1) {
