@@ -70,6 +70,16 @@ public:
 		return *this;
 	}
 
+	PointCloud(PointCloud &&p) : array{new Point[p.size]}, idx{p.idx}, size{p.size} {
+		for(size_t i=0;i<p.idx;i++)
+			array[i] = p.array[i];
+
+		p.idx = 0;
+		p.size = 0;
+		p.array = nullptr;
+		delete [] p.array;
+	}
+
 private:
 	Point *array = nullptr;
 	size_t idx, size;
@@ -79,20 +89,24 @@ int main() {
 	Point p1(10, 20, 30);
 	Point p2(11, 21, 31);
 
-	PointCloud ptr(50);
+	PointCloud ptr{15};
 
 	ptr.emplace_back(p1);
 	ptr.emplace_back(p2);
 	ptr.emplace_back(Point{100,200,300});
 	ptr.emplace_back(Point{400, 500, 600});
 
-	PointCloud temp;
-	temp = ptr;
+	std::cout<<ptr<<"\n";
 
-	temp.emplace_back(Point{4,5,6});
-	temp.emplace_back(Point{700, 800, 900});
-	temp.emplace_back(Point{82, 83, 83});
+	PointCloud copyPtr = ptr;
+	PointCloud movePtr(std::move(ptr));
+
+	movePtr.emplace_back(Point{4,5,6});
+	movePtr.emplace_back(Point{700, 800, 900});
+	movePtr.emplace_back(Point{82, 83, 83});
 
 	std::cout<<ptr<<"\n";
-	std::cout<<temp<<"\n";
+	std::cout<<copyPtr<<"\n";
+	std::cout<<movePtr<<"\n";
+
 }
