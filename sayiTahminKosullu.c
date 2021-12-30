@@ -29,24 +29,28 @@ player_t createPlayer() {
 }
 
 int updatingArray(int *ptr, int num) {
-	size_t idx=0;
+	int idx=arrSize-1;
 
 	while(num) {
-		ptr[idx++] = num%10;
+		if(idx >= 0 && idx < arrSize)
+			ptr[idx--] = num%10;
+		else
+			break;
 		num /= 10;
 	}
 
-	return ctrl(ptr, idx) && ptr[arrSize-1] != 0;
+	return ctrl(ptr, idx) && ptr[0] != 0;
 }
 
 int ctrl(const int *arr, int idx) {
-	if(idx < arrSize || idx > arrSize)
+	if(idx != -1) {
 		return 0;
+	}
 
-	for(size_t i=0;i<idx;i++) {
+	for(size_t i=0;i<arrSize;i++) {
 		int flag = 0;
 
-		for(size_t j=0;j<idx;j++)
+		for(size_t j=0;j<arrSize;j++)
 			if(arr[i] == arr[j])
 				flag++;
 		if(flag > 1)
@@ -60,8 +64,8 @@ void foo(const int *array, player_t *ptr) {
 	ptr->plus = 0;
 	ptr->minus = 0;
 
-	for(size_t i=0, j=arrSize-1;i<arrSize;i++, j--) {
-		if(array[i] == ptr->arr[j])
+	for(size_t i=0;i<arrSize;i++) {
+		if(array[i] == ptr->arr[i])
 			ptr->plus++;
 		else
 			ptr->minus++;
@@ -69,8 +73,8 @@ void foo(const int *array, player_t *ptr) {
 }
 
 int compArray(const int *arr1, const int *arr2) {
-	for(size_t i=0, j=arrSize-1;i<arrSize;i++, j--)
-		if(arr1[i] != arr2[j])
+	for(size_t i=0;i<arrSize;i++)
+		if(arr1[i] != arr2[i])
 			return 0;
 	return 1;
 }
@@ -89,9 +93,7 @@ int main() {
 
 	int n = 10, win=0;
 
-	for(size_t i=0;i<arrSize;i++)
-		printf("%d ", arr[i]);
-	printf("\n");
+	//printf("randomNum: %d\n", randomNum);
 
 	while(n--) {
 		int num;
