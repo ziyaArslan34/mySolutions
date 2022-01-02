@@ -1,0 +1,85 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "info.h"
+
+typedef struct {
+	char name[30];
+	int hour, minute;
+	char inOut;
+}person_t;
+
+int comp(person_t per1, person_t per2) {
+	if(per1.hour > per2.hour)
+		return 1;
+
+	if(per1.hour == per2.hour) {
+		if(per1.minute > per2.minute)
+			return 1;
+		return 0;
+	}
+
+	if(per1.hour == per2.hour && per1.minute == per2.minute)
+		return 0;
+	return 1;
+}
+
+void bubbleSortPerson(person_t *per, size_t size) {
+	for(size_t i=0;i<size;i++) {
+		for(size_t j=0;j<size;j++) {
+			if(comp(per[i], per[j])) {
+				person_t temp = per[i];
+				per[i] = per[j];
+				per[j] = temp;
+			}
+		}
+	}
+}
+
+void printPerson(const person_t *info, size_t size) {
+	for(size_t i=0;i<size;i++)
+		printf("%s  %d:%d %c\n", info[i].name, info[i].hour, info[i].minute, info[i].inOut);
+}
+
+int main() {
+	FILE *file = fopen("person.txt", "r");
+
+	person_t info[10];
+	size_t idx=0;
+
+	type_t strs = init(15);
+
+	if(!file) {
+		perror("Error");
+		return -1;
+	}
+
+	while(!feof(file)) {
+		char str[1024];
+		fgets(str, sizeof(str), file);
+		push_back(&strs, str);
+	}
+
+	for(size_t i=0;i<strs.size;i++) {
+		type_t temp = init(10);
+		splitStr(&temp, strs.array[i], " :");
+
+		if(idx >= 10) break;
+
+		strcpy(info[idx].name, temp.array[0]);
+		info[idx].hour = atoi(temp.array[1]);
+		info[idx].minute = atoi(temp.array[2]);
+		info[idx].inOut = temp.array[3][0];
+		idx++;
+
+		destroy(&temp);
+
+	}
+
+	bubbleSortPerson(info, idx-1);
+
+	printPerson(info, idx-1);
+	destroy(&strs);
+
+	return 0;
+}
