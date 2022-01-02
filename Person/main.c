@@ -68,7 +68,10 @@ int main() {
 	while(!feof(file)) {
 		char str[1024];
 		fgets(str, sizeof(str), file);
-		if(isAlpha(str[0]) || (str[0] >= 48 && str[0] <= 57))
+		str[strlen(str)-1] = '\0';
+		size_t sLen = strlen(str);
+
+		if((isAlpha(str[0]) || (str[0] >= 48 && str[0] <= 57)) && (str[sLen-1] == '>' || str[sLen-1] == '<') )
 			push_back(&strs, str);
 	}
 

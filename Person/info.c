@@ -21,7 +21,7 @@ int isAlpha(char ch) {
 	return (ch >= 97 && ch <= 122) || (ch >= 65 && ch <= 90);
 }
 
-static int exprFind(const char *expr, char ch) {
+int exprFind(const char *expr, char ch) {
 	for(size_t i=0;i<strlen(expr);i++)
 		if(expr[i] == ch)
 			return 1;
