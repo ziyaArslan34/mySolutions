@@ -21,7 +21,7 @@ int comp(person_t per1, person_t per2) {
 
 	if(per1.hour == per2.hour && per1.minute == per2.minute)
 		return 0;
-	return 1;
+	return 0;
 }
 
 void bubbleSortPerson(person_t *per, size_t size) {
@@ -36,16 +36,27 @@ void bubbleSortPerson(person_t *per, size_t size) {
 	}
 }
 
+void myCopy(person_t *per, char **array, size_t idx) {
+	strcpy(per[idx].name, array[0]);
+	per[idx].hour = atoi(array[1]);
+	per[idx].minute = atoi(array[2]);
+	per[idx].inOut = array[3][0];
+}
+
 void printPerson(const person_t *info, size_t size) {
+	printf("\n\n");
+
 	for(size_t i=0;i<size;i++)
 		printf("%s  %d:%d %c\n", info[i].name, info[i].hour, info[i].minute, info[i].inOut);
+	printf("\n\n");
+
 }
 
 int main() {
 	FILE *file = fopen("person.txt", "r");
 
-	person_t info[10];
-	size_t idx=0;
+	person_t infoIn[10], infoOut[10];
+	size_t inIdx=0, outIdx=0;
 
 	type_t strs = init(15);
 
@@ -57,28 +68,34 @@ int main() {
 	while(!feof(file)) {
 		char str[1024];
 		fgets(str, sizeof(str), file);
-		push_back(&strs, str);
+		if(isAlpha(str[0]) || (str[0] >= 48 && str[0] <= 57))
+			push_back(&strs, str);
 	}
 
 	for(size_t i=0;i<strs.size;i++) {
 		type_t temp = init(10);
 		splitStr(&temp, strs.array[i], " :");
 
-		if(idx >= 10) break;
+		if(inIdx >= 10 || outIdx >= 10) break;
 
-		strcpy(info[idx].name, temp.array[0]);
-		info[idx].hour = atoi(temp.array[1]);
-		info[idx].minute = atoi(temp.array[2]);
-		info[idx].inOut = temp.array[3][0];
-		idx++;
+		if(temp.array[3][0] == '>') {
+			myCopy(infoIn, temp.array, inIdx);
+			inIdx++;
 
+		} else if(temp.array[3][0] == '<') {
+			myCopy(infoOut, temp.array, outIdx);
+			outIdx++;
+		}
 		destroy(&temp);
-
 	}
 
-	bubbleSortPerson(info, idx-1);
+	printf("heh\n");
+	bubbleSortPerson(infoIn, inIdx);
+	bubbleSortPerson(infoOut, outIdx);
 
-	printPerson(info, idx-1);
+	printPerson(infoIn, inIdx);
+	printPerson(infoOut, outIdx);
+
 	destroy(&strs);
 
 	return 0;
