@@ -66,7 +66,7 @@ void push_back(type_t *type, const char *str) {
 void printArray(const type_t *type) {
 	printf("\nsize : %zu\n", type->size);
 	for(size_t i=0;i<type->size;i++)
-		printf("%s ", type->array[i]);
+		printf(" [%s] ", type->array[i]);
 	printf("\n\n");
 }
 

@@ -79,6 +79,9 @@ int main() {
 		type_t temp = init(10);
 		splitStr(&temp, strs.array[i], " :");
 
+		//printf("\n\n");
+		//printArray(&temp);
+
 		if(inIdx >= 10 || outIdx >= 10) break;
 
 		if(temp.array[3][0] == '>') {
