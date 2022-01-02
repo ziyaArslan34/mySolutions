@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <unistd.h>
 
+#define START_PARSE_CODE 500
+
 struct Clock {
 	int hour, minute, second;
 	friend std::ostream& operator<<(std::ostream& out, const Clock &cl) {
@@ -16,19 +18,28 @@ struct Clock {
 std::string parseTime(const std::string &buffer) {
 	size_t cnt{};
 	std::string time;
+	size_t len = buffer.size();
 
-	for(size_t i=0;i<buffer.size();i++) {
-		if(buffer[i] >= 48 && buffer[i] <= 57)
-			cnt++;
+	size_t flag = 0;
 
-		if(cnt == 2) {
-			i += 2;
+	for(size_t i=0;i<len;i++) {
+		if(flag == 0) {
+			if(buffer[i] >= 48 && buffer[i] <= 57) {
+				for(size_t m=i;buffer[i++] != ' ' && m < len;m++) {}
+				flag = START_PARSE_CODE;
+			}
+		}
+
+		if(flag == START_PARSE_CODE) {
 			for(size_t j=i;buffer[i++] != ' ' && j < buffer.size();j++) {
+				//std::cout<<"buffer["<<j<<"] : "<<buffer[j]<<"\n";
 				time.push_back(buffer[j]);
 			}
 		}
 	}
 
+	for(size_t i=0;i<4;i++)
+		time.pop_back();
 	return time;
 }
 
@@ -40,8 +51,8 @@ Clock getCurrent(const std::string &currentTime) {
 
 		for(size_t j=i;currentTime[i++] != ':' && j < currentTime.size();j++)
 			tmp.push_back(currentTime[j]);
-		//vec.push_back(std::atoi(static_cast<const char*>(tmp)));
-		vec.push_back(std::stoi(tmp));
+		vec.push_back(std::atoi(tmp.data()));
+		//vec.push_back(std::stoi(tmp));
 	}
 
 	Clock res;
@@ -54,7 +65,6 @@ Clock getCurrent(const std::string &currentTime) {
 }
 
 int main() {
-	sleep(1);
 
 	auto date = std::chrono::system_clock::now();
 	std::time_t time = std::chrono::system_clock::to_time_t(date);
@@ -70,7 +80,7 @@ int main() {
 
 	std::cout<<buffer<<"\n";
 	std::cout<<currentTime<<"\n";
-	//std::cout<<clock<<"\n";
+	std::cout<<clock<<"\n";
 
 	if(((now->tm_year+1900) == 2022 &&
 		(now->tm_mon+1) == 1 && now->tm_mday == 1) &&
@@ -80,9 +90,10 @@ int main() {
 
 		return 0;
 	}
-
+/*
 
 	while(1) {
 		main();
 	}
+*/
 }
