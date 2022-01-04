@@ -17,7 +17,7 @@ type_t init() {
 	return arr;
 }
 
-static int isAlpha(char ch) {
+int isAlpha(char ch) {
 	return (ch >= 97 && ch <= 122) || (ch >= 65 && ch <= 90);
 }
 
@@ -26,6 +26,25 @@ int exprFind(const char *expr, char ch) {
 		if(expr[i] == ch)
 			return 1;
 	return 0;
+}
+
+int search(const type_t *type, const char *src) {
+	for(size_t i=0;i<type->size;i++)
+		if(!strcmp(type->array[i], src))
+			return 1;
+	return 0;
+}
+
+void push_back(type_t *type, const char *src) {
+	size_t len = strlen(src)+1;
+
+	if(type->size >= type->cap) {
+		type->cap *= 2;
+		type->array = (char**)realloc(type->array, sizeof(char*)*type->cap);
+	}
+
+	type->array[type->size] = (char*)malloc(sizeof(char)*len);
+	strcpy(type->array[type->size++], src);
 }
 
 type_t foo(const char *str, const char *expr) {
@@ -47,17 +66,8 @@ type_t foo(const char *str, const char *expr) {
 
 		tmp[idx++] = '\0';
 
-		if(arr.size >= arr.cap) {
-			arr.cap *= 2;
-			arr.array = (char**)realloc(arr.array, sizeof(char*)*arr.cap);
-		}
-
 		if(idx-1) {
-			size_t index;
-			arr.array[arr.size] = (char*)malloc(sizeof(char)*idx);
-			for(index=0;index<idx;index++)
-				arr.array[arr.size][index] = tmp[index];
-			arr.array[arr.size++][index++] = '\0';
+			push_back(&arr, tmp);
 		}
 		free(tmp);
 	}
@@ -93,6 +103,10 @@ int main() {
 	printExpr(&val2);
 	printExpr(&val3);
 
+
+	if(search(&val1, "idickc")) {
+		printf("bulundu\n");
+	}
 
 	destroy(&val1);
 	destroy(&val2);
