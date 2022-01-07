@@ -125,7 +125,18 @@ mytime_t getCurrentClock(const char *tm_) {
 }
 
 void printClock(const mytime_t *myTime) {
-	printf("\n[ %d:%d:%d ]\n", myTime->hour, myTime->min, myTime->sec);
+	printf("\n\n[ ");
+
+	if(myTime->hour <= 9) printf(" 0%d:", myTime->hour);
+	else printf(" %d:", myTime->hour);
+
+	if(myTime->min <= 9) printf("0%d:", myTime->min);
+	else printf("%d:", myTime->min);
+
+	if(myTime->sec <= 9) printf("0%d ", myTime->sec);
+	else printf("%d ", myTime->sec);
+
+	printf(" ]\n\n");
 }
 
 int main() {
