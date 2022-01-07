@@ -34,19 +34,22 @@ int compLess(const mytime_t *t1, const mytime_t *t2) {
 
 mytime_t getDifferenceTime(const mytime_t *t1, const mytime_t *t2) {
 	mytime_t dftime = {0,0,0};
+	mytime_t maxClock = {0,0,0};
 
 	if(compLess(t1, t2) == EQUAL)
 		return dftime;
 
-	if(compLess(t1, t2))
+	if(compLess(t1, t2)) {
+		maxClock = *t2;
 		dftime = *t1;
-	else {
-		return dftime;
+	} else {
+		maxClock = *t1;
+		dftime = *t2;
 	}
 
 	int res = 0;
 
-	while(compLess(&dftime, t2) != EQUAL) {
+	while(compLess(&dftime, &maxClock) != EQUAL) {
 		res++;
 		dftime.sec++;
 
