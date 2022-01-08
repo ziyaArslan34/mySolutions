@@ -3,6 +3,10 @@
 #include <string>
 #include <random>
 #include <chrono>
+#include <algorithm>
+#include <iomanip>
+#include <functional>
+#include <type_traits>
 
 template <typename T>
 T myRand(const T& min, const T& max) {
@@ -20,21 +24,17 @@ void myPrint(B &buffer, const T& val, Args&&...args) {
 	myPrint(buffer, args...);
 }
 
+static constexpr const char *mons[] = {"ocak", "subat", "mart", "nisan", "mayis", "haziran", "temmuz", "agustos", "eylul", "ekim", "kasim", "aralik"};
+static constexpr const char days[] = {31,28,30,31,30,31,30,31,30,31,30,31};
+
 class Date {
 public:
 	Date() : day{1}, mon{1}, year{1907} {}
 
-	Date(int d, int m, int y) : day{d}, mon{m}, year{y} {
-		if(isLeapYear()) {
-			days[1] = 29;
-			if(mon == 2 && day > 29)
-				day = days[1];
-		} else if(mon == 2 && day > 28)
-			day = days[1];
-	}
+	Date(int d, int m, int y) : day{d}, mon{m}, year{y} {}
 
-	Date(const Date& other) : day{other.day}, mon{other.mon}, year{other.year}, mons{other.mons}, days{other.days} {}
-	Date(Date&& other) : day{other.day}, mon{other.day}, year{other.year}, mons{std::move(other.mons)}, days{std::move(other.days)} {
+	Date(const Date& other) : day{other.day}, mon{other.mon}, year{other.year} {}
+	Date(Date&& other) : day{other.day}, mon{other.mon}, year{other.year} {
 		other.day = 1;
 		other.mon = 1;
 		other.year = 1907;
@@ -44,8 +44,10 @@ public:
 	Date &operator =(Date&&) = default;
 
 	friend std::ostream& operator <<(std::ostream& out, const Date &date) {
-		out<<"[ ";
-		out<<date.day<<" "<<date.mons[static_cast<size_t>(date.mon-1)]<<" "<<date.year;
+		out<<std::left;
+
+		out<<std::setw(3)<<"[ ";
+		out<<date.day<<" "<<mons[!date.mon ? 0 : date.mon-1]<<" "<<date.year;
 		out<<" ]\n";
 
 		return out;
@@ -88,7 +90,7 @@ public:
 	}
 
 	bool operator <(const Date &date) const {
-		return *this > date;
+		return !(*this > date);
 	}
 
 	Date& operator ++() {
@@ -136,20 +138,19 @@ public:
 	}
 
 	static Date randomDate() {
-		return Date{myRand(1,30), myRand(1,12), myRand(1907, 2022)};
+		return Date{myRand(1,30), myRand(1,11), myRand(1907, 2022)};
 	}
 
 	friend Date getDifferenceDate(const Date&, const Date&);
 
+/*
+	void getInfo() {
+		myPrint(std::cout, "Day: ", day, "\n", "Mon: ", mon, "\n", "Year: ", year, "\n", "Vec size: ", mons.size(), "\n\n");
+	}
+*/
+
 private:
 	int day, mon, year;
-
-	std::vector<std::string> mons = {
-		"ocak", "subat", "mart", "nisan", "mayis", "haziran",
-		"temmuz", "agustos", "eylul", "ekim", "kasim", "aralik"
-	};
-
-	std::vector<int> days{31,28,30,31,30,31,30,31,30,31,30,31};
 };
 
 Date getDifferenceDate(const Date &d1, const Date &d2) {
@@ -173,10 +174,10 @@ Date getDifferenceDate(const Date &d1, const Date &d2) {
 		res++;
 		dfDate.day++;
 
-		if(dfDate.day == 31) {
-			dfDate.day = 1;
+		if(dfDate.day > days[!dfDate.mon ? 0 : static_cast<size_t>(dfDate.mon-1)]) {
+			dfDate.day = days[static_cast<size_t>(dfDate.mon-1)];
 			dfDate.mon++;
-			if(dfDate.mon == 13) {
+			if(dfDate.mon > 12) {
 				dfDate.mon = 1;
 				dfDate.year++;
 			}
@@ -193,10 +194,14 @@ Date getDifferenceDate(const Date &d1, const Date &d2) {
 }
 
 int main() {
-	Date d{25,12,2021};
+	std::vector<Date> vec;
 
-	for(size_t i=0;i<25;i++) {
-		std::cout<<d<<"\n";
-		++d;
+	for(size_t i=0;i<25;i++)
+		vec.push_back(Date{Date::randomDate()});
+
+	sort(vec.begin(), vec.end());
+
+	for(const auto& i : vec) {
+		std::cout<<i<<"\n";
 	}
 }
