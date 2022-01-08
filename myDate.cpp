@@ -199,7 +199,7 @@ int main() {
 	for(size_t i=0;i<25;i++)
 		vec.push_back(Date{Date::randomDate()});
 
-	sort(vec.begin(), vec.end());
+	sort(vec.begin(), vec.end(), std::greater{});
 
 	for(const auto& i : vec) {
 		std::cout<<i<<"\n";
