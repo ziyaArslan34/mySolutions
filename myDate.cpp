@@ -92,10 +92,46 @@ public:
 	}
 
 	Date& operator ++() {
+		day++;
+		if(day > days[static_cast<size_t>(mon-1)]) {
+			day = 1;
+			mon++;
+			if(mon > 12) {
+				mon = 1;
+				year++;
+				if(year > 2023)
+					year = 1907;
+			}
+		}
+
+		return *this;
+	}
+
+	Date& operator +(size_t n) {
+		while(n--)
+			++*this;
 		return *this;
 	}
 
 	Date& operator --() {
+		day--;
+		if(day == 0) {
+			mon--;
+			day = days[!mon ? 0 : static_cast<size_t>(mon-1)];
+			if(mon == 0) {
+				mon = 12;
+				year--;
+				if(year == 1907)
+					year = 2022;
+			}
+		}
+
+		return *this;
+	}
+
+	Date& operator -(size_t n) {
+		while(n--)
+			--*this;
 		return *this;
 	}
 
@@ -103,7 +139,7 @@ public:
 		return Date{myRand(1,30), myRand(1,12), myRand(1907, 2022)};
 	}
 
-	friend void getDifferenceDate(const Date&, const Date&);
+	friend Date getDifferenceDate(const Date&, const Date&);
 
 private:
 	int day, mon, year;
@@ -116,14 +152,12 @@ private:
 	std::vector<int> days{31,28,30,31,30,31,30,31,30,31,30,31};
 };
 
-#include <unistd.h>
-
-void getDifferenceDate(const Date &d1, const Date &d2) {
+Date getDifferenceDate(const Date &d1, const Date &d2) {
 	Date dfDate;
 	Date maxDate;
 
 	if(d1 == d2)
-		return;
+		return dfDate;
 
 	if(d1 > d2) {
 		dfDate = d2;
@@ -153,9 +187,16 @@ void getDifferenceDate(const Date &d1, const Date &d2) {
 	dfDate.mon = (res/30)%12;
 	dfDate.day = res % 30;
 
-	std::cout<<"\n"<<dfDate.day<<" gun "<<dfDate.mon<<" ay "<<dfDate.year<<" yil var\n";
+	//std::cout<<"\n"<<dfDate.day<<" gun "<<dfDate.mon<<" ay "<<dfDate.year<<" yil var\n";
+
+	return dfDate;
 }
 
 int main() {
-	getDifferenceDate(Date{3, 1, 2022}, Date{2, 7, 2022});
+	Date d{25,12,2021};
+
+	for(size_t i=0;i<25;i++) {
+		std::cout<<d<<"\n";
+		++d;
+	}
 }
