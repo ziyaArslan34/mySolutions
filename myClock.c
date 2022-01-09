@@ -13,6 +13,7 @@ int          myRand(int,int);
 mytime_t     randomClock();
 int          compLess(const mytime_t*, const mytime_t*);
 size_t       clockToSecond(const mytime_t*);
+void         clockSort(mytime_t **, size_t, int(*)(const mytime_t*, const mytime_t*));
 mytime_t     getDifferenceTime(const mytime_t*, const mytime_t*);
 const char*  getCurrentTime();
 mytime_t     getCurrentClock(const char*);
@@ -59,6 +60,18 @@ size_t clockToSecond(const mytime_t *mytime) {
 	second += (size_t)mytime->hour*60*60;
 
 	return second;
+}
+
+void clockSort(mytime_t **array, size_t size, int (*comp)(const mytime_t*, const mytime_t*)) {
+	for(size_t i=0;i<size;i++) {
+		for(size_t j=0;j<size;j++) {
+			if(comp(&((*array)[i]), &((*array)[j]))) {
+				mytime_t temp = (*array)[i];
+				(*array)[i] = (*array)[j];
+				(*array)[j] = temp;
+			}
+		}
+	}
 }
 
 mytime_t getDifferenceTime(const mytime_t *t1, const mytime_t *t2) {
@@ -177,17 +190,18 @@ int main() {
 	printClock(&systemClock);
 
 
-	mytime_t test;
+	mytime_t *array = (mytime_t*)malloc(sizeof(mytime_t)*10);
+	size_t idx=0;
 
-	printf("saat gir: ");
-	scanf("%d%d%d", &test.hour, &test.min, &test.sec);
+	for(size_t i=0;i<10;i++)
+		array[idx++] = randomClock();
 
-	mytime_t t = getDifferenceTime(&test, &systemClock);
-	printClock(&t);
+	for(size_t i=0;i<idx;i++)
+		printClock(&array[i]);
+	clockSort(&array, idx, compLess);
+	printf("\n\nSiralamadan sonra\n\n");
 
-	printf("total second: %zu\n", clockToSecond(&t));
-
-	mytime_t random = randomClock();
-	printClock(&random);
+	for(size_t i=0;i<idx;i++)
+		printClock(&array[i]);
 
 }
