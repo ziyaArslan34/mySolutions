@@ -204,4 +204,6 @@ int main() {
 	for(size_t i=0;i<idx;i++)
 		printClock(&array[i]);
 
+	free(array);
+	return 0;
 }
