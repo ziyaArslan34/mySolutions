@@ -1,14 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #define ROW 7
 #define COL 7
+#define CITYSIZE 56
 
 struct city {
-	char name[30];
+	char name[10];
 	int row, col;
-	struct city *north, *south, *west, *east; // bune
+	struct city *north, *south, *west, *east;
 };
 
 struct country {
@@ -22,29 +24,69 @@ int myRand(int min, int max) {
 	return (int)rand()%(max-min+1)+min;
 }
 
-const char *randomCity() {
-	static const int len = 5;
+const char *makeCity() {
+	static size_t idx=0;
 
-	static const char *name[] = {
-		"city1", "city2", "city3", "city4", "city5"
+	static const char *allCities[CITYSIZE] = {
+		"istanbul", "izmir", "antalya", "erzurum", "igdir", "van", "ankara",
+		"elazig", "hakkari", "sirnak", "bitlis", "bayburt", "agri", "mus",
+		"siirt", "urfa", "antep", "eskisehir", "adiyaman", "kilis", "adana",
+		"hatay", "mersin", "burdur", "aksaray", "maras", "osmaniye", "malatya",
+		"kirsehir", "sivas", "tekirdag", "edirne", "mugla", "kutahya", "usak",
+		"aydin", "isparta", "kirklareli", "bursa", "izmit", "sakarya", "trabzon",
+		"rize", "samsun", "sinop", "giresun", "zonguldak", "yozgat", "ardahan",
+		"artvin", "duzce", "bolu", "corum", "balikesir", "canakkale", "batman"
 	};
 
-	return name[myRand(0,len-1)];
+	if(idx >= CITYSIZE)
+		return NULL;
+
+	return allCities[idx++];
+}
+
+int isNull(const city_t *road) {
+	return road == NULL;
+}
+
+void printAllInfo(const country_t *ctr) {
+	printf("\n\n");
+	for(size_t i=0;i<ROW;i++) {
+		for(size_t j=0;j<COL;j++) {
+			printf("\n\n====================================\n\n");
+			printf("[%s  %zu  %zu] sehrinin komsulari\n\n", ctr->cities[i][j].name, i,j);
+			if(!isNull(ctr->cities[i][j].west)) // Bati
+				printf("\nBati [ %s %d %d ]\n", ctr->cities[i][j].west->name, ctr->cities[i][j].west->row, ctr->cities[i][j].west->col);
+			//else printf("\nBati komsusu yok\n");
+
+			if(!isNull(ctr->cities[i][j].east)) // Dogu
+				printf("\nDogu [ %s %d %d ]\n", ctr->cities[i][j].east->name, ctr->cities[i][j].east->row, ctr->cities[i][j].east->col);
+			//else printf("\nDogu komsusu yok\n");
+
+			if(!isNull(ctr->cities[i][j].south)) // Guney
+				printf("\nGuney [ %s %d %d ]\n", ctr->cities[i][j].south->name, ctr->cities[i][j].south->row, ctr->cities[i][j].south->col);
+			//else printf("\nGuney komsusu yok\n");
+
+			if(!isNull(ctr->cities[i][j].north)) // Kuzey
+				printf("\nKuzey [ %s %d %d ]\n", ctr->cities[i][j].north->name, ctr->cities[i][j].north->row, ctr->cities[i][j].north->col);
+			//else printf("\nKuzey komsusu yok\n");
+			printf("\n\n");
+		}
+	}
 }
 
 void print(const country_t *ctr) {
 	printf("\n\n");
 	for(size_t start=0;start<ROW;start++)
-		printf("\e[91m_________________");
+		printf("_________________");
 	printf("\n\n");
 
 	for(size_t i=0;i<ROW;i++) {
 		for(size_t j=0;j<COL;j++) {
-			printf("\e[90m| \e[91m[ \e[90m%s %d %d \e[91m] ", ctr->cities[i][j].name, ctr->cities[i][j].row, ctr->cities[i][j].col);
+			printf("| [ %s %d %d ] ", ctr->cities[i][j].name, ctr->cities[i][j].row, ctr->cities[i][j].col);
 		}
 		printf("\n");
 		for(size_t ptr = 0;ptr<ROW;ptr++)
-			printf("\e[91m_________________");
+			printf("_________________");
 		printf("\n");
 	}
 	printf("\n\n");
@@ -87,13 +129,14 @@ int main() {
 
 			ctr.cities[j][i].row = r;
 			ctr.cities[j][i].col = c;
-			strcpy(ctr.cities[j][i].name, randomCity());
+			const char *cityName = makeCity();
+			strcpy(ctr.cities[j][i].name, cityName);
 		}
 	}
 
 	print(&ctr);
 
-	printf("\n[ %s  %d  %d ]\n\n", ctr.cities[1][1].south->name, ctr.cities[1][1].south->row, ctr.cities[1][1].south->col);
+	printAllInfo(&ctr);
 
 	destroy(&ctr);
 }
