@@ -3,13 +3,13 @@
 #include <string.h>
 #include <time.h>
 
-#define ROW 7
-#define COL 7
+#define ROW 4
+#define COL 4
 #define CITYSIZE 56
 
 struct city {
 	char name[10];
-	int row, col;
+	size_t row, col;
 	struct city *north, *south, *west, *east;
 };
 
@@ -53,21 +53,21 @@ void printAllInfo(const country_t *ctr) {
 	for(size_t i=0;i<ROW;i++) {
 		for(size_t j=0;j<COL;j++) {
 			printf("\n\n====================================\n\n");
-			printf("[%s  %zu  %zu] sehrinin komsulari\n\n", ctr->cities[i][j].name, i,j);
+			printf("[ %s ] sehrinin komsulari\n\n", ctr->cities[i][j].name);
 			if(!isNull(ctr->cities[i][j].west)) // Bati
-				printf("\nBati [ %s %d %d ]\n", ctr->cities[i][j].west->name, ctr->cities[i][j].west->row, ctr->cities[i][j].west->col);
+				printf("\nBati [ %s ]\n", ctr->cities[i][j].west->name /*, ctr->cities[i][j].west->row, ctr->cities[i][j].west->col*/);
 			//else printf("\nBati komsusu yok\n");
 
 			if(!isNull(ctr->cities[i][j].east)) // Dogu
-				printf("\nDogu [ %s %d %d ]\n", ctr->cities[i][j].east->name, ctr->cities[i][j].east->row, ctr->cities[i][j].east->col);
+				printf("\nDogu [ %s ]\n", ctr->cities[i][j].east->name /*, ctr->cities[i][j].east->row, ctr->cities[i][j].east->col*/);
 			//else printf("\nDogu komsusu yok\n");
 
 			if(!isNull(ctr->cities[i][j].south)) // Guney
-				printf("\nGuney [ %s %d %d ]\n", ctr->cities[i][j].south->name, ctr->cities[i][j].south->row, ctr->cities[i][j].south->col);
+				printf("\nGuney [ %s ]\n", ctr->cities[i][j].south->name /*, ctr->cities[i][j].south->row, ctr->cities[i][j].south->col*/);
 			//else printf("\nGuney komsusu yok\n");
 
 			if(!isNull(ctr->cities[i][j].north)) // Kuzey
-				printf("\nKuzey [ %s %d %d ]\n", ctr->cities[i][j].north->name, ctr->cities[i][j].north->row, ctr->cities[i][j].north->col);
+				printf("\nKuzey [ %s ]\n", ctr->cities[i][j].north->name /*, ctr->cities[i][j].north->row, ctr->cities[i][j].north->col*/);
 			//else printf("\nKuzey komsusu yok\n");
 			printf("\n\n");
 		}
@@ -82,7 +82,7 @@ void print(const country_t *ctr) {
 
 	for(size_t i=0;i<ROW;i++) {
 		for(size_t j=0;j<COL;j++) {
-			printf("| [ %s %d %d ] ", ctr->cities[i][j].name, ctr->cities[i][j].row, ctr->cities[i][j].col);
+			printf("| [ %s ] ", ctr->cities[i][j].name);
 		}
 		printf("\n");
 		for(size_t ptr = 0;ptr<ROW;ptr++)
@@ -107,8 +107,8 @@ int main() {
 	for(size_t i=0;i<ROW;i++)
 		ctr.cities[i] = (city_t*)malloc(sizeof(city_t)*COL);
 
-	for(int i=0, r=-3;i<ROW;i++, r++) {
-		for(int j=0, c=4;j<COL;j++, c--) {
+	for(size_t i=0;i<ROW;i++) {
+		for(size_t j=0;j<COL;j++) {
 			if(j == 0)
 				ctr.cities[i][j].west = NULL;
 			else
@@ -127,8 +127,8 @@ int main() {
 			else
 				ctr.cities[i][j].south = &ctr.cities[i+1][j];
 
-			ctr.cities[j][i].row = r;
-			ctr.cities[j][i].col = c;
+			ctr.cities[j][i].row = i;
+			ctr.cities[j][i].col = j;
 			const char *cityName = makeCity();
 			strcpy(ctr.cities[j][i].name, cityName);
 		}
