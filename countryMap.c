@@ -10,6 +10,7 @@
 struct city {
 	char name[10];
 	size_t row, col;
+	size_t pSize;
 	struct city *north, *south, *west, *east;
 };
 
@@ -20,8 +21,8 @@ struct country {
 typedef struct city city_t;
 typedef struct country country_t;
 
-int myRand(int min, int max) {
-	return (int)rand()%(max-min+1)+min;
+size_t myRand(size_t min, size_t max) {
+	return (size_t)rand()%(max-min+1)+min;
 }
 
 const char *makeCity() {
@@ -42,6 +43,14 @@ const char *makeCity() {
 		return NULL;
 
 	return allCities[idx++];
+}
+
+int searchCity(const country_t *ctr, const char *city) {
+	for(size_t i=0;i<ROW;i++)
+		for(size_t j=0;j<COL;j++)
+			if(!strcmp(ctr->cities[i][j].name, city))
+				return 1;
+	return 0;
 }
 
 int isNull(const city_t *road) {
@@ -129,6 +138,7 @@ int main() {
 
 			ctr.cities[j][i].row = i;
 			ctr.cities[j][i].col = j;
+			ctr.cities[i][j].pSize = myRand(100000, 3000000000);
 			const char *cityName = makeCity();
 			strcpy(ctr.cities[j][i].name, cityName);
 		}
