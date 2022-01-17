@@ -31,6 +31,18 @@ int search(const type_t *type, const char *src) {
 	return 0;
 }
 
+const char * returnIp(const type_t* type) {
+	for(size_t i=0;i<type->size;i++) {
+		size_t len = strlen(type->array[i])-1;
+
+		if((type->array[i][0] >= 48 && type->array[i][0] <= 57)
+			&& (type->array[i][len] >= 48 && type->array[i][len] <= 57))
+			return type->array[i];
+	}
+
+	return NULL;
+}
+
 void push_back(type_t *type, const char *src) {
 	size_t len = strlen(src)+1;
 

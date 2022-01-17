@@ -29,7 +29,7 @@ int main() {
 		type_t word = createWord(sline, " ");
 		//printArray(&word);
 
-		fprintf(fptr, "%s\n", word.array[3]);
+		fprintf(fptr, "%s\n", returnIp(&word));
 		destroy(&word);
 		fclose(tempFile);
 	}
