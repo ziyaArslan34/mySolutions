@@ -2,57 +2,35 @@
 #include <math.h>
 #include <stdlib.h>
 
-int hex_to_dec(const char *num) {
-	size_t size = strlen(num);
+int hex_to_dec(const char *hex) {
+	int size = (int)strlen(hex);
+	int decimal=0, base=1;
 
-	for(size_t i=0;i<size;i++) {
-		if(!(num[i] >= 48 && num[i] <= 57) && !(num[i] >= 97 && num[i] <= 102) && !(num[i] >= 65 && num[i] <= 70)) {
-			printf("\nundefined hexdecimal\n");
+	for(int i=size-1;i>=0;i--) {
+		if(hex[i] >= '0' && hex[i] <= '9') {
+			decimal += (int)(hex[i] - 48) * base;
+			base *= 16;
+		} else if(hex[i] >= 'a' && hex[i] <= 'f') {
+			decimal += (int)(hex[i] - 87) * base;
+			base *= 16;
+		} else if(hex[i] >= 'A' && hex[i] <= 'F') {
+			decimal += (int)(hex[i] - 55) * base;
+			base *= 16;
+		} else {
+			printf("undefined hexdecimal\n");
 			return 0;
 		}
 	}
 
-	int idx=0;
-
-	int *array = (int*)malloc(sizeof(int)*size);
-
-	for(size_t i=0;i<size;i++) {
-		switch(num[i]) {
-			case 97:  array[idx] = 10; break;
-			case 98:  array[idx] = 11; break;
-			case 99:  array[idx] = 12; break;
-			case 100: array[idx] = 13; break;
-			case 101: array[idx] = 14; break;
-			case 102: array[idx] = 15; break;
-
-			case 65:  array[idx] = 10; break;
-			case 66:  array[idx] = 11; break;
-			case 67:  array[idx] = 12; break;
-			case 68:  array[idx] = 13; break;
-			case 69:  array[idx] = 14; break;
-			case 70:  array[idx] = 15; break;
-
-			default:
-				array[idx] = num[i] - '0';
-				break;
-		}
-		idx++;
-	}
-
-	int res = 0;
-
-	for(int i=0,j=(int)size-1;i<(int)size;i++, j--)
-		res += (int) (array[i] * pow(16, j));
-
-	free(array);
-	return res;
+	return decimal;
 }
 
 int main() {
-	printf("%d\n", hex_to_dec("123"));
-	printf("%d\n", hex_to_dec("7a"));
-	printf("%d\n", hex_to_dec("7A"));
-	printf("%d\n", hex_to_dec("36F"));
-	printf("%d\n", hex_to_dec("65"));
-	printf("%d\n", hex_to_dec("6fz"));
+	printf("123 -> %d\n", hex_to_dec("123"));
+	printf("7a  -> %d\n", hex_to_dec("7a"));
+	printf("7A  -> %d\n", hex_to_dec("7A"));
+	printf("36F -> %d\n", hex_to_dec("36F"));
+	printf("65  -> %d\n", hex_to_dec("65"));
+	printf("1A  -> %d\n", hex_to_dec("1A"));
+	printf("6fz -> %d\n", hex_to_dec("6fz"));
 }
