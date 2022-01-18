@@ -19,12 +19,12 @@ int hex_to_dec(const char *num) {
 			case 103: array[idx] = 16; break;
 
 			case 65:  array[idx] = 10; break;
-            case 66:  array[idx] = 11; break;
-            case 67:  array[idx] = 12; break;
-            case 68:  array[idx] = 13; break;
-            case 69:  array[idx] = 14; break;
-            case 70:  array[idx] = 15; break;
-            case 71:  array[idx] = 16; break;
+			case 66:  array[idx] = 11; break;
+			case 67:  array[idx] = 12; break;
+			case 68:  array[idx] = 13; break;
+			case 69:  array[idx] = 14; break;
+			case 70:  array[idx] = 15; break;
+			case 71:  array[idx] = 16; break;
 
 			default:
 				array[idx] = num[i] - '0';
@@ -47,4 +47,5 @@ int main() {
 	printf("%d\n", hex_to_dec("7a"));
 	printf("%d\n", hex_to_dec("7A"));
 	printf("%d\n", hex_to_dec("36F"));
+	printf("%d\n", hex_to_dec("65"));
 }
