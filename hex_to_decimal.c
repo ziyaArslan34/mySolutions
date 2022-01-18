@@ -4,6 +4,14 @@
 
 int hex_to_dec(const char *num) {
 	size_t size = strlen(num);
+
+	for(size_t i=0;i<size;i++) {
+		if(!(num[i] >= 48 && num[i] <= 57) && !(num[i] >= 97 && num[i] <= 103) && !(num[i] >= 65 && num[i] <= 71)) {
+			printf("\nundefined hexdecimal\n");
+			return 0;
+		}
+	}
+
 	int idx=0;
 
 	int *array = (int*)malloc(sizeof(int)*size);
@@ -48,4 +56,5 @@ int main() {
 	printf("%d\n", hex_to_dec("7A"));
 	printf("%d\n", hex_to_dec("36F"));
 	printf("%d\n", hex_to_dec("65"));
+	printf("%d\n", hex_to_dec("6fz"));
 }
