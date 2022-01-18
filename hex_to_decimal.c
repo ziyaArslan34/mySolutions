@@ -6,7 +6,7 @@ int hex_to_dec(const char *num) {
 	size_t size = strlen(num);
 
 	for(size_t i=0;i<size;i++) {
-		if(!(num[i] >= 48 && num[i] <= 57) && !(num[i] >= 97 && num[i] <= 103) && !(num[i] >= 65 && num[i] <= 71)) {
+		if(!(num[i] >= 48 && num[i] <= 57) && !(num[i] >= 97 && num[i] <= 102) && !(num[i] >= 65 && num[i] <= 70)) {
 			printf("\nundefined hexdecimal\n");
 			return 0;
 		}
@@ -24,7 +24,6 @@ int hex_to_dec(const char *num) {
 			case 100: array[idx] = 13; break;
 			case 101: array[idx] = 14; break;
 			case 102: array[idx] = 15; break;
-			case 103: array[idx] = 16; break;
 
 			case 65:  array[idx] = 10; break;
 			case 66:  array[idx] = 11; break;
@@ -32,7 +31,6 @@ int hex_to_dec(const char *num) {
 			case 68:  array[idx] = 13; break;
 			case 69:  array[idx] = 14; break;
 			case 70:  array[idx] = 15; break;
-			case 71:  array[idx] = 16; break;
 
 			default:
 				array[idx] = num[i] - '0';
