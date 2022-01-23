@@ -3,18 +3,22 @@
 #include <stdlib.h>
 
 char *substr(const char *str, size_t begin, size_t end, size_t len) {
+	size_t sLen = strlen(str);
+	if(begin >= sLen || end > sLen || begin < 0 || end < 0)
+		return NULL;
+
 	char *newS = (char*)malloc(sizeof(char)*len+1);
 
-	size_t i, idx=0;
-	for(i=begin;i<end;i++)
-		newS[idx++] = str[i];
+	size_t idx=0;
+	while(begin != end)
+		newS[idx++] = str[begin++];
 	newS[idx++] = '\0';
 
 	return newS;
 }
 
 void foo(const char *str, size_t n) {
-	if(n == 0 || n == 1 || n >= strlen(str) || (strlen(str)/n) <= n) {
+	if(n == 0 || n == 1) {
 		printf("%s\n", str);
 		return;
 	}
@@ -25,19 +29,22 @@ void foo(const char *str, size_t n) {
 	for(size_t i=0;i<n;i++) {
 		size_t begin, end;
 		begin = start;
-		end = sLen+start;
+		end = i < n-1 ? sLen+start : strlen(str);
 		start += sLen;
 
 		//printf("\n\nsLen{ %zu }, begin { %zu }, end { %zu }, start { %zu }\n\n", sLen, begin, end, start);
+		char *s = NULL;
 
-		char *s = substr(str, begin, end, sLen);
-
-		printf("%s\n", s);
-		free(s);
+		if((s = substr(str, begin, end, sLen)) != NULL) {
+			printf("%s\n", s);
+			free(s);
+		} else {
+			printf("NULL\n");
+		}
 	}
 }
 
 int main() {
-	const char *str = "ziya arslan learning C++";
-	foo(str, 4);
+	const char *str = "his anyone learning C++.";
+	foo(str,7);
 }
