@@ -14,12 +14,12 @@ char *substr(const char *str, size_t begin, size_t end, size_t len) {
 }
 
 void foo(const char *str, size_t n) {
-	if(n == 0 || n == 1) {
+	if(n == 0 || n == 1 || n >= strlen(str) || (strlen(str)/n) <= n) {
 		printf("%s\n", str);
 		return;
 	}
 
-	size_t sLen = strlen(str)/n;
+	size_t sLen = strlen(str) / n;
 	size_t start=0;
 
 	for(size_t i=0;i<n;i++) {
@@ -39,6 +39,5 @@ void foo(const char *str, size_t n) {
 
 int main() {
 	const char *str = "ziya arslan learning C++";
-
 	foo(str, 4);
 }
