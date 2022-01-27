@@ -4,7 +4,11 @@
 
 struct pair { size_t begin, end; };
 
-int findLocation(const char *s1, const char *s2, struct pair *p) {
+struct pair *find_location_all(const char *s1, const char *s2, size_t *len) {
+	size_t size=0, cap=4;
+
+	struct pair *p = (struct pair*)malloc(sizeof(struct pair)*cap);
+
 	size_t lenSrc = strlen(s2);
 	size_t lenDest = strlen(s1);
 
@@ -15,28 +19,31 @@ int findLocation(const char *s1, const char *s2, struct pair *p) {
 			if(s1[m] == s2[j])
 				cnt++;
 		if(cnt == lenSrc) {
-			/*for(size_t idx=i;idx<lenSrc+i;idx++)
-				s1[idx] = '*';
-			*/
+			if(size >= cap) {
+				cap *= 2;
+				p = (struct pair*)realloc(p,sizeof(struct pair)*cap);
+			}
 
-			p->begin = i;
-			p->end = m;
-
-			return 1;
+			p[size].begin = i;
+			p[size].end = m;
+			size++;
 		}
 	}
 
-	return 0;
+	*len = size;
+	return p;
 }
 
 int main() {
-	struct pair p = {0,0};
+	const char *dest = "mert mert mert mert mert";
+	const char *src = "mert";
 
-	const char *dest = "I watched you, my arms are tied";
-	const char *src = "my arms";
+	size_t size=0;
 
-	if(findLocation(dest, src, &p))
-		printf("[ begin, end ] : %zu %zu\n", p.begin, p.end);
-	else
-		printf("not found\n");
+	struct pair *p = find_location_all(dest, src, &size);
+
+	for(size_t i=0;i<size;i++)
+		printf("\n[ %zu %zu ]\n", p[i].begin, p[i].end);
+
+	free(p);
 }
