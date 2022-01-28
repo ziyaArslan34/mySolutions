@@ -138,7 +138,7 @@ public:
 	}
 
 	static Date randomDate() {
-		return Date{myRand(1,30), myRand(1,11), myRand(1907, 2022)};
+		return Date{myRand(1,31), myRand(1,12), myRand(1907, 2022)};
 	}
 
 	friend Date getDifferenceDate(const Date&, const Date&);
@@ -199,7 +199,9 @@ int main() {
 	for(size_t i=0;i<25;i++)
 		vec.push_back(Date{Date::randomDate()});
 
-	sort(vec.begin(), vec.end(), std::greater{});
+	sort(vec.begin(), vec.end(), [](const auto&val1, const auto& val2) {
+		return val1 > val2;
+	});
 
 	for(const auto& i : vec) {
 		std::cout<<i<<"\n";
