@@ -72,14 +72,14 @@ int isRapport(const char *str) {
 
 	size_t idx1=0, idx2=0;
 
-	mystack_t *stack = init(sizeof(char));
-
 	int flag = 0;
 	for(size_t i=0;i<strlen(str);i++)
 		if(isOpen(str[i]) || isOpen(str[i]))
 			flag = 1;
 	if(!flag)
 		return 0;
+
+	mystack_t *stack = init(sizeof(char));
 
 	for(size_t i=0;i<strlen(str);i++) {
 		if(isOpen(str[i]))
@@ -141,7 +141,7 @@ int main() {
 	const char *str[] = {"({[{{}sifir}][{(<><bir>)}][iki][{uc}]})",
 						 "({[{{<}sifir}][{(<><bir>)}][iki][{uc}]})",
 						 "{[(<>)]}",
-						 "((a[<scope1] * b[scope2]) (a>[{scope3}{scope4}]))",
+						 "((a[scope1] * b[scope2]) (a[{scope3}{scope4}]))",
 						 "{{()[]{}}}",
 						 "merhabalar"
 	};
