@@ -16,8 +16,8 @@ data_t init(size_t n) {
 	return dt;
 }
 
-void push_back(data_t *dt, const char *src) {
-	for(size_t i=0;i<strlen(src);i++) {
+void push_back(data_t *dt, const char *src, size_t len) {
+	for(size_t i=0;i<len;i++) {
 		if(dt->size >= dt->cap) {
 			dt->cap *= 2;
 			dt->data = (char*)realloc(dt->data, sizeof(char)*dt->cap);
@@ -70,11 +70,11 @@ data_t text_to_hex(const char *text) {
 
 		reverse_s(s.data,s.size);
 		//printf("str: %s\n", s);
-		push_back(&data, s.data);
+		push_back(&data, s.data, s.size);
 		free(s.data);
 	}
 
-	push_back(&data, " \0");
+	push_back(&data, " \0", 3);
 	return data;
 }
 
