@@ -38,40 +38,40 @@ void reverse_s(char *s, size_t size) {
 		swap(&s[i], &s[j]);
 }
 
-void push_back_s(char *s, size_t *size, size_t *cap, char ch) {
-	if(*size >= *cap) {
-		*cap *= 2;
-		s = (char*)realloc(s, sizeof(char)*(*cap));
+void push_back_s(data_t *s, char ch) {
+	if(s->size >= s->cap) {
+		s->cap *= 2;
+		s->data = (char*)realloc(s->data, sizeof(char)*s->cap);
 	}
-	s[(*size)++] = ch;
+	s->data[s->size++] = ch;
 }
 
 data_t text_to_hex(const char *text) {
 	data_t data = init(16);
 
 	for(size_t i=0;i<strlen(text);i++) {
-		size_t size=0, cap=4;
-		char *s = (char*)malloc(sizeof(char)*cap);
+		data_t s = init(4);
+
 		int decimal = (int)text[i];
 
-        while(decimal) {
+		while(decimal) {
 			int digit = decimal%16;
 			char ch;
 			if(digit < 10)
 				ch = (char)(48+digit);
 			else
 				ch = (char)(87+digit);
-			push_back_s(s,&size, &cap, ch);
+			push_back_s(&s,ch);
 			decimal /= 16;
 		}
 
-		push_back_s(s, &size, &cap, 'x');
-		push_back_s(s, &size, &cap, '\x5c');
+		push_back_s(&s,'x');
+		push_back_s(&s,'\x5c');
 
-		reverse_s(s,size);
+		reverse_s(s.data,s.size);
 		//printf("str: %s\n", s);
-		push_back(&data, s);
-		free(s);
+		push_back(&data, s.data);
+		free(s.data);
 	}
 
 	push_back(&data, " \0");
