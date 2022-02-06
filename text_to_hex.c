@@ -7,6 +7,14 @@ typedef struct {
 	size_t size, cap;
 }data_t;
 
+data_t init(size_t);
+void push_back_s(data_t*, const char*, size_t);
+void push_back_c(data_t*,char);
+void swap(char*, char*);
+void reverse(char*, size_t);
+data_t text_to_hex(const char*);
+
+
 data_t init(size_t n) {
 	data_t dt;
 	dt.size = 0;
@@ -17,14 +25,8 @@ data_t init(size_t n) {
 }
 
 void push_back_s(data_t *dt, const char *src, size_t len) {
-	for(size_t i=0;i<len;i++) {
-		if(dt->size >= dt->cap) {
-			dt->cap *= 2;
-			dt->data = (char*)realloc(dt->data, sizeof(char)*dt->cap);
-		}
-
-		dt->data[dt->size++] = src[i];
-	}
+	for(size_t i=0;i<len;i++)
+		push_back_c(dt, src[i]);
 }
 
 void swap(char *c1, char *c2) {
