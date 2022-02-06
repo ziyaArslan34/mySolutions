@@ -1,8 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <unistd.h>
 #include <string.h>
+
+#if _WIN32
+#include <windows.h>
+#define SLEEP_COMMAND Sleep(1)
+#define CLEAR_COMMAND system("cls")
+
+#else
+#include <unistd.h>
+#define SLEEP_COMMAND sleep(1)
+#define CLEAR_COMMAND system("clear")
+#endif
 
 #define ROW 10
 #define COL 10
@@ -89,7 +99,7 @@ int main() {
 	text[strlen(text)-1] = '\0';
 
 	while(1) {
-		system("clear");
+		CLEAR_COMMAND;
 		int arr[10]={0};
 
 		char code[ROW][COL] = {
@@ -114,7 +124,7 @@ int main() {
 		} else {
 			printf("\nLutfen 10 basamaktan fazla sayi girmeyin!\n");
 		}
-		sleep(1);
+		SLEEP_COMMAND;
 	}
 	return 0;
 }
