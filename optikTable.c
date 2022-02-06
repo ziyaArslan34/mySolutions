@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-#include <locale.h>
+#include <string.h>
 
 #define ROW 10
 #define COL 10
@@ -21,7 +21,7 @@ int my_rand(int min, int max) {
 
 void randomize_array(void *array, size_t size, size_t typeSize) {
 	for(size_t i=0;i<size;i++)
-		swap((char*)array+my_rand(0,(int)size-1)*typeSize, (char*)array+my_rand(0,(int)size-1)*typeSize, typeSize);
+		swap((char*)array+(size_t)my_rand(0,(int)size-1)*typeSize, (char*)array+(size_t)my_rand(0,(int)size-1)*typeSize, typeSize);
 }
 
 void print_table(char code[][COL], int *arr) {
@@ -31,7 +31,7 @@ void print_table(char code[][COL], int *arr) {
 		printf("\e[90m%d ", arr[i]);
 	printf("\n  ");
 
-	for(int i=0;i<20;i++)
+	for(int i=0;i<21;i++)
 		printf("\e[90m%c", '_');
 	printf("\n");
 
@@ -67,12 +67,12 @@ int sep(int *arr, long int num) {
 }
 
 void star_map(char code[][COL], int *arr, const char *text) {
-	size_t idx=0;
+	size_t idx=0, sLen = strlen(text);
 
 	for(int i=0;i<ROW;i++) {
 		for(int j=0;j<COL;j++) {
 			if(arr[j] == i) {
-				if(idx >= strlen(text))
+				if(idx >= sLen)
 					idx=0;
 				code[i][j] = text[idx++];
 			}
@@ -105,7 +105,7 @@ int main() {
 			{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}
 		};
 
-		long int num = 1234567891;
+		long int num = 1234556789;
 
 		if(sep(arr, num)) {
 			randomize_array(arr, 10, sizeof(int));
@@ -116,4 +116,5 @@ int main() {
 		}
 		sleep(1);
 	}
+	return 0;
 }
