@@ -8,10 +8,10 @@ typedef struct {
 }data_t;
 
 data_t init(size_t);
-void push_back_s(data_t*, const char*, size_t);
-void push_back_c(data_t*,char);
-void swap(char*, char*);
-void reverse(char*, size_t);
+void   push_back_s(data_t*, const char*, size_t);
+void   push_back_c(data_t*,char);
+void   swap(char*, char*);
+void   reverse(char*, size_t);
 data_t text_to_hex(const char*);
 
 
