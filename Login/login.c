@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
 #include "hash.h"
 #include "split.h"
 
@@ -21,18 +23,19 @@ void sing_in() {
 	user_t user;
 	size_t flag=0;
 
+	FILE *fptr = fopen("users.txt", "r");
+
 	printf("username: ");
 	scanf("%s", user.username);
 	printf("password: ");
 	scanf("%s", user.password);
 
-	FILE *rFile = fopen("users.txt", "r");
-
-	while(!feof(rFile)) {
+	while(!feof(fptr)) {
 		char line[1024];
-		fgets(line, sizeof(line), rFile);
+		fgets(line, sizeof(line), fptr);
 		line[strlen(line)-1] = '\0';
 		type_t split = split_str(line, " {");
+
 		if(search(&split, user.username)) {
 			hash_t hash = init_hash();
 			type_t pass = split_str(line, "[]");
@@ -40,7 +43,10 @@ void sing_in() {
 
 			for(size_t i=0;i<pass.size-1;i++)
 				push_back_hash(&hash, atoi(pass.array[i]));
-			hash.key = atoi(split_str(line, "()").array[1]);
+			type_t get_key = split_str(line, "()");
+
+			hash.key = atoi(get_key.array[1]);
+			destroy_split(&get_key);
 			char *passw = decrypt(&hash);
 
 			if(strcmp(passw, user.password) == 0)
@@ -56,14 +62,14 @@ void sing_in() {
 		destroy_split(&split);
 	}
 
-	fclose(rFile);
-
 	if(!flag) {
 		printf("login failure!\n");
+		fclose(fptr);
 		return;
 	} else {
 		printf("login succcess\n");
 	}
+	fclose(fptr);
 }
 
 void sing_up(FILE *fptr) {
@@ -81,15 +87,17 @@ void sing_up(FILE *fptr) {
 	encrypt(&hash, user.password);
 	for(size_t i=0;i<hash.size;i++)
 		fprintf(fptr, "[%d]",hash.data[i]);
-	fprintf(fptr, "}(%d)\n\n", hash.key);
+	fprintf(fptr, "}(%d)\n", hash.key);
 
 	printf("\nadded new user\n");
 	destroy_hash(&hash);
 }
 
 int main() {
-	//FILE *users = fopen("users.txt", "w+");
+	srand((unsigned)time(NULL));
 
+	FILE *users = fopen("users.txt", "a+");
+/*while(1) {*/
 	int choice;
 	menu();
 	printf("choice: ");
@@ -97,19 +105,18 @@ int main() {
 
 	switch(choice) {
 		case 0:
-			//fclose(users);
+			fclose(users);
 			exit(0);
 			break;
 		case 1:
 			sing_in();
 			break;
 		case 2:
-			//sing_up(users);
+			sing_up(users);
 			break;
 		default:
 			printf("invalid choice!\n");
 			break;
 	}
-
-	//fclose(users);
+	fclose(users);
 }

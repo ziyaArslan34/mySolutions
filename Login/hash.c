@@ -13,7 +13,7 @@ hash_t init_hash() {
 
 	hash.size = 0;
 	hash.cap = 16;
-	hash.key = my_rand(1,5);
+	hash.key = my_rand(2,9);
 
 	hash.data = (int*)malloc(sizeof(int)*hash.cap);
 	return hash;
