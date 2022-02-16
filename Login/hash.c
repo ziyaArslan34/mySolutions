@@ -45,6 +45,19 @@ void push_back_hash(hash_t *hash, int val) {
 	hash->data[hash->size++] = val;
 }
 
+int comp_hash(const hash_t *h1, const hash_t *h2) {
+	size_t size1 = h1->size;
+	size_t size2 = h2->size;
+
+	if(size1 != size2)
+		return 0;
+
+	for(size_t i=0;i<size1;i++)
+		if(h1->data[i] != h2->data[i])
+			return 0;
+	return 1;
+}
+
 void swap(void *val1, void *val2, size_t type) {
 	void *temp = malloc(type);
 	memcpy(temp, val1, type);
