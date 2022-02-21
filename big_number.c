@@ -176,7 +176,7 @@ void reverse(char *array, size_t len) {
 }
 
 int main() {
-	char num1[18]={0}, num2[18]={0};
+	char num1[25]={0}, num2[25]={0};
 	array_t result = init(18);
 
 	printf("1. ve 2. numarayi girin: ");
