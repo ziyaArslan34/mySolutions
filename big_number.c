@@ -50,18 +50,32 @@ void addition(array_t *result, const char *num1, const char *num2) {
 
 	for(i=(int)data.maxLen-1, j=(int)data.minLen-1;j>=0;j--,i--) {
 		data.step = (data.sMax[i] - '0') + (data.sMin[j] - '0') + data.get;
-		push_back(result, (char)(((data.step%10)) + '0'));
-		data.get = (data.step/10)%10;
+		if(i == 0) {
+			while(data.step) {
+				push_back(result, (char)(data.step%10)+'0');
+				data.step /= 10;
+			}
+		} else {
+			push_back(result, (char)(((data.step%10)) + '0'));
+			data.get = (data.step/10)%10;
+		}
 	}
 
 	for(;i>=0;i--) {
 		int temp = (data.sMax[i] - '0') + data.get;
-		if(temp >= 10) {
-			push_back(result, (char)(temp%10) + '0');
-			data.get = (temp/10)%10;
+		if(i != 0) {
+			if(temp >= 10) {
+				push_back(result, (char)(temp%10) + '0');
+				data.get = (temp/10)%10;
+			} else {
+				push_back(result, (char)temp+'0');
+				data.get = (temp/10)%10;
+			}
 		} else {
-			push_back(result, (char)temp+'0');
-			data.get = (temp/10)%10;
+			while(temp) {
+				push_back(result, (char)(temp%10) + '0');
+				temp /= 10;
+			}
 		}
 	}
 
