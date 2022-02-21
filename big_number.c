@@ -105,7 +105,7 @@ void multiplication(array_t *result, const char *num1, const char *num2) {
 				data.get = (step/10)%10;
 			} else {
 				while(step) {
-					push_back(&temp[idx], (step%10)+'0');
+					push_back(&temp[idx], (char)(step%10)+'0');
 					step /= 10;
 				}
 			}
@@ -115,20 +115,24 @@ void multiplication(array_t *result, const char *num1, const char *num2) {
 		push_back(&temp[idx++], '\0');
 	}
 
-	addition(result, temp[0].data, temp[1].data);
-	const char *tmp = result->data;
-	destroy(result);
-
-	for(size_t x=2;x<idx;x++) {
-		addition(result, tmp, temp[x].data);
-		tmp = result->data;
-		if(x < idx-1)
-			destroy(result);
+	if(idx > 1) {
+		addition(result, result->data, temp[0].data);
+		const char *tmp = result->data;
+		destroy(result);
+		for(size_t i=1;i<idx;i++) {
+			addition(result, tmp, temp[i].data);
+			tmp = result->data;
+			if(i < idx-1)
+				destroy(result);
+		}
+	} else {
+		addition(result, result->data, temp[0].data);
 	}
 
-	for(size_t y=0;y<data.minLen;y++)
+	for(size_t y=0;y<data.minLen;y++) {
+		//printf("%s\n", temp[y].data);
 		free(temp[y].data);
-	push_back(result, '\0');
+	}
 }
 
 array_t init(size_t cap) {
@@ -174,7 +178,6 @@ void reverse(char *array, size_t len) {
 int main() {
 	char num1[18]={0}, num2[18]={0};
 	array_t result = init(18);
-	memset(result.data, '0', 18);
 
 	printf("1. ve 2. numarayi girin: ");
 	scanf("%s%s", num1, num2);
@@ -182,9 +185,13 @@ int main() {
 	clock_t start = clock();
 
 	multiplication(&result, num1, num2);
-	clock_t end = clock();
+	printf("carpma: %s\n", result.data);
+	destroy(&result);
+	addition(&result, num1, num2);
+	printf("toplama: %s\n", result.data);
 
-	printf("%s\n", result.data);
-	printf("hesaplama suresi: %.4lf\n", (double)(end-start)/CLOCKS_PER_SEC);
+	clock_t end = clock();
+	printf("\ntoplam gecen sure: %.4lf\n", (double)(end-start)/CLOCKS_PER_SEC);
+
 	destroy(&result);
 }
