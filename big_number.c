@@ -28,6 +28,8 @@ void    addition(array_t*, const char*, const char*);
 void    multiplication(array_t*, const char*, const char*);
 void    subtraction(array_t*, const char*, const char*, char);
 void    division(array_t*, const char*, const char*);
+int     input_control(const char*);
+
 
 data_t init_data(const char*s1, const char *s2) {
 	data_t data;
@@ -125,11 +127,12 @@ void multiplication(array_t *result, const char *num1, const char *num2) {
 		destroy(result);
 		for(size_t i=1;i<idx;i++) {
 			addition(result, tmp, temp[i].data);
-			if(i < idx-1)
-				destroy(result);
 			free(tmp);
 			tmp = (char*)malloc(sizeof(char)*result->size+1);
 			strcpy(tmp, result->data);
+
+			if(i < idx-1)
+				destroy(result);
 		}
 	} else {
 		addition(result, result->data, temp[0].data);
@@ -182,12 +185,26 @@ void reverse(char *array, size_t len) {
 		swap(&array[i], &array[j]);
 }
 
+int input_control(const char *s) {
+	for(size_t i=0;i<strlen(s);i++)
+		if(!(s[i] >= 48 && s[i] <= 57))
+			return 0;
+	return 1;
+}
+
 int main() {
-	char num1[18]={0}, num2[18]={0};
+	char num1[25]={0}, num2[25]={0};
 	array_t result = init(18);
 
-	printf("1. ve 2. numarayi girin: ");
-	scanf("%s%s", num1, num2);
+	do {
+		printf("1. sayi: ");
+		scanf("%s", num1);
+	}while(!input_control(num1));
+
+	do {
+		printf("2. sayi: ");
+		scanf("%s", num2);
+	}while(!input_control(num2));
 
 	clock_t start = clock();
 
