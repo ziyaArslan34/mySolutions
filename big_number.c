@@ -133,6 +133,7 @@ void multiplication(array_t *result, const char *num1, const char *num2) {
 		//printf("%s\n", temp[y].data);
 		free(temp[y].data);
 	}
+	free(temp);
 }
 
 array_t init(size_t cap) {
