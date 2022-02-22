@@ -83,6 +83,9 @@ void addition(array_t *result, const char *num1, const char *num2) {
 	push_back(result, '\0');
 }
 
+//void subtraction(array_t *result, const char *num1, const char *num2) {}
+//void division(array_t *result, const char *num1, const char *num2) {}
+
 void debug(int cnt) { printf("debug: %d\n", cnt); }
 
 void multiplication(array_t *result, const char *num1, const char *num2) {
@@ -117,13 +120,16 @@ void multiplication(array_t *result, const char *num1, const char *num2) {
 
 	if(idx > 1) {
 		addition(result, result->data, temp[0].data);
-		const char *tmp = result->data;
+		char *tmp = (char*)malloc(sizeof(char)*result->size+1);
+		strcpy(tmp, result->data);
 		destroy(result);
 		for(size_t i=1;i<idx;i++) {
 			addition(result, tmp, temp[i].data);
-			tmp = result->data;
+			strcpy(tmp,result->data);
 			if(i < idx-1)
 				destroy(result);
+			free(tmp);
+			tmp = (char*)malloc(sizeof(char)*result->size+1);
 		}
 	} else {
 		addition(result, result->data, temp[0].data);
@@ -177,7 +183,7 @@ void reverse(char *array, size_t len) {
 }
 
 int main() {
-	char num1[25]={0}, num2[25]={0};
+	char num1[18]={0}, num2[18]={0};
 	array_t result = init(18);
 
 	printf("1. ve 2. numarayi girin: ");
@@ -192,7 +198,7 @@ int main() {
 	printf("toplama: %s\n", result.data);
 
 	clock_t end = clock();
-	printf("\ntoplam gecen sure: %.4lf\n", (double)(end-start)/CLOCKS_PER_SEC);
+	printf("\ntoplam gecen sure: %.8lf\n", (double)(end-start)/CLOCKS_PER_SEC);
 
 	destroy(&result);
 }
