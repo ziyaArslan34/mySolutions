@@ -30,6 +30,8 @@ void    subtraction(array_t*, const char*, const char*, char);
 void    division(array_t*, const char*, const char*);
 int     input_control(const char*);
 int     data_compare(const array_t*, const array_t*);
+int     data_less(const array_t*, const array_t*);
+int     data_greater(const array_t*, const array_t*);
 void    debug_function(int);
 
 
@@ -48,6 +50,14 @@ data_t init_data(const char*s1, const char *s2) {
 	return data;
 }
 
+int data_less(const array_t *a1, const array_t *a2) {
+	//a1 < a2 return true
+	if(a1->size < a2->size)
+		return 1;
+
+	return strcmp(a1->data, a2->data) < 0;
+}
+
 int data_compare(const array_t *a1, const array_t *a2) {
 	if(a1->size != a2->size)
 		return 0;
@@ -56,6 +66,10 @@ int data_compare(const array_t *a1, const array_t *a2) {
 		if(a1->data[i] != a2->data[i])
 			return 0;
 	return 1;
+}
+
+int data_greater(const array_t *a1, const array_t *a2) {
+	return !data_less(a1,a2);
 }
 
 void addition(array_t *result, const char *num1, const char *num2) {
