@@ -125,11 +125,11 @@ void multiplication(array_t *result, const char *num1, const char *num2) {
 		destroy(result);
 		for(size_t i=1;i<idx;i++) {
 			addition(result, tmp, temp[i].data);
-			strcpy(tmp,result->data);
 			if(i < idx-1)
 				destroy(result);
 			free(tmp);
 			tmp = (char*)malloc(sizeof(char)*result->size+1);
+			strcpy(tmp, result->data);
 		}
 	} else {
 		addition(result, result->data, temp[0].data);
