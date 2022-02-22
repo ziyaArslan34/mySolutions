@@ -29,6 +29,8 @@ void    multiplication(array_t*, const char*, const char*);
 void    subtraction(array_t*, const char*, const char*, char);
 void    division(array_t*, const char*, const char*);
 int     input_control(const char*);
+int     data_compare(const array_t*, const array_t*);
+void    debug_function(int);
 
 
 data_t init_data(const char*s1, const char *s2) {
@@ -44,6 +46,16 @@ data_t init_data(const char*s1, const char *s2) {
 	data.sMin = data.minLen == data.sLen2 ? s2 : s1;
 
 	return data;
+}
+
+int data_compare(const array_t *a1, const array_t *a2) {
+	if(a1->size != a2->size)
+		return 0;
+
+	for(size_t i=0;i<a1->size;i++)
+		if(a1->data[i] != a2->data[i])
+			return 0;
+	return 1;
 }
 
 void addition(array_t *result, const char *num1, const char *num2) {
@@ -86,9 +98,14 @@ void addition(array_t *result, const char *num1, const char *num2) {
 }
 
 //void subtraction(array_t *result, const char *num1, const char *num2) {}
-//void division(array_t *result, const char *num1, const char *num2) {}
 
-void debug(int cnt) { printf("debug: %d\n", cnt); }
+void division(array_t *result, const char *num1, const char *num2) {
+	data_t data = init_data(num1, num2);
+	(void)result;
+	(void)data; /* todo */
+}
+
+void debug_function(int cnt) { printf("debug: %d\n", cnt); }
 
 void multiplication(array_t *result, const char *num1, const char *num2) {
 	data_t data = init_data(num1, num2);
