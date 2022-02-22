@@ -18,21 +18,23 @@ typedef struct {
 	const char *sMax, *sMin;
 }data_t;
 
-array_t init(size_t);
-data_t  init_data(const char*, const char*);
-void    push_back(array_t *, char);
-void    destroy(array_t*);
-void    swap(char*, char*);
-void    reverse(char*, size_t);
-void    addition(array_t*, const char*, const char*);
-void    multiplication(array_t*, const char*, const char*);
-void    subtraction(array_t*, const char*, const char*, char);
-void    division(array_t*, const char*, const char*);
-int     input_control(const char*);
-int     data_compare(const array_t*, const array_t*);
-int     data_less(const array_t*, const array_t*);
-int     data_greater(const array_t*, const array_t*);
-void    debug_function(int);
+array_t  init(size_t);
+data_t   init_data(const char*, const char*);
+void     push_back(array_t *, char);
+void     destroy(array_t*);
+void     swap(char*, char*);
+void     reverse(char*, size_t);
+void     addition(array_t*, const char*, const char*);
+void     multiplication(array_t*, const char*, const char*);
+void     subtraction(array_t*, const char*, const char*);
+void     division(array_t*, const char*, const char*);
+int      input_control(const char*);
+int      data_compare(const array_t*, const array_t*);
+int      data_less(const array_t*, const array_t*);
+int      data_greater(const array_t*, const array_t*);
+array_t  operator_plus_plus(array_t *);
+array_t  operator_mines_mines(array_t*);
+void     debug_function(int);
 
 
 data_t init_data(const char*s1, const char *s2) {
@@ -48,6 +50,15 @@ data_t init_data(const char*s1, const char *s2) {
 	data.sMin = data.minLen == data.sLen2 ? s2 : s1;
 
 	return data;
+}
+
+array_t operator_plus_plus(array_t *arr) {
+	array_t temp = init(15);
+
+	addition(&temp, arr->data, "1");
+	*arr = temp;
+	destroy(&temp);
+	return *arr;
 }
 
 int data_less(const array_t *a1, const array_t *a2) {
@@ -111,7 +122,35 @@ void addition(array_t *result, const char *num1, const char *num2) {
 	push_back(result, '\0');
 }
 
-//void subtraction(array_t *result, const char *num1, const char *num2) {}
+void subtraction(array_t *result, const char *num1, const char *num2) {
+	data_t data = init_data(num1, num2);
+	array_t a1 = init(15), a2 = init(15);
+
+	for(size_t i=0;i<data.sLen1;i++)
+		push_back(&a1, num1[i]);
+	push_back(&a1, '\0');
+
+	for(size_t i=0;i<data.sLen2;i++)
+		push_back(&a2, num2[i]);
+	push_back(&a2, '\0');
+
+	array_t less = data_less(&a1, &a2) ? a1 : a2;
+	array_t greater = data_greater(&a1, &a2) ? a1 : a2;
+	array_t temp = init(25);
+
+	while(!data_compare(&less, &greater)) {
+		operator_plus_plus(&less);
+		operator_plus_plus(&temp);
+	}
+
+	push_back(&temp, '\0');
+
+	destroy(result);
+	*result = temp;
+
+	destroy(&less);
+	destroy(&greater);
+}
 
 void division(array_t *result, const char *num1, const char *num2) {
 	data_t data = init_data(num1, num2);
@@ -170,7 +209,6 @@ void multiplication(array_t *result, const char *num1, const char *num2) {
 	}
 
 	for(size_t y=0;y<data.minLen;y++) {
-		//printf("%s\n", temp[y].data);
 		free(temp[y].data);
 	}
 	free(temp);
@@ -181,6 +219,7 @@ array_t init(size_t cap) {
 	res.size = 0;
 	res.cap = cap <= 0 ? 10 : cap;
 	res.data = (char*)malloc(sizeof(char)*res.cap);
+	memset(res.data, '0', res.cap);
 	return res;
 }
 
@@ -238,12 +277,16 @@ int main() {
 	}while(!input_control(num2));
 
 	clock_t start = clock();
-
+/*
 	multiplication(&result, num1, num2);
 	printf("carpma: %s\n", result.data);
 	destroy(&result);
 	addition(&result, num1, num2);
 	printf("toplama: %s\n", result.data);
+*/
+
+	subtraction(&result, num1, num2);
+	printf("%s\n", result.data);
 
 	clock_t end = clock();
 	printf("\ntoplam gecen sure: %.8lf\n", (double)(end-start)/CLOCKS_PER_SEC);
