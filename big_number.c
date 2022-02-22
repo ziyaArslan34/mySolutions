@@ -277,16 +277,12 @@ int main() {
 	}while(!input_control(num2));
 
 	clock_t start = clock();
-/*
+
 	multiplication(&result, num1, num2);
 	printf("carpma: %s\n", result.data);
 	destroy(&result);
 	addition(&result, num1, num2);
 	printf("toplama: %s\n", result.data);
-*/
-
-	subtraction(&result, num1, num2);
-	printf("%s\n", result.data);
 
 	clock_t end = clock();
 	printf("\ntoplam gecen sure: %.8lf\n", (double)(end-start)/CLOCKS_PER_SEC);
