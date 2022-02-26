@@ -185,7 +185,11 @@ void print_clock(const mytime_t *myTime) {
 }
 
 int main() {
+	srand((unsigned)time(NULL));
+
 	const char* currentTime = get_current_time();
+	printf("\n%s\n\n", currentTime);
+
 	mytime_t systemClock = get_current_clock(currentTime);
 	print_clock(&systemClock);
 
