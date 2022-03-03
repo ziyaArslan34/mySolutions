@@ -6,12 +6,11 @@ void shift(int *arr, int count, int size, const char *direction) {
 	if(!strcmp(direction, "right")) {
 		for(int i=0;i<count;i++) {
 			int tmp = arr[size-1];
-			for(int j=size-1;j>=0;j--)
+			for(int j=size-1;j>0;j--)
 				arr[j] = arr[j-1];
 			arr[0] = tmp;
 		}
 	} else if(!strcmp(direction, "left")) {
-		// todo
 		for(int i=0;i<count;i++) {
 			int tmp = arr[0];
 			for(int j=0;j<size-1;j++)
