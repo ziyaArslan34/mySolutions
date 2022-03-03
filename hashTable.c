@@ -62,14 +62,16 @@ void decrypt(hash_t **hash) {
 			cap *= 2;
 			nums = (int*)realloc(nums, sizeof(int)*cap);
 		}
-
+		printf("num: %d\n", num);
 		nums[index++] = num;
 	}
 
 	char *str = (char*)malloc(sizeof(char)*index+1);
 
-	for(int i=0;i<index;i++)
+	for(int i=0;i<index;i++) {
+		printf("%d  ", nums[i]);
 		str[i] = nums[i];
+	}
 
 	printf("\nDecrypt : %s\n", str);
 

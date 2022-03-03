@@ -32,5 +32,5 @@ int main() {
 	printf("36F -> %d\n", hex_to_dec("36F"));
 	printf("65  -> %d\n", hex_to_dec("65"));
 	printf("1A  -> %d\n", hex_to_dec("1A"));
-	printf("6fz -> %d\n", hex_to_dec("6fz"));
+	printf("ffffffff -> %d\n", hex_to_dec("ffffffff"));
 }

@@ -9,7 +9,7 @@ int myRand(int min, int max) {
 void printBit(int value) {
 	printf("\nvalue:[%d] [ ", value);
 
-	for(int i=(int)(sizeof(value)*8);i>=0;i--) {
+	for(int i=(int)(sizeof(value)*8)-1;i>=0;i--) {
 		if(value & 1 << i)
 			printf("1");
 		else

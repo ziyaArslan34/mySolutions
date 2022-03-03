@@ -7,7 +7,29 @@ typedef struct {
 	char name[30];
 	int hour, minute;
 	char inOut;
+	int time;
 }person_t;
+
+void differenceTime(person_t *per) {
+	int h = per->hour;
+	int m = per->minute;
+
+	int hour = 17;
+	int minute = 1;
+	int totalTime = 0;
+
+	while(h < hour) {
+		if(m == 59) {
+			h++;
+			m=0;
+		}
+		m++;
+		++totalTime;
+	}
+
+	printf("%d\n", totalTime/60);
+}
+
 
 int comp(person_t per1, person_t per2) {
 	if(per1.hour > per2.hour)
@@ -102,6 +124,7 @@ int main() {
 	printPerson(infoIn, inIdx);
 	printPerson(infoOut, outIdx);
 
+	differenceTime(&infoIn[0]);
 	destroy(&strs);
 
 	return 0;

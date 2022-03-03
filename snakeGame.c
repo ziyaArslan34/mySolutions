@@ -17,7 +17,7 @@
 #endif
 
 #define X 20
-#define Y 20
+#define Y 30
 
 typedef struct {
 	int x,y;
