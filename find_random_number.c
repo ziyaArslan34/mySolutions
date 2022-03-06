@@ -39,7 +39,7 @@ int main() {
 
 		}
 		cnt++;
-		printf("[%d]*[%d]+[%d]-[%d]*[%d]+[%d] = %d\n", array[0], array[1],array[2],array[3],array[4],array[5],result);
+		printf("[%d]+[%d]-[%d]*[%d]+[%d]-[%d] = %d\n", array[0], array[1],array[2],array[3],array[4],array[5],result);
 
 	} while(result != randomNumber);
 
