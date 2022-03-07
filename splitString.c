@@ -96,7 +96,7 @@ void destroy(type_t *type) {
 int main() {
 	type_t val1 = foo("_exprone22a222exprtwo3exprthree....exprfour=exprfive+exprsix&exprseven(expreight>exprnine[exprten]expreleven-exprtwerty", NULL);
 	type_t val2 = foo("bir/iki/uc/pazartesi", "/");
-	type_t val3 = foo("pazartesi&sali+carsamba]persembe-cuma<cumartesi", "*");
+	type_t val3 = foo("pazartesi&sali+carsamba]persembe-cuma<cumartesi", "<-&+]");
 
 
 	printExpr(&val1);
