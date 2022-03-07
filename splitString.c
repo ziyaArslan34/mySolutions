@@ -47,7 +47,7 @@ void push_back(type_t *type, const char *src) {
 	strcpy(type->array[type->size++], src);
 }
 
-type_t foo(const char *str, const char *expr) {
+type_t split(const char *str, const char *expr) {
 	type_t arr = init();
 
 	size_t len = strlen(str);
@@ -94,9 +94,9 @@ void destroy(type_t *type) {
 }
 
 int main() {
-	type_t val1 = foo("_exprone22a222exprtwo3exprthree....exprfour=exprfive+exprsix&exprseven(expreight>exprnine[exprten]expreleven-exprtwerty", NULL);
-	type_t val2 = foo("bir/iki/uc/pazartesi", "/");
-	type_t val3 = foo("pazartesi&sali+carsamba]persembe-cuma<cumartesi", "<-&+]");
+	type_t val1 = split("_exprone22a222exprtwo3exprthree....exprfour=exprfive+exprsix&exprseven(expreight>exprnine[exprten]expreleven-exprtwerty", NULL);
+	type_t val2 = split("bir/iki/uc/pazartesi", "/");
+	type_t val3 = split("pazartesi&sali+carsamba]persembe-cuma<cumartesi", "<-&+]");
 
 
 	printExpr(&val1);
