@@ -3,14 +3,14 @@
 
 int main(int argc, char **argv) {
 	if(argc != 2) {
-		std::cout<<"usage: { readZip <file.zip> }\n";
+		std::cout<<"usage: { ./readzip <file> }\n";
 		return -1;
 	}
 
 	std::ifstream reads{argv[1], std::ios::binary};
 
 	if(!reads) {
-		std::cout<<"File failed!\n";
+		std::cout<<"cannot read file!\n";
 		return -1;
 	}
 
@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 
 		reads.seekg(4, std::ios::cur);
 		reads.read((char*)&len, 2);
-		std::cout<<"Dosya isim uzunlugu: "<<len<<"\n";
+		//std::cout<<"Dosya isim uzunlugu: "<<len<<"\n";
 		reads.read((char*)&extlen, 2);
 		//std::cout<<"Extra bilgi uzunlugu: "<<extlen<<"\n";
 
