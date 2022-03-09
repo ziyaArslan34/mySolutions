@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
 		reads.read((char*)&len, 2);
 		std::cout<<"Dosya isim uzunlugu: "<<len<<"\n";
 		reads.read((char*)&extlen, 2);
-		std::cout<<"Extra bilgi uzunlugu: "<<extlen<<"\n";
+		//std::cout<<"Extra bilgi uzunlugu: "<<extlen<<"\n";
 
 		char *filename = new char[len+1];
 		reads.read(filename, len);
