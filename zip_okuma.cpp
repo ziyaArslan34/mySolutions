@@ -22,10 +22,6 @@ int main(int argc, char **argv) {
 
 		reads.read(data, 4);
 
-		if(!(data[0] == 'P' && data[1] == 'K')) {
-			break;
-		}
-
 		reads.seekg(14,std::ios::cur);
 		reads.read(reinterpret_cast<char*>(&fileSize), 4);
 
@@ -41,7 +37,7 @@ int main(int argc, char **argv) {
 		reads.read(filename, len);
 		filename[len] = 0;
 
-		std::cout<<"Dosya ismi: "<<filename<<"\n\n\n";
+		std::cout<<"Dosya ismi  : "<<filename<<"\n\n\n";
 		delete [] filename;
 		reads.seekg(extlen+fileSize, std::ios::cur);
 	} while(!reads.eof());
