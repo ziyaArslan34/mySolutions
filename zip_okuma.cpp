@@ -27,14 +27,14 @@ int main(int argc, char **argv) {
 		}
 
 		reads.seekg(14,std::ios::cur);
-		reads.read((char*)&fileSize, 4);
+		reads.read(reinterpret_cast<char*>(&fileSize), 4);
 
 		std::cout<<"Dosya boyutu: "<<fileSize<<"\n";
 
 		reads.seekg(4, std::ios::cur);
-		reads.read((char*)&len, 2);
+		reads.read(reinterpret_cast<char*>(&len), 2);
 		//std::cout<<"Dosya isim uzunlugu: "<<len<<"\n";
-		reads.read((char*)&extlen, 2);
+		reads.read(reinterpret_cast<char*>(&extlen), 2);
 		//std::cout<<"Extra bilgi uzunlugu: "<<extlen<<"\n";
 
 		char *filename = new char[len+1];
