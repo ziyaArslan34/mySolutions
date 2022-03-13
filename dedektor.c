@@ -93,6 +93,7 @@ int main() {
 	}
 
 	double oldDistance, newDistance=0;
+	size_t move=0;
 
 	printf("ilerlemek icin a,d,s,w tuslarini kullan\n\n");
 
@@ -101,7 +102,7 @@ int main() {
 
 		printf("suanki konum: [%d][%d]\n", dedector.x, dedector.y);
 		char road = (char)kbhit();
-
+		move++;
 		switch(road) {
 			case 'a':
 				advance_left(&dedector);
@@ -115,6 +116,9 @@ int main() {
 			case 's':
 				advance_down(&dedector);
 				break;
+			default:
+				printf("Hatali yon!..\n");
+				move--;
 		}
 
 		newDistance = distance_calc(&gold, &dedector);
@@ -126,5 +130,5 @@ int main() {
 
 	}while(!equal(&gold, &dedector));
 
-	printf("tmmdir [%d][%d] konumunda bulundu...\n", gold.x, gold.y);
+	printf("%zu. hamlede [%d][%d] konumunda aranan bulundu...\n", move, gold.x, gold.y);
 }
