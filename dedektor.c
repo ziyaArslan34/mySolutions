@@ -22,7 +22,7 @@ int kbhit() {
 	tcgetattr(STDIN_FILENO, &old_);
 	new_ = old_;
 
-	new_.c_lflag &= ~(ICANON | ECHO);
+	new_.c_lflag &= (unsigned int)~(ICANON | ECHO);
 	tcsetattr(STDIN_FILENO, TCSANOW, &new_);
 	ch = getchar();
 	tcsetattr(STDIN_FILENO, TCSANOW, &old_);
@@ -119,6 +119,7 @@ int main() {
 			default:
 				printf("Hatali yon!..\n");
 				move--;
+				continue;
 		}
 
 		newDistance = distance_calc(&object, &dedector);
