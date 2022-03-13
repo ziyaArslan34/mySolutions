@@ -30,13 +30,13 @@ int kbhit() {
 	return ch;
 }
 
-void point_gold(int (*array)[][SIZE], point_t *gold) {
-	(*array)[my_rand(0, SIZE-1)][my_rand(0,SIZE-1)] = 1;
+void point_object(int (*map)[][SIZE], point_t *object) {
+	(*map)[my_rand(0, SIZE-1)][my_rand(0,SIZE-1)] = 1;
 	for(size_t i=0;i<SIZE;i++) {
 		for(size_t j=0;j<SIZE;j++) {
-			if((*array)[i][j]) {
-				gold->x = (int)i;
-				gold->y = (int)j;
+			if((*map)[i][j]) {
+				object->x = (int)i;
+				object->y = (int)j;
 				break;
 			}
 		}
@@ -75,19 +75,19 @@ void advance_down(point_t *dedector) {
         dedector->x++;
 }
 
-int equal(const point_t *p1, const point_t *p2) {
+int equal_controls(const point_t *p1, const point_t *p2) {
 	return (p1->x == p2->x) && (p1->y == p2->y);
 }
 
 int main() {
 	srand((unsigned)time(NULL));
-	int array[SIZE][SIZE] = {0};
+	int map[SIZE][SIZE] = {0};
 
-	point_t gold, dedector = {my_rand(0,SIZE-1),my_rand(0,SIZE-1)};
+	point_t object, dedector = {my_rand(0,SIZE-1),my_rand(0,SIZE-1)};
 
-	point_gold(&array, &gold);
+	point_object(&map, &object);
 
-	if(equal(&gold, &dedector)) {
+	if(equal_controls(&object, &dedector)) {
 		printf("zaten ikisi ayni yerde :D\n");
 		return 0;
 	}
@@ -121,14 +121,14 @@ int main() {
 				move--;
 		}
 
-		newDistance = distance_calc(&gold, &dedector);
+		newDistance = distance_calc(&object, &dedector);
 
 		if(oldDistance > newDistance)
 			printf("yakinlasiyo.. mesafe: %.3lf\n", newDistance);
 		else
 			printf("uzaklasiyo..  mesafe: %.3lf\n", newDistance);
 
-	}while(!equal(&gold, &dedector));
+	}while(!equal_controls(&object, &dedector));
 
-	printf("%zu. hamlede [%d][%d] konumunda aranan bulundu...\n", move, gold.x, gold.y);
+	printf("%zu. hamlede [%d][%d] konumunda nesne bulundu...\n", move, object.x, object.y);
 }
