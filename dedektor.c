@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <termios.h>
+#include <unistd.h>
 
 #define SIZE 15
 
@@ -11,6 +13,21 @@ typedef struct {
 
 int my_rand(int min, int max) {
 	return (int)rand()%(max-min+1)+min;
+}
+
+int kbhit() {
+	struct termios old_, new_;
+	int ch;
+
+	tcgetattr(STDIN_FILENO, &old_);
+	new_ = old_;
+
+	new_.c_lflag &= ~(ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &new_);
+	ch = getchar();
+	tcsetattr(STDIN_FILENO, TCSANOW, &old_);
+
+	return ch;
 }
 
 void point_gold(int (*array)[][SIZE], point_t *gold) {
@@ -77,33 +94,27 @@ int main() {
 
 	double oldDistance, newDistance=0;
 
+	printf("ilerlemek icin a,d,s,w tuslarini kullan\n\n");
+
 	do {
 		oldDistance = newDistance;
 
-		char road;
-		int n;
-		//printf("gold: %d  %d\n", gold.x, gold.y);
-
 		printf("suanki konum: [%d][%d]\n", dedector.x, dedector.y);
+		char road = (char)kbhit();
 
-		printf("yon ve adim sec(l,r,u,d): ");
-		scanf(" %c%d", &road, &n);
-
-		for(int i=0;i<n;i++) {
-			switch(road) {
-				case 'l':
-					advance_left(&dedector);
-					break;
-				case 'r':
-					advance_right(&dedector);
-					break;
-				case 'u':
-					advance_up(&dedector);
-					break;
-				case 'd':
-					advance_down(&dedector);
-					break;
-			}
+		switch(road) {
+			case 'a':
+				advance_left(&dedector);
+				break;
+			case 'd':
+				advance_right(&dedector);
+				break;
+			case 'w':
+				advance_up(&dedector);
+				break;
+			case 's':
+				advance_down(&dedector);
+				break;
 		}
 
 		newDistance = distance_calc(&gold, &dedector);
