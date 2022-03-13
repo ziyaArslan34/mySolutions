@@ -69,6 +69,12 @@ int main() {
 	point_t gold, dedector = {my_rand(0,SIZE-1),my_rand(0,SIZE-1)};
 
 	point_gold(&array, &gold);
+
+	if(equal(&gold, &dedector)) {
+		printf("zaten ikisi ayni yerde :D\n");
+		return 0;
+	}
+
 	double oldDistance, newDistance=0;
 
 	do {
