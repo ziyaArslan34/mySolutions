@@ -114,5 +114,6 @@ int main() {
 			printf("uzaklasiyo..  mesafe: %.3lf\n", newDistance);
 
 	}while(!equal(&gold, &dedector));
-	printf("tmmdir bulundu...\n");
+
+	printf("tmmdir [%d][%d] konumunda bulundu...\n", gold.x, gold.y);
 }
