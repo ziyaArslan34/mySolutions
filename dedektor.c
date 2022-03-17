@@ -79,6 +79,31 @@ int equal_controls(const point_t *p1, const point_t *p2) {
 	return (p1->x == p2->x) && (p1->y == p2->y);
 }
 
+void print_map(int (*map)[][SIZE], const point_t *dedector) {
+	(*map)[dedector->x][dedector->y] = 2;
+
+	printf("\n   ");
+	for(size_t i=0;i<SIZE*2;i++)
+		printf("\e[90m_");
+	printf("\n");
+
+	for(size_t i=0;i<SIZE;i++) {
+		for(size_t j=0;j<SIZE;j++) {
+			if((*map)[i][j] == 2) {
+				printf("\e[91mx\e[90m|");
+			} else {
+				printf("\e[91m \e[90m|");
+			}
+		}
+		printf("\n");
+	}
+
+	for(size_t i=0;i<SIZE*2;i++)
+		printf("\e[90m_");
+	printf("\n");
+	(*map)[dedector->x][dedector->y] = 0;
+}
+
 int main() {
 	srand((unsigned)time(NULL));
 	int map[SIZE][SIZE] = {0};
@@ -100,7 +125,7 @@ int main() {
 	do {
 		oldDistance = newDistance;
 
-		printf("suanki konum: [%d][%d]\n", dedector.x, dedector.y);
+		//printf("suanki konum: [%d][%d]\n", dedector.x, dedector.y);
 		char road = (char)kbhit();
 		move++;
 		switch(road) {
@@ -124,11 +149,12 @@ int main() {
 
 		newDistance = distance_calc(&object, &dedector);
 
+		system("clear");
 		if(oldDistance > newDistance)
 			printf("yakinlasiyo.. mesafe: %.3lf\n", newDistance);
 		else
 			printf("uzaklasiyo..  mesafe: %.3lf\n", newDistance);
-
+		print_map(&map, &dedector);
 	}while(!equal_controls(&object, &dedector));
 
 	printf("%zu. hamlede [%d][%d] konumunda nesne bulundu...\n", move, object.x, object.y);
