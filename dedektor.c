@@ -82,7 +82,7 @@ int equal_controls(const point_t *p1, const point_t *p2) {
 void print_map(int (*map)[][SIZE], const point_t *dedector) {
 	(*map)[dedector->x][dedector->y] = 2;
 
-	printf("\n   ");
+	printf("\n ");
 	for(size_t i=0;i<SIZE*2;i++)
 		printf("\e[90m_");
 	printf("\n");
