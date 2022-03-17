@@ -123,6 +123,7 @@ int main() {
 	size_t move=0;
 
 	printf("ilerlemek icin a,d,s,w tuslarini kullanin..\n\n");
+	clock_t startTime = clock();
 
 	do {
 		oldDistance = newDistance;
@@ -159,5 +160,5 @@ int main() {
 		print_map(&map, &dedector);
 	}while(!equal_controls(&object, &dedector));
 
-	printf("%zu. hamlede [%d][%d] konumunda nesne bulundu...\n", move, object.x, object.y);
+	printf("%zu hamle ve %.4lf saniyede [%d][%d] konumunda nesne bulundu...\n", move, (double)(clock()-startTime)/CLOCKS_PER_SEC, object.x, object.y);
 }
