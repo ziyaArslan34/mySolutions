@@ -22,7 +22,7 @@ int kbhit() {
 	tcgetattr(STDIN_FILENO, &old_);
 	new_ = old_;
 
-	new_.c_lflag &= (unsigned int)~(ICANON | ECHO);
+	new_.c_lflag &= (unsigned)~(ICANON | ECHO);
 	tcsetattr(STDIN_FILENO, TCSANOW, &new_);
 	ch = getchar();
 	tcsetattr(STDIN_FILENO, TCSANOW, &old_);
@@ -83,11 +83,12 @@ void print_map(int (*map)[][SIZE], const point_t *dedector) {
 	(*map)[dedector->x][dedector->y] = 2;
 
 	printf("\n ");
-	for(size_t i=0;i<SIZE*2;i++)
+	for(size_t i=0;i<SIZE*2+1;i++)
 		printf("\e[90m_");
 	printf("\n");
 
 	for(size_t i=0;i<SIZE;i++) {
+		printf("\e[90m |");
 		for(size_t j=0;j<SIZE;j++) {
 			if((*map)[i][j] == 2) {
 				printf("\e[91mx\e[90m|");
@@ -98,7 +99,8 @@ void print_map(int (*map)[][SIZE], const point_t *dedector) {
 		printf("\n");
 	}
 
-	for(size_t i=0;i<SIZE*2;i++)
+	printf(" ");
+	for(size_t i=0;i<SIZE*2+1;i++)
 		printf("\e[90m_");
 	printf("\n");
 	(*map)[dedector->x][dedector->y] = 0;
@@ -120,7 +122,7 @@ int main() {
 	double oldDistance, newDistance=0;
 	size_t move=0;
 
-	printf("ilerlemek icin a,d,s,w tuslarini kullan\n\n");
+	printf("ilerlemek icin a,d,s,w tuslarini kullanin..\n\n");
 
 	do {
 		oldDistance = newDistance;
@@ -151,9 +153,9 @@ int main() {
 
 		system("clear");
 		if(oldDistance > newDistance)
-			printf("yakinlasiyo.. mesafe: %.3lf\n", newDistance);
+			printf("yakinlasiyorsunuz.. mesafe: %.3lf\n", newDistance);
 		else
-			printf("uzaklasiyo..  mesafe: %.3lf\n", newDistance);
+			printf("uzaklasiyorsunuz..  mesafe: %.3lf\n", newDistance);
 		print_map(&map, &dedector);
 	}while(!equal_controls(&object, &dedector));
 
