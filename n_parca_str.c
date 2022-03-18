@@ -17,7 +17,7 @@ char *substr(const char *str, size_t begin, size_t end, size_t len) {
 	return newS;
 }
 
-void foo(const char *str, size_t n) {
+void parsing(const char *str, size_t n) {
 	if(n == 0 || n == 1) {
 		printf("%s\n", str);
 		return;
@@ -32,7 +32,6 @@ void foo(const char *str, size_t n) {
 		end = i < n-1 ? sLen+start : strlen(str);
 		start += sLen;
 
-		//printf("\n\nsLen{ %zu }, begin { %zu }, end { %zu }, start { %zu }\n\n", sLen, begin, end, start);
 		char *s = NULL;
 
 		if((s = substr(str, begin, end, sLen)) != NULL) {
@@ -46,5 +45,5 @@ void foo(const char *str, size_t n) {
 
 int main() {
 	const char *str = "his anyone learning C++.";
-	foo(str,7);
+	parsing(str,7);
 }
