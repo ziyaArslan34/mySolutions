@@ -5,7 +5,7 @@
 #include <termios.h>
 #include <unistd.h>
 
-#define SIZE 15
+#define SIZE 20
 
 typedef struct {
 	int x,y;
@@ -31,16 +31,10 @@ int kbhit() {
 }
 
 void point_object(int (*map)[][SIZE], point_t *object) {
-	(*map)[my_rand(0, SIZE-1)][my_rand(0,SIZE-1)] = 1;
-	for(size_t i=0;i<SIZE;i++) {
-		for(size_t j=0;j<SIZE;j++) {
-			if((*map)[i][j]) {
-				object->x = (int)i;
-				object->y = (int)j;
-				break;
-			}
-		}
-	}
+	object->x = my_rand(0, SIZE-1);
+	object->y = my_rand(0, SIZE-1);
+
+	(*map)[object->x][object->y] = 1;
 }
 
 double distance_calc(const point_t *p1, const point_t *p2) {
@@ -128,7 +122,6 @@ int main() {
 	do {
 		oldDistance = newDistance;
 
-		//printf("suanki konum: [%d][%d]\n", dedector.x, dedector.y);
 		char road = (char)kbhit();
 		move++;
 		switch(road) {
