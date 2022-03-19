@@ -160,26 +160,6 @@ void division(array_t *result, const char *num1, const char *num2) {
 
 void debug_function(int cnt) { printf("debug: %d\n", cnt); }
 
-void shift(char *arr, int count, int size, const char *direction) {
-    if(!strcmp(direction, "right")) {
-        for(int i=0;i<count;i++) {
-            char tmp = arr[size-1];
-            for(int j=size-1;j>=0;j--)
-                arr[j] = arr[j-1];
-            arr[0] = tmp;
-        }
-    } else if(!strcmp(direction, "left")) {
-        for(int i=0;i<count;i++) {
-            char tmp = arr[0];
-            for(int j=0;j<size-1;j++)
-                arr[j] = arr[j+1];
-            arr[size-1] = tmp;
-        }
-    } else {
-        puts("cannot direction!..\n");
-    }
-}
-
 void multiplication(array_t *result, const char *num1, const char *num2) {
 	data_t data = init_data(num1, num2);
 
@@ -217,13 +197,6 @@ void multiplication(array_t *result, const char *num1, const char *num2) {
 		destroy(&xx);
 	}
 
-	int counter=0;
-	for(size_t i=0;result->data[i] == '0' && i<result->size;i++) {
-			counter++;
-	}
-
-	shift(result->data, counter, result->size, "left");
-
 	for(size_t y=0;y<data.minLen;y++) {
 		free(temp[y].data);
 	}
@@ -235,7 +208,7 @@ array_t init(size_t cap) {
 	res.size = 0;
 	res.cap = cap <= 0 ? 10 : cap;
 	res.data = (char*)malloc(sizeof(char)*res.cap);
-	memset(res.data, '0', res.cap);
+	memset(res.data, 0, res.cap);
 	return res;
 }
 
