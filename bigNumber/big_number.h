@@ -36,8 +36,8 @@ int      data_equal(const array_t*, const array_t*);
 int      data_less(const array_t*, const array_t*);
 int      data_greater(const array_t*, const array_t*);
 
-array_t  operator_plus_plus(array_t *);
-array_t  operator_mines_mines(array_t*);
+void     operator_plus_plus(array_t *);
+void     operator_mines_mines(array_t*);
 
 void     debug_function(int);
 

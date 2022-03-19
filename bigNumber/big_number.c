@@ -66,7 +66,7 @@ void addition(array_t *result, const char *num1, const char *num2) {
 		data.step = (data.sMax[i] - '0') + (data.sMin[j] - '0') + data.carry;
 		if(i == 0) {
 			while(data.step) {
-				push_back(result, (char)(data.step%10)+'0');
+				push_back(result, (char)(data.step%10) + '0');
 				data.step /= 10;
 			}
 		} else {
@@ -95,6 +95,37 @@ void addition(array_t *result, const char *num1, const char *num2) {
 
 	reverse(result->data, result->size);
 	push_back(result, '\0');
+}
+
+void subtraction(array_t *result, const char *num1, const char *num2) {
+	data_t data = init_data(num1, num2);
+	int i,j;
+
+	char *sMax = (char*)malloc(sizeof(char)*data.maxLen+1);
+	char *sMin = (char*)malloc(sizeof(char)*data.minLen+1);
+
+	strcpy(sMax, data.sMax);
+	strcpy(sMin, data.sMin);
+
+	for(i=(int)data.maxLen-1, j=(int)data.minLen-1;j>=0;j--, i--) {
+		if((sMax[i] + '0') < (sMin[j] + '0')) {
+			sMax[i-1]--;
+			data.step = sMax[i] + sMin[j];
+			push_back(result, (char)data.step-'0');
+		} else {
+			data.step = sMax[i] - sMin[j];
+			push_back(result, (char)data.step+'0');
+		}
+	}
+
+	for(;i>=0;i--)
+		push_back(result, sMax[i]);
+
+	reverse(result->data, result->size);
+	push_back(result, '\0');
+
+	free(sMax);
+	free(sMin);
 }
 
 void multiplication(array_t *result, const char *num1, const char *num2) {
@@ -156,6 +187,20 @@ void push_back(array_t *arr, char ch) {
 	}
 
 	arr->data[arr->size++] = ch;
+}
+
+void operator_plus_plus(array_t *arr) {
+	array_t tmp = init(15);
+	addition(&tmp, arr->data, "1");
+	destroy(arr);
+	*arr = tmp;
+}
+
+void operator_mines_mines(array_t *arr) {
+	array_t tmp = init(15);
+	subtraction(&tmp, arr->data, "1");
+	destroy(arr);
+	*arr = tmp;
 }
 
 void destroy(array_t *arr) {

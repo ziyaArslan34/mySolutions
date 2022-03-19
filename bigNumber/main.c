@@ -19,14 +19,10 @@ int main() {
 
         clock_t start = clock();
 
-        multiplication(&result, num1, num2);
-        printf("carpma: %s\n", result.data);
-        destroy(&result);
+        subtraction(&result, num1, num2);
+        printf("cikarma: %s\n", result.data);
 
-        addition(&result, num1, num2);
-        printf("toplama: %s\n", result.data);
 		destroy(&result);
-
         clock_t end = clock();
         printf("\ntoplam gecen sure: %.8lf\n", (double)(end-start)/CLOCKS_PER_SEC);
 }
