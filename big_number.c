@@ -160,6 +160,26 @@ void division(array_t *result, const char *num1, const char *num2) {
 
 void debug_function(int cnt) { printf("debug: %d\n", cnt); }
 
+void shift(char *arr, int count, int size, const char *direction) {
+    if(!strcmp(direction, "right")) {
+        for(int i=0;i<count;i++) {
+            char tmp = arr[size-1];
+            for(int j=size-1;j>=0;j--)
+                arr[j] = arr[j-1];
+            arr[0] = tmp;
+        }
+    } else if(!strcmp(direction, "left")) {
+        for(int i=0;i<count;i++) {
+            char tmp = arr[0];
+            for(int j=0;j<size-1;j++)
+                arr[j] = arr[j+1];
+            arr[size-1] = tmp;
+        }
+    } else {
+        puts("cannot direction!..\n");
+    }
+}
+
 void multiplication(array_t *result, const char *num1, const char *num2) {
 	data_t data = init_data(num1, num2);
 
@@ -190,23 +210,19 @@ void multiplication(array_t *result, const char *num1, const char *num2) {
 		push_back(&temp[idx++], '\0');
 	}
 
-	if(idx > 1) {
-		addition(result, result->data, temp[0].data);
-		char *tmp = (char*)malloc(sizeof(char)*result->size+1);
-		strcpy(tmp, result->data);
-		destroy(result);
-		for(size_t i=1;i<idx;i++) {
-			addition(result, tmp, temp[i].data);
-			free(tmp);
-			tmp = (char*)malloc(sizeof(char)*result->size+1);
-			strcpy(tmp, result->data);
-
-			if(i < idx-1)
-				destroy(result);
-		}
-	} else {
-		addition(result, result->data, temp[0].data);
+	for(size_t i=0;i<idx;i++) {
+		array_t xx = init(18);
+		addition(&xx, result->data, temp[i].data);
+		*result = xx;
+		destroy(&xx);
 	}
+
+	int counter=0;
+	for(size_t i=0;result->data[i] == '0' && i<result->size;i++) {
+			counter++;
+	}
+
+	shift(result->data, counter, result->size, "left");
 
 	for(size_t y=0;y<data.minLen;y++) {
 		free(temp[y].data);
