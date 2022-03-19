@@ -19,8 +19,8 @@ int main() {
 
         clock_t start = clock();
 
-        subtraction(&result, num1, num2);
-        printf("cikarma: %s\n", result.data);
+        division(&result, num1, num2);
+        printf("bolme: %s\n", result.data);
 
 		destroy(&result);
         clock_t end = clock();

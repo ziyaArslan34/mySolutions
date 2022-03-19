@@ -38,8 +38,17 @@ array_t init(size_t lenght) {
 int data_less(const array_t *a1, const array_t *a2) {
 	if(a1->size < a2->size)
 		return 1;
+	if(a1->size > a2->size)
+		return 0;
 
-	return strcmp(a1->data, a2->data) < 0;
+	for(size_t i=0;i<a1->size;i++) {
+		if(a1->data[i] > a2->data[i])
+			return 0;
+		else if(a1->data[i] < a2->data[i])
+			return 1;
+	}
+
+	return 0;
 }
 
 int data_greater(const array_t *a1, const array_t *a2) {
@@ -126,6 +135,27 @@ void subtraction(array_t *result, const char *num1, const char *num2) {
 
 	free(sMax);
 	free(sMin);
+}
+
+void division(array_t *result, const char *num1, const char *num2) {
+	data_t data = init_data(num1, num2);
+
+	array_t cnt = init(15);
+	array_t tmp = init(15);
+
+	addition(result, data.sMax, "0");
+
+	while(data_less(&tmp, result)) {
+		array_t res = init(15);
+
+		operator_plus_plus(&cnt);
+		addition(&res, tmp.data, data.sMin);
+		destroy(&tmp);
+		tmp = res;
+	}
+
+	destroy(result);
+	*result = cnt;
 }
 
 void multiplication(array_t *result, const char *num1, const char *num2) {
@@ -225,5 +255,5 @@ int input_control(const char *s) {
 	for(size_t i=0;i<strlen(s);i++)
 		if(!(s[i] >= 48 && s[i] <= 57))
 			return 0;
-	return 1;
+	return s[0] != 48 && strlen(s) >= 1;
 }
