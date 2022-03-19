@@ -2,40 +2,37 @@
 #include <stdlib.h>
 #include <string.h>
 
-void shift(int *arr, int count, int size, const char *direction) {
+void shift_array(size_t typeSize, void *array, size_t size, int counter, const char *direction) {
 	if(!strcmp(direction, "right")) {
-		for(int i=0;i<count;i++) {
-			int tmp = arr[size-1];
-			for(int j=size-1;j>0;j--)
-				arr[j] = arr[j-1];
-			arr[0] = tmp;
+		for(int i=0;i<counter;i++) {
+			void *tmp = malloc(typeSize);
+			memcpy(tmp, (char*)array+((size-1)*typeSize), typeSize);
+
+			for(int j=(int)size-1;j>0;j--)
+				memcpy((char*)array+(size_t)j*typeSize, (char*)array+((size_t)(j-1)*typeSize), typeSize);
+			memcpy((char*)array+0*typeSize, tmp, typeSize);
+			free(tmp);
 		}
 	} else if(!strcmp(direction, "left")) {
-		for(int i=0;i<count;i++) {
-			int tmp = arr[0];
-			for(int j=0;j<size-1;j++)
-				arr[j] = arr[j+1];
-			arr[size-1] = tmp;
+		for(int i=0;i<counter;i++) {
+			void *tmp = malloc(typeSize);
+			memcpy(tmp, (char*)array+0*typeSize, typeSize);
+
+			for(size_t j=0;j<size-1;j++)
+				memcpy((char*)array+j*typeSize, (char*)array+((j+1)*typeSize), typeSize);
+			memcpy((char*)array+((size-1)*typeSize), tmp, typeSize);
 		}
 	} else {
-		puts("cannot direction!..\n");
+		fprintf(stderr, "not direction.!\n");
 	}
 }
 
-void print(const int *arr, int size) {
-	for(int i=0;i<size;i++)
-		printf("%d  ", arr[i]);
-	printf("\n");
-}
-
 int main() {
-	int arr[]={2,6,3,9,4};
+	int array[] = {1,2,3,4,5,6,7};
 
-	print(arr,5);
-	shift(arr, 1,5,"left");
-	print(arr, 5);
+	shift_array(sizeof(int), array, 7, 2, "left");
 
-	shift(arr, 4, 5, "right");
-	print(arr, 5);
-	return 0;
+	for(size_t i=0;i<7;i++)
+		printf("%d ", array[i]);
+	printf("\n");
 }
