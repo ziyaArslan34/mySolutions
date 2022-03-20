@@ -88,10 +88,10 @@ void print_split(const type_t *type) {
 
 void destroy_split(type_t *type) {
 	for(size_t i=0;i<type->size;i++) {
-		type->array[i] = NULL;
 		free(type->array[i]);
+		type->array[i] = NULL;
 	}
 
-	type->array = NULL;
 	free(type->array);
+	type->array = NULL;
 }
