@@ -4,8 +4,8 @@
 #include <time.h>
 
 int main() {
-	char num1[25]={0}, num2[25]={0};
-	bignum_t result = init(10);
+	char num1[30]={0}, num2[30]={0};
+	bignum_t result = init(30);
 
 	do {
 		printf("1. sayi: ");
@@ -47,5 +47,6 @@ int main() {
 	}
 
 	destroy(&result);
+
 	printf("\ntoplam gecen sure: %.8lf\n", (double)(clock()-start)/CLOCKS_PER_SEC);
 }
