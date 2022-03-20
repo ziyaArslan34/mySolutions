@@ -5,7 +5,7 @@
 
 int main() {
 	char num1[25]={0}, num2[25]={0};
-	array_t result = init(10);
+	bignum_t result = init(10);
 
 	do {
 		printf("1. sayi: ");

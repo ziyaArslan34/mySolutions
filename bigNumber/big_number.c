@@ -20,22 +20,22 @@ data_t init_data(const char*s1, const char *s2) {
 	return data;
 }
 
-array_t init(size_t lenght) {
-	array_t res;
-	res.size = 0;
-	res.cap = lenght <= 0 ? 10 : lenght;
+bignum_t init(size_t lenght) {
+	bignum_t bignum;
+	bignum.size = 0;
+	bignum.cap = lenght <= 0 ? 10 : lenght;
 
-	if((res.data = (char*)malloc(sizeof(char)*res.cap)) == NULL) {
+	if((bignum.data = (char*)malloc(sizeof(char)*bignum.cap)) == NULL) {
 		perror("");
 		exit(1);
 	}
 
-	memset(res.data, 0, res.cap);
+	memset(bignum.data, 0, bignum.cap);
 
-	return res;
+	return bignum;
 }
 
-int data_less(const array_t *a1, const array_t *a2) {
+int data_less(const bignum_t *a1, const bignum_t *a2) {
 	if(a1->size < a2->size)
 		return 1;
 	if(a1->size > a2->size)
@@ -51,11 +51,11 @@ int data_less(const array_t *a1, const array_t *a2) {
 	return 0;
 }
 
-int data_greater(const array_t *a1, const array_t *a2) {
+int data_greater(const bignum_t *a1, const bignum_t *a2) {
 	return !data_less(a1,a2) && !data_equal(a1,a2);
 }
 
-int data_equal(const array_t *a1, const array_t *a2) {
+int data_equal(const bignum_t *a1, const bignum_t *a2) {
 	if(a1->size != a2->size)
 		return 0;
 
@@ -67,7 +67,7 @@ int data_equal(const array_t *a1, const array_t *a2) {
 
 void debug_function(int loc) { printf("\ndebug: %d\n", loc); }
 
-void addition(array_t *result, const char *num1, const char *num2) {
+void addition(bignum_t *result, const char *num1, const char *num2) {
 	data_t data = init_data(num1, num2);
 	int i,j;
 
@@ -106,7 +106,7 @@ void addition(array_t *result, const char *num1, const char *num2) {
 	push_back(result, '\0');
 }
 
-void subtraction(array_t *result, const char *num1, const char *num2) {
+void subtraction(bignum_t *result, const char *num1, const char *num2) {
 	data_t data = init_data(num1, num2);
 	int i,j;
 
@@ -149,16 +149,16 @@ void subtraction(array_t *result, const char *num1, const char *num2) {
 	free(sMin);
 }
 
-void division(array_t *result, const char *num1, const char *num2) {
+void division(bignum_t *result, const char *num1, const char *num2) {
 	data_t data = init_data(num1, num2);
 
-	array_t cnt = init(15);
-	array_t tmp = init(15);
+	bignum_t cnt = init(15);
+	bignum_t tmp = init(15);
 
 	addition(result, data.sMax, "0");
 
 	while(data_less(&tmp, result)) {
-		array_t res = init(15);
+		bignum_t res = init(15);
 
 		operator_plus_plus(&cnt);
 		addition(&res, tmp.data, data.sMin);
@@ -170,12 +170,12 @@ void division(array_t *result, const char *num1, const char *num2) {
 	*result = cnt;
 }
 
-void multiplication(array_t *result, const char *num1, const char *num2) {
+void multiplication(bignum_t *result, const char *num1, const char *num2) {
 	data_t data = init_data(num1, num2);
 
-	array_t *adds = NULL;
+	bignum_t *adds = NULL;
 
-	if((adds = (array_t*)malloc(sizeof(array_t)*data.minLen)) == NULL) {
+	if((adds = (bignum_t*)malloc(sizeof(bignum_t)*data.minLen)) == NULL) {
 		perror("");
 		exit(1);
 	}
@@ -206,7 +206,7 @@ void multiplication(array_t *result, const char *num1, const char *num2) {
 	}
 
 	for(size_t i=0;i<idx;i++) {
-		array_t sum = init(15);
+		bignum_t sum = init(15);
 		addition(&sum, result->data, adds[i].data);
 		destroy(result);
 		*result = sum;
@@ -217,45 +217,40 @@ void multiplication(array_t *result, const char *num1, const char *num2) {
 	free(adds);
 }
 
-void push_back(array_t *arr, char ch) {
-	if(arr->data == NULL) {
-		arr->cap = 18;
-		if((arr->data = (char*)malloc(sizeof(char)*arr->cap)) == NULL) {
+void push_back(bignum_t *bignum, char digit) {
+	if(bignum->data == NULL)
+		*bignum = init(18);
+
+	if(bignum->size >= bignum->cap) {
+		bignum->cap *= 2;
+		if((bignum->data = (char*)realloc(bignum->data, sizeof(char)*bignum->cap)) == NULL) {
 			perror("");
 			exit(1);
 		}
 	}
 
-	if(arr->size >= arr->cap) {
-		arr->cap *= 2;
-		if((arr->data = (char*)realloc(arr->data, sizeof(char)*arr->cap)) == NULL) {
-			perror("");
-			exit(1);
-		}
-	}
-
-	arr->data[arr->size++] = ch;
+	bignum->data[bignum->size++] = digit;
 }
 
-void operator_plus_plus(array_t *arr) {
-	array_t tmp = init(15);
-	addition(&tmp, arr->data, "1");
-	destroy(arr);
-	*arr = tmp;
+void operator_plus_plus(bignum_t *bignum) {
+	bignum_t tmp = init(15);
+	addition(&tmp, bignum->data, "1");
+	destroy(bignum);
+	*bignum = tmp;
 }
 
-void operator_mines_mines(array_t *arr) {
-	array_t tmp = init(15);
-	subtraction(&tmp, arr->data, "1");
-	destroy(arr);
-	*arr = tmp;
+void operator_mines_mines(bignum_t *bignum) {
+	bignum_t tmp = init(15);
+	subtraction(&tmp, bignum->data, "1");
+	destroy(bignum);
+	*bignum = tmp;
 }
 
-void destroy(array_t *arr) {
-	arr->size = 0;
-	arr->cap = 0;
-	arr->data = NULL;
-	free(arr->data);
+void destroy(bignum_t *bignum) {
+	bignum->size = 0;
+	bignum->cap = 0;
+	bignum->data = NULL;
+	free(bignum->data);
 }
 
 void swap(char *i, char *j) {
