@@ -35,6 +35,35 @@ bignum_t init(size_t lenght) {
 	return bignum;
 }
 
+static void prefix_del_zero(size_t typeSize, void *array, size_t size, int counter, const char *direction) {
+	if(!strcmp(direction, "right")) {
+		for(int i=0;i<counter;i++) {
+			void *tmp = malloc(typeSize);
+			memcpy(tmp, (char*)array+((size-1)*typeSize), typeSize);
+			for(int j=(int)size-1;j>0;j--)
+				memcpy((char*)array+(size_t)j*typeSize, (char*)array+((size_t)(j-1)*typeSize), typeSize);
+			memcpy((char*)array+0*typeSize, tmp, typeSize);
+			free(tmp);
+		}
+	} else if(!strcmp(direction, "left")) {
+		for(int i=0;i<counter;i++) {
+			void *tmp = malloc(typeSize);
+			memcpy(tmp, (char*)array+0*typeSize, typeSize);
+			for(size_t j=0;j<size-1;j++)
+				memcpy((char*)array+j*typeSize, (char*)array+((j+1)*typeSize), typeSize);
+			memcpy((char*)array+((size-1)*typeSize), tmp, typeSize);
+		}
+	} else {
+		fprintf(stderr, "not direction.!\n");
+	}
+}
+
+static void suffix_del_bad_char(char *array, size_t size) {
+	int i;
+	for(i=(int)size-1;i >= 0 && !(array[i] >= 48 && array[i] <= 57);i--) {}
+	array[i+1] = '\0';
+}
+
 int data_less(const bignum_t *a1, const bignum_t *a2) {
 	if(a1->size < a2->size)
 		return 1;
@@ -108,7 +137,7 @@ void addition(bignum_t *result, const char *num1, const char *num2) {
 
 void subtraction(bignum_t *result, const char *num1, const char *num2) {
 	data_t data = init_data(num1, num2);
-	int i,j;
+	int i,j, counter=0;
 
 	char *sMax = NULL, *sMin = NULL;
 	if((sMax = (char*)malloc(sizeof(char)*data.maxLen+1)) == NULL || (sMin = (char*)malloc(sizeof(char)*data.minLen+1)) == NULL){
@@ -122,7 +151,7 @@ void subtraction(bignum_t *result, const char *num1, const char *num2) {
 	for(i=(int)data.maxLen-1, j=(int)data.minLen-1;j>=0;j--, i--) {
 		if((sMax[i] + '0') < (sMin[j] + '0')) {
 			if(sMax[i] == 48) {
-				data.step = sMax[i] - sMax[j];
+				data.step = ((sMax[i]-'0') + 10) - (sMin[j]-'0');
 				int m;
 				for(m=i-1;sMax[m] == 48 && m>=0;m--)
 					sMax[m] = 57;
@@ -144,6 +173,11 @@ void subtraction(bignum_t *result, const char *num1, const char *num2) {
 
 	reverse(result->data, result->size);
 	push_back(result, '\0');
+
+	for(size_t i=0;result->data[i] == 48;i++)
+		counter++;
+	prefix_del_zero(sizeof(char), result->data, result->size, counter, "left");
+	suffix_del_bad_char(result->data, result->size);
 
 	free(sMax);
 	free(sMin);
