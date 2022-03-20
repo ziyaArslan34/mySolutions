@@ -150,6 +150,11 @@ void subtraction(bignum_t *result, const char *num1, const char *num2) {
 }
 
 void division(bignum_t *result, const char *num1, const char *num2) {
+	if(!strcmp(num1, "0") || !strcmp(num2, "0")) {
+		fprintf(stderr, "zero by division!!.\n");
+		return;
+	}
+
 	data_t data = init_data(num1, num2);
 
 	bignum_t cnt = init(15);
@@ -268,5 +273,5 @@ int input_control(const char *s) {
 	for(size_t i=0;i<strlen(s);i++)
 		if(!(s[i] >= 48 && s[i] <= 57))
 			return 0;
-	return s[0] != 48 && strlen(s) >= 1;
+	return strlen(s) == 1 ? 1 : s[0] != 48;
 }
