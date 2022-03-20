@@ -35,7 +35,7 @@ bignum_t init(size_t lenght) {
 	return bignum;
 }
 
-static char *parsing_number(const char *str) {
+char *parsing_number(const char *str) {
         size_t len = strlen(str);
         size_t size=0, cap=len+(len/3)+1, cnt=0;
 

@@ -21,6 +21,7 @@ typedef struct {
 bignum_t  init(size_t);
 data_t    init_data(const char*, const char*);
 void      print_bignum(const bignum_t*);
+char*     parsing_number(const char*);
 void      push_back(bignum_t *, char);
 void      destroy(bignum_t*);
 void      swap(char*, char*);
