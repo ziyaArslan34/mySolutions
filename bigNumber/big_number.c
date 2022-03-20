@@ -228,21 +228,32 @@ void division(bignum_t *result, const char *num1, const char *num2) {
 
 	data_t data = init_data(num1, num2);
 
-	bignum_t cnt = init(15);
-	bignum_t tmp = init(15);
+	bignum_t max = init(10), min = init(10), cnt = init(10), tmp = init(10);
 
-	addition(result, data.sMax, "0");
+	for(size_t i=0;i<data.maxLen;i++)
+		push_back(&max, data.sMax[i]);
+	push_back(&max, '\0');
 
-	while(data_less(&tmp, result)) {
-		bignum_t res = init(15);
+	for(size_t i=0;i<data.minLen;i++) {
+		push_back(&min, data.sMin[i]);
+		push_back(&tmp, data.sMin[i]);
+	}
+	push_back(&tmp, '\0');
+	push_back(&min, '\0');
 
+	while(data_less(&min, &max) || data_equal(&max, &min)) {
 		operator_plus_plus(&cnt);
-		addition(&res, tmp.data, data.sMin);
-		destroy(&tmp);
-		tmp = res;
+		bignum_t res = init(30);
+		addition(&res, min.data, tmp.data);
+		destroy(&min);
+		min = res;
 	}
 
 	destroy(result);
+	destroy(&max);
+	destroy(&min);
+	destroy(&tmp);
+
 	*result = cnt;
 }
 
