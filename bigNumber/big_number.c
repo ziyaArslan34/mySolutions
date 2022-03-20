@@ -35,6 +35,17 @@ bignum_t init(size_t lenght) {
 	return bignum;
 }
 
+void print_bignum(const bignum_t *bignum) {
+	for(size_t i=0;i<bignum->size;i++) {
+		if(i && i % 3 == 0) {
+			putchar(',');
+		}
+		printf("%c", bignum->data[i]);
+	}
+
+	printf("\n\n");
+}
+
 static void prefix_del_zero(size_t typeSize, void *array, size_t size, int counter, const char *direction) {
 	if(!strcmp(direction, "right")) {
 		for(int i=0;i<counter;i++) {

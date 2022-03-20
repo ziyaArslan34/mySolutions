@@ -28,19 +28,23 @@ int main() {
 	switch(islem) {
 		case 1:
 			addition(&result, num1, num2);
-			printf("toplama sonucu: %s\n", result.data);
+			printf("toplama sonucu: ");
+			print_bignum(&result);
 			break;
 		case 2:
 			subtraction(&result, num1, num2);
-			printf("cikarma sonucu: %s\n", result.data);
+			printf("cikarma sonucu: ");
+			print_bignum(&result);
 			break;
 		case 3:
 			multiplication(&result, num1, num2);
-			printf("carpma sonucu: %s\n", result.data);
+			printf("carpma sonucu: ");
+			print_bignum(&result);
 			break;
 		case 4:
 			division(&result, num1, num2);
-			printf("bolme sonucu: %s\n", result.data);
+			printf("bolme sonucu: ");
+			print_bignum(&result);
 			break;
 		default:
 			printf("hatali islem!\n");
