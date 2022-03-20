@@ -174,7 +174,7 @@ void addition(bignum_t *result, const char *num1, const char *num2) {
 
 void subtraction(bignum_t *result, const char *num1, const char *num2) {
 	data_t data = init_data(num1, num2);
-	int i,j, counter=0;
+	int i,j;
 
 	char *sMax = NULL, *sMin = NULL;
 	if((sMax = (char*)malloc(sizeof(char)*data.maxLen+1)) == NULL || (sMin = (char*)malloc(sizeof(char)*data.minLen+1)) == NULL){
@@ -211,9 +211,9 @@ void subtraction(bignum_t *result, const char *num1, const char *num2) {
 	reverse(result->data, result->size);
 	push_back(result, '\0');
 
-	for(size_t i=0;result->data[i] == 48;i++)
-		counter++;
-	prefix_del_zero(sizeof(char), result->data, result->size, counter, "left");
+	//for(size_t i=0;result->data[i] == 48;i++)
+	//	counter++;
+	//prefix_del_zero(sizeof(char), result->data, result->size, counter, "left");
 	//suffix_del_bad_char(result->data, result->size);
 
 	free(sMax);
