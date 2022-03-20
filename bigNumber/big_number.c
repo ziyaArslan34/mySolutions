@@ -196,7 +196,7 @@ void subtraction(bignum_t *result, const char *num1, const char *num2) {
 				push_back(result, (char)data.step+'0');
 			} else {
 				sMax[i-1]--;
-				data.step = sMax[i] - sMin[j];
+				data.step = ((sMax[i]-'0')+10) - (sMin[j]-'0');
 				push_back(result, (char)data.step+'0');
 			}
 		} else {
@@ -214,7 +214,7 @@ void subtraction(bignum_t *result, const char *num1, const char *num2) {
 	for(size_t i=0;result->data[i] == 48;i++)
 		counter++;
 	prefix_del_zero(sizeof(char), result->data, result->size, counter, "left");
-	suffix_del_bad_char(result->data, result->size);
+	//suffix_del_bad_char(result->data, result->size);
 
 	free(sMax);
 	free(sMin);
