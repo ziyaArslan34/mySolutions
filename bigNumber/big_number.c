@@ -211,9 +211,10 @@ void subtraction(bignum_t *result, const char *num1, const char *num2) {
 	reverse(result->data, result->size);
 	push_back(result, '\0');
 
-	//for(size_t i=0;result->data[i] == 48;i++)
-	//	counter++;
-	//prefix_del_zero(sizeof(char), result->data, result->size, counter, "left");
+	int counter = 0;
+	for(size_t i=0;result->data[i] == 48;i++)
+		counter++;
+	prefix_del_zero(sizeof(char), result->data, result->size, counter-1, "left");
 	//suffix_del_bad_char(result->data, result->size);
 
 	free(sMax);
