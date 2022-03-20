@@ -35,14 +35,40 @@ bignum_t init(size_t lenght) {
 	return bignum;
 }
 
-void print_bignum(const bignum_t *bignum) {
-	for(size_t i=0;i<bignum->size;i++) {
-		if(i && i % 3 == 0) {
-			putchar(',');
-		}
-		printf("%c", bignum->data[i]);
-	}
+static char *parsing_number(const char *str) {
+        size_t len = strlen(str);
+        size_t size=0, cap=len+(len/3)+1, cnt=0;
 
+        char *pars = NULL;
+        if((pars = (char*)malloc(sizeof(char)*cap)) == NULL) {
+                fprintf(stderr, "memory error!\n");
+                exit(1);
+        }
+
+        for(int i=(int)len-1;i>=0;i--) {
+                if(size >= cap) {
+                        cap *= 2;
+                        if((pars = (char*)realloc(pars, sizeof(char)*cap)) == NULL) {
+                                fprintf(stderr, "memory error!\n");
+                                exit(1);
+                        }
+                }
+
+                if(cnt && cnt % 3 == 0)
+                        pars[size++] = '.';
+                pars[size++] = str[i];
+                cnt++;
+        }
+
+        pars[size++] = '\0';
+        reverse(pars, size-1);
+        return pars;
+}
+
+void print_bignum(const bignum_t *bignum) {
+	char *str = parsing_number(bignum->data);
+	printf("%s\n", str);
+	free(str);
 	printf("\n\n");
 }
 
