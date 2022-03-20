@@ -288,8 +288,8 @@ void operator_mines_mines(bignum_t *bignum) {
 void destroy(bignum_t *bignum) {
 	bignum->size = 0;
 	bignum->cap = 0;
-	bignum->data = NULL;
 	free(bignum->data);
+	bignum->data = NULL;
 }
 
 void swap(char *i, char *j) {
