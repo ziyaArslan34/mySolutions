@@ -110,17 +110,29 @@ void subtraction(array_t *result, const char *num1, const char *num2) {
 	data_t data = init_data(num1, num2);
 	int i,j;
 
-	char *sMax = (char*)malloc(sizeof(char)*data.maxLen+1);
-	char *sMin = (char*)malloc(sizeof(char)*data.minLen+1);
+	char *sMax = NULL, *sMin = NULL;
+	if((sMax = (char*)malloc(sizeof(char)*data.maxLen+1)) == NULL || (sMin = (char*)malloc(sizeof(char)*data.minLen+1)) == NULL){
+		perror("");
+		exit(1);
+	}
 
 	strcpy(sMax, data.sMax);
 	strcpy(sMin, data.sMin);
 
 	for(i=(int)data.maxLen-1, j=(int)data.minLen-1;j>=0;j--, i--) {
 		if((sMax[i] + '0') < (sMin[j] + '0')) {
-			sMax[i-1]--;
-			data.step = sMax[i] + sMin[j];
-			push_back(result, (char)data.step-'0');
+			if(sMax[i] == 48) {
+				data.step = sMax[i] - sMax[j];
+				int m;
+				for(m=i-1;sMax[m] == 48 && m>=0;m--)
+					sMax[m] = 57;
+				sMax[m]--;
+				push_back(result, (char)data.step+'0');
+			} else {
+				sMax[i-1]--;
+				data.step = sMax[i] - sMin[j];
+				push_back(result, (char)data.step+'0');
+			}
 		} else {
 			data.step = sMax[i] - sMin[j];
 			push_back(result, (char)data.step+'0');
@@ -208,12 +220,18 @@ void multiplication(array_t *result, const char *num1, const char *num2) {
 void push_back(array_t *arr, char ch) {
 	if(arr->data == NULL) {
 		arr->cap = 18;
-		arr->data = (char*)malloc(sizeof(char)*arr->cap);
+		if((arr->data = (char*)malloc(sizeof(char)*arr->cap)) == NULL) {
+			perror("");
+			exit(1);
+		}
 	}
 
 	if(arr->size >= arr->cap) {
 		arr->cap *= 2;
-		arr->data = (char*)realloc(arr->data, sizeof(char)*arr->cap);
+		if((arr->data = (char*)realloc(arr->data, sizeof(char)*arr->cap)) == NULL) {
+			perror("");
+			exit(1);
+		}
 	}
 
 	arr->data[arr->size++] = ch;
