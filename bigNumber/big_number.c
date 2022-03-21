@@ -72,7 +72,7 @@ void print_bignum(const bignum_t *bignum) {
 	printf("\n\n");
 }
 
-static void prefix_del_zero(size_t typeSize, void *array, size_t size, int counter, const char *direction) {
+void prefix_del_zero(size_t typeSize, void *array, size_t size, int counter, const char *direction) {
 	if(!strcmp(direction, "right")) {
 		for(int i=0;i<counter;i++) {
 			void *tmp = malloc(typeSize);
@@ -95,7 +95,7 @@ static void prefix_del_zero(size_t typeSize, void *array, size_t size, int count
 	}
 }
 
-static void suffix_del_bad_char(char *array, size_t size) {
+void suffix_del_bad_char(char *array, size_t size) {
 	int i;
 	for(i=(int)size-1;i >= 0 && !(array[i] >= 48 && array[i] <= 57);i--) {}
 	array[i+1] = '\0';
@@ -229,31 +229,21 @@ void division(bignum_t *result, const char *num1, const char *num2) {
 
 	data_t data = init_data(num1, num2);
 
-	bignum_t max = init(10), min = init(10), cnt = init(10), tmp = init(10);
+	bignum_t max = init(10), cnt = init(10), min = init(10);
 
 	for(size_t i=0;i<data.maxLen;i++)
 		push_back(&max, data.sMax[i]);
 	push_back(&max, '\0');
 
-	for(size_t i=0;i<data.minLen;i++) {
-		push_back(&min, data.sMin[i]);
-		push_back(&tmp, data.sMin[i]);
-	}
-	push_back(&tmp, '\0');
-	push_back(&min, '\0');
-
 	while(data_less(&min, &max) || data_equal(&max, &min)) {
-		operator_plus_plus(&cnt);
-		bignum_t res = init(30);
-		addition(&res, min.data, tmp.data);
-		destroy(&min);
-		min = res;
+		operator_plus(&min, data.sMin);
+		operator_plus(&cnt, "1");
 	}
 
+	operator_mines(&cnt, "1");
 	destroy(result);
 	destroy(&max);
 	destroy(&min);
-	destroy(&tmp);
 
 	*result = cnt;
 }
@@ -320,16 +310,16 @@ void push_back(bignum_t *bignum, char digit) {
 	bignum->data[bignum->size++] = digit;
 }
 
-void operator_plus_plus(bignum_t *bignum) {
+void operator_plus(bignum_t *bignum, const char *n) {
 	bignum_t tmp = init(15);
-	addition(&tmp, bignum->data, "1");
+	addition(&tmp, bignum->data, n);
 	destroy(bignum);
 	*bignum = tmp;
 }
 
-void operator_mines_mines(bignum_t *bignum) {
+void operator_mines(bignum_t *bignum, const char *n) {
 	bignum_t tmp = init(15);
-	subtraction(&tmp, bignum->data, "1");
+	subtraction(&tmp, bignum->data, n);
 	destroy(bignum);
 	*bignum = tmp;
 }

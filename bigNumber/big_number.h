@@ -37,8 +37,8 @@ int       data_equal(const bignum_t*, const bignum_t*);
 int       data_less(const bignum_t*, const bignum_t*);
 int       data_greater(const bignum_t*, const bignum_t*);
 
-void      operator_plus_plus(bignum_t *);
-void      operator_mines_mines(bignum_t*);
+void      operator_plus(bignum_t *, const char*);
+void      operator_mines(bignum_t*, const char*);
 
 void      debug_function(int);
 
