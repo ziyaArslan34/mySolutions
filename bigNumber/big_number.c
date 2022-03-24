@@ -35,6 +35,10 @@ bignum_t init(size_t length) {
 	return bignum;
 }
 
+void sort_array(bignum_t *array,size_t size, comp fptr) {
+	qsort(array, size, sizeof(bignum_t), fptr);
+}
+
 char *parsing_number(const char *str) {
         size_t len = strlen(str);
         size_t size=0, cap=len+(len/3)+1, cnt=0;

@@ -6,17 +6,21 @@
 #define MAX_LEN(x,y) ((x) > (y) ? (x) : (y))
 #define MIN_LEN(x,y) ((x) < (y) ? (x) : (y))
 
-typedef struct {
+struct Bignum {
         char *data;
         size_t size, cap;
-}bignum_t;
+};
 
-typedef struct {
+struct Data {
         int carry, step;
         size_t len1, len2;
         size_t maxLen, minLen;
         const char *sMax, *sMin;
-}data_t;
+};
+
+typedef struct Bignum bignum_t;
+typedef struct Data   data_t;
+typedef int (*comp)(const void*, const void*);
 
 bignum_t   init(size_t);
 data_t     init_data(const char*, const char*);
@@ -26,6 +30,7 @@ void       push_back(bignum_t *, char);
 void       destroy(bignum_t*);
 void       swap(char*, char*);
 void       reverse(char*, size_t);
+void       sort_array(bignum_t*, size_t size, comp);
 
 bignum_t*  addition(bignum_t*, const char*, const char*);
 bignum_t*  multiplication(bignum_t*, const char*, const char*);
