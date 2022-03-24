@@ -5,11 +5,11 @@
 
 #include "big_number.h"
 
-data_t init_data(const char*s1, const char *s2) {
+data_t init_data(const char *s1, const char *s2) {
 	data_t data;
 
 	data.carry = 0;
-	data.step=0;
+	data.step = 0;
 	data.len1 = strlen(s1);
 	data.len2 = strlen(s2);
 	data.maxLen = MAX_LEN(data.len1, data.len2);
@@ -23,7 +23,7 @@ data_t init_data(const char*s1, const char *s2) {
 bignum_t init(size_t length) {
 	bignum_t bignum;
 	bignum.size = 0;
-	bignum.cap = length <= 0 ? 10 : length;
+	bignum.cap = length <= 0 ? DEFAULT_SIZE : length;
 
 	if((bignum.data = (char*)malloc(sizeof(char)*bignum.cap)) == NULL) {
 		perror("");
@@ -264,7 +264,7 @@ bignum_t* multiplication(bignum_t *result, const char *num1, const char *num2) {
 	}
 
 	for(size_t i=0;i<data.minLen;i++)
-		adds[i] = init(15);
+		adds[i] = init(DEFAULT_SIZE);
 	size_t idx=0;
 
 	for(int i=(int)data.minLen-1;i>=0;i--) {
@@ -289,14 +289,11 @@ bignum_t* multiplication(bignum_t *result, const char *num1, const char *num2) {
 	}
 
 	for(size_t i=0;i<idx;i++) {
-		bignum_t sum = init(15);
-		addition(&sum, result->data, adds[i].data);
-		destroy(result);
-		*result = sum;
+		operator_plus(result, adds[i].data);
 	}
 
 	for(size_t i=0;i<data.minLen;i++)
-		destroy(&adds[i]);
+		destroy(adds+i);
 	free(adds);
 
 	return result;
@@ -304,7 +301,7 @@ bignum_t* multiplication(bignum_t *result, const char *num1, const char *num2) {
 
 void push_back(bignum_t *bignum, char digit) {
 	if(bignum->data == NULL)
-		*bignum = init(18);
+		*bignum = init(DEFAULT_SIZE);
 
 	if(bignum->size >= bignum->cap) {
 		bignum->cap *= 2;
@@ -318,7 +315,7 @@ void push_back(bignum_t *bignum, char digit) {
 }
 
 bignum_t *operator_plus(bignum_t *bignum, const char *n) {
-	bignum_t tmp = init(15);
+	bignum_t tmp = init(DEFAULT_SIZE);
 	addition(&tmp, bignum->data, n);
 	destroy(bignum);
 	*bignum = tmp;
@@ -327,7 +324,7 @@ bignum_t *operator_plus(bignum_t *bignum, const char *n) {
 }
 
 bignum_t *operator_mines(bignum_t *bignum, const char *n) {
-	bignum_t tmp = init(15);
+	bignum_t tmp = init(DEFAULT_SIZE);
 	subtraction(&tmp, bignum->data, n);
 	destroy(bignum);
 	*bignum = tmp;

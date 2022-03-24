@@ -6,6 +6,8 @@
 #define MAX_LEN(x,y) ((x) > (y) ? (x) : (y))
 #define MIN_LEN(x,y) ((x) < (y) ? (x) : (y))
 
+#define DEFAULT_SIZE 20
+
 struct Bignum {
         char *data;
         size_t size, cap;

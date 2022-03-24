@@ -4,8 +4,8 @@
 #include <time.h>
 
 int main() {
-	char num1[30]={0}, num2[30]={0};
-	bignum_t result = init(30);
+	char num1[50]={0}, num2[50]={0};
+	bignum_t result = init(50);
 
 	do {
 		printf("1. sayi: ");
