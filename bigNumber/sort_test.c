@@ -4,31 +4,25 @@
 #include <time.h>
 
 #include "big_number.h"
-
-int my_rand(int min, int max) {
-	return (int)rand()%(max-min+1)+min;
-}
+#define SIZE 5
 
 int main() {
 	srand((unsigned)time(NULL));
 
-	bignum_t array[10];
+	bignum_t array[SIZE];
 
-	for(size_t i=0;i<10;i++) {
-		array[i] = init(10);
-		char n[10]={0};
-		sprintf(n, "%d", my_rand(10000,1000000));
-		operator_plus(array+i, n);
-		print_bignum(array+i);
+	for(size_t i=0;i<SIZE;i++) {
+		array[i] = random_big_number();
+		printf("%s\n", array[i].data);
 	}
 
-	qsort(array, 10, sizeof(bignum_t), data_less);
+	qsort(array, SIZE, sizeof(bignum_t), data_less);
 
 	printf("\n\n");
 
-	for(size_t i=0;i<10;i++)
+	for(size_t i=0;i<SIZE;i++)
 		print_bignum(array+i);
 
-	for(size_t i=0;i<10;i++)
+	for(size_t i=0;i<SIZE;i++)
 		destroy(array+i);
 }

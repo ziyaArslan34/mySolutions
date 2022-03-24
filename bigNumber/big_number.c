@@ -39,6 +39,22 @@ void sort_array(bignum_t *array,size_t size, comp fptr) {
 	qsort(array, size, sizeof(bignum_t), fptr);
 }
 
+int my_rand(int min, int max) {
+	return (int)rand()%(max-min+1)+min;
+}
+
+bignum_t random_big_number(void) {
+	bignum_t number = init(DEFAULT_SIZE);
+	int step = my_rand(10,40);
+	push_back(&number, (char)my_rand('1', '9'));
+
+	for(int i=1;i<step;i++)
+		push_back(&number, (char)my_rand('0', '9'));
+
+	push_back(&number, '\0');
+	return number;
+}
+
 char *parsing_number(const char *str) {
         size_t len = strlen(str);
         size_t size=0, cap=len+(len/3)+1, cnt=0;
@@ -110,8 +126,8 @@ int data_less(const void *a1, const void *a2) {
 	const bignum_t *y = (const bignum_t*)a2;
 
 	if(x->size == y->size)
-		return strcmp(x->data, y->data);
-	return x->size < y->size;
+		return strcmp(x->data, y->data) > 0;
+	return x->size > y->size;
 }
 
 int data_greater(const void *a1, const void *a2) {
