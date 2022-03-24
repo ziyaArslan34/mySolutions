@@ -33,9 +33,9 @@ void      subtraction(bignum_t*, const char*, const char*);
 void      division(bignum_t*, const char*, const char*);
 
 int       input_control(const char*);
-int       data_equal(const bignum_t*, const bignum_t*);
-int       data_less(const bignum_t*, const bignum_t*);
-int       data_greater(const bignum_t*, const bignum_t*);
+int       data_equal(const void*, const void*);
+int       data_less(const void*, const void*);
+int       data_greater(const void*, const void*);
 
 void      operator_plus(bignum_t *, const char*);
 void      operator_mines(bignum_t*, const char*);

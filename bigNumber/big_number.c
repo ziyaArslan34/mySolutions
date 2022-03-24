@@ -101,32 +101,37 @@ void suffix_del_bad_char(char *array, size_t size) {
 	array[i+1] = '\0';
 }
 
-int data_less(const bignum_t *a1, const bignum_t *a2) {
-	if(a1->size < a2->size)
+int data_less(const void *a1, const void *a2) {
+	const bignum_t *x = (const bignum_t*)a1;
+	const bignum_t *y = (const bignum_t*)a2;
+
+	if(x->size < y->size)
 		return 1;
-	if(a1->size > a2->size)
+	if(x->size > y->size)
 		return 0;
 
-	for(size_t i=0;i<a1->size;i++) {
-		if(a1->data[i] > a2->data[i])
+	for(size_t i=0;i<x->size;i++) {
+		if(x->data[i] > y->data[i])
 			return 0;
-		else if(a1->data[i] < a2->data[i])
+		else if(x->data[i] < y->data[i])
 			return 1;
 	}
 
 	return 0;
 }
 
-int data_greater(const bignum_t *a1, const bignum_t *a2) {
+int data_greater(const void *a1, const void *a2) {
 	return !data_less(a1,a2) && !data_equal(a1,a2);
 }
 
-int data_equal(const bignum_t *a1, const bignum_t *a2) {
-	if(a1->size != a2->size)
+int data_equal(const void *a1, const void *a2) {
+	const bignum_t *x = (const bignum_t*)a1;
+	const bignum_t *y = (const bignum_t*)a2;
+	if(x->size != y->size)
 		return 0;
 
-	for(size_t i=0;i<a1->size;i++)
-		if(a1->data[i] != a2->data[i])
+	for(size_t i=0;i<x->size;i++)
+		if(x->data[i] != y->data[i])
 			return 0;
 	return 1;
 }
