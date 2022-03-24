@@ -97,7 +97,7 @@ void prefix_del_zero(size_t typeSize, void *array, size_t size, int counter, con
 
 void suffix_del_bad_char(char *array, size_t size) {
 	int i;
-	for(i=(int)size-1;i >= 0 && !(array[i] >= 48 && array[i] <= 57);i--) {}
+	for(i=(int)size-1;i >= 0 && !(array[i] >= '0' && array[i] <= '9');i--) {}
 	array[i+1] = '\0';
 }
 
@@ -113,7 +113,7 @@ int data_less(const void *a1, const void *a2) {
 	for(size_t i=0;i<x->size;i++) {
 		if(x->data[i] > y->data[i])
 			return 0;
-		else if(x->data[i] < y->data[i])
+		if(x->data[i] < y->data[i])
 			return 1;
 	}
 
@@ -138,7 +138,7 @@ int data_equal(const void *a1, const void *a2) {
 
 void debug_function(int loc) { printf("\ndebug: %d\n", loc); }
 
-void addition(bignum_t *result, const char *num1, const char *num2) {
+bignum_t* addition(bignum_t *result, const char *num1, const char *num2) {
 	data_t data = init_data(num1, num2);
 	int i,j;
 
@@ -175,9 +175,11 @@ void addition(bignum_t *result, const char *num1, const char *num2) {
 
 	reverse(result->data, result->size);
 	push_back(result, '\0');
+
+	return result;
 }
 
-void subtraction(bignum_t *result, const char *num1, const char *num2) {
+bignum_t* subtraction(bignum_t *result, const char *num1, const char *num2) {
 	data_t data = init_data(num1, num2);
 	int i,j;
 
@@ -192,11 +194,11 @@ void subtraction(bignum_t *result, const char *num1, const char *num2) {
 
 	for(i=(int)data.maxLen-1, j=(int)data.minLen-1;j>=0;j--, i--) {
 		if((sMax[i] + '0') < (sMin[j] + '0')) {
-			if(sMax[i] == 48) {
+			if(sMax[i] == '0') {
 				data.step = ((sMax[i]-'0') + 10) - (sMin[j]-'0');
 				int m;
-				for(m=i-1;sMax[m] == 48 && m>=0;m--)
-					sMax[m] = 57;
+				for(m=i-1;sMax[m] == '0' && m>=0;m--)
+					sMax[m] = '9';
 				sMax[m]--;
 				push_back(result, (char)data.step+'0');
 			} else {
@@ -217,19 +219,21 @@ void subtraction(bignum_t *result, const char *num1, const char *num2) {
 	push_back(result, '\0');
 
 	int counter = 0;
-	for(size_t i=0;result->data[i] == 48;i++)
+	for(size_t i=0;result->data[i] == '0';i++)
 		counter++;
 	prefix_del_zero(sizeof(char), result->data, result->size, counter-1, "left");
 	//suffix_del_bad_char(result->data, result->size);
 
 	free(sMax);
 	free(sMin);
+
+	return result;
 }
 
-void division(bignum_t *result, const char *num1, const char *num2) {
+bignum_t* division(bignum_t *result, const char *num1, const char *num2) {
 	if(!strcmp(num1, "0") || !strcmp(num2, "0")) {
 		fprintf(stderr, "zero by division!!.\n");
-		return;
+		return NULL;
 	}
 
 	data_t data = init_data(num1, num2);
@@ -251,9 +255,11 @@ void division(bignum_t *result, const char *num1, const char *num2) {
 	destroy(&min);
 
 	*result = cnt;
+
+	return result;
 }
 
-void multiplication(bignum_t *result, const char *num1, const char *num2) {
+bignum_t* multiplication(bignum_t *result, const char *num1, const char *num2) {
 	data_t data = init_data(num1, num2);
 
 	bignum_t *adds = NULL;
@@ -298,6 +304,8 @@ void multiplication(bignum_t *result, const char *num1, const char *num2) {
 	for(size_t i=0;i<data.minLen;i++)
 		destroy(&adds[i]);
 	free(adds);
+
+	return result;
 }
 
 void push_back(bignum_t *bignum, char digit) {
@@ -343,13 +351,15 @@ void swap(char *i, char *j) {
 }
 
 void reverse(char *array, size_t len) {
-	for(int i=0, j=(int)len-1;i<(int)len/2;i++, j--)
-		swap(&array[i], &array[j]);
+	char *pend = array+len;
+
+	while(array < pend)
+		swap(array++, --pend);
 }
 
 int input_control(const char *s) {
 	for(size_t i=0;i<strlen(s);i++)
-		if(!(s[i] >= 48 && s[i] <= 57))
+		if(!(s[i] >= '0' && s[i] <= '9'))
 			return 0;
-	return strlen(s) == 1 ? 1 : s[0] != 48;
+	return strlen(s) == 1 ? 1 : s[0] != '0';
 }
