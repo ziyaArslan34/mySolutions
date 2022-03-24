@@ -109,19 +109,9 @@ int data_less(const void *a1, const void *a2) {
 	const bignum_t *x = (const bignum_t*)a1;
 	const bignum_t *y = (const bignum_t*)a2;
 
-	if(x->size < y->size)
-		return 1;
-	if(x->size > y->size)
-		return 0;
-
-	for(size_t i=0;i<x->size;i++) {
-		if(x->data[i] > y->data[i])
-			return 0;
-		if(x->data[i] < y->data[i])
-			return 1;
-	}
-
-	return 0;
+	if(x->size == y->size)
+		return strcmp(x->data, y->data);
+	return x->size < y->size;
 }
 
 int data_greater(const void *a1, const void *a2) {
