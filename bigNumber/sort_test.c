@@ -19,7 +19,7 @@ int main() {
 		char n[10]={0};
 		sprintf(n, "%d", my_rand(10000,1000000));
 		operator_plus(array+i, n);
-		printf("%s\n", array[i].data);
+		print_bignum(array+i);
 	}
 
 	qsort(array, 10, sizeof(bignum_t), data_less);
@@ -27,5 +27,8 @@ int main() {
 	printf("\n\n");
 
 	for(size_t i=0;i<10;i++)
-		printf("%s\n", array[i].data);
+		print_bignum(array+i);
+
+	for(size_t i=0;i<10;i++)
+		destroy(array+i);
 }
