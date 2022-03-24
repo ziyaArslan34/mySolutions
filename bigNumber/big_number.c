@@ -20,10 +20,10 @@ data_t init_data(const char*s1, const char *s2) {
 	return data;
 }
 
-bignum_t init(size_t lenght) {
+bignum_t init(size_t length) {
 	bignum_t bignum;
 	bignum.size = 0;
-	bignum.cap = lenght <= 0 ? 10 : lenght;
+	bignum.cap = length <= 0 ? 10 : length;
 
 	if((bignum.data = (char*)malloc(sizeof(char)*bignum.cap)) == NULL) {
 		perror("");
@@ -323,18 +323,22 @@ void push_back(bignum_t *bignum, char digit) {
 	bignum->data[bignum->size++] = digit;
 }
 
-void operator_plus(bignum_t *bignum, const char *n) {
+bignum_t *operator_plus(bignum_t *bignum, const char *n) {
 	bignum_t tmp = init(15);
 	addition(&tmp, bignum->data, n);
 	destroy(bignum);
 	*bignum = tmp;
+
+	return bignum;
 }
 
-void operator_mines(bignum_t *bignum, const char *n) {
+bignum_t *operator_mines(bignum_t *bignum, const char *n) {
 	bignum_t tmp = init(15);
 	subtraction(&tmp, bignum->data, n);
 	destroy(bignum);
 	*bignum = tmp;
+
+	return bignum;
 }
 
 void destroy(bignum_t *bignum) {
