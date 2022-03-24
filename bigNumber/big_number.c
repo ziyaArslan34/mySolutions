@@ -36,7 +36,15 @@ bignum_t init(size_t length) {
 }
 
 void sort_array(bignum_t *array,size_t size, comp fptr) {
-	qsort(array, size, sizeof(bignum_t), fptr);
+	for(size_t i=0;i<size;i++) {
+		for(size_t j=0;j<size;j++) {
+			if(fptr(array+i, array+j)) {
+				bignum_t tmp = array[i];
+				array[i] = array[j];
+				array[j] = tmp;
+			}
+		}
+	}
 }
 
 int my_rand(int min, int max) {
@@ -56,33 +64,33 @@ bignum_t random_big_number(void) {
 }
 
 char *parsing_number(const char *str) {
-        size_t len = strlen(str);
-        size_t size=0, cap=len+(len/3)+1, cnt=0;
+	size_t len = strlen(str);
+	size_t size=0, cap=len+(len/3)+1, cnt=0;
 
-        char *pars = NULL;
-        if((pars = (char*)malloc(sizeof(char)*cap)) == NULL) {
-                fprintf(stderr, "memory error!\n");
-                exit(1);
-        }
+	char *pars = NULL;
+	if((pars = (char*)malloc(sizeof(char)*cap)) == NULL) {
+		fprintf(stderr, "memory error!\n");
+		exit(1);
+	}
 
-        for(int i=(int)len-1;i>=0;i--) {
-                if(size >= cap) {
-                        cap *= 2;
-                        if((pars = (char*)realloc(pars, sizeof(char)*cap)) == NULL) {
-                                fprintf(stderr, "memory error!\n");
-                                exit(1);
-                        }
-                }
+	for(int i=(int)len-1;i>=0;i--) {
+		if(size >= cap) {
+			cap *= 2;
+			if((pars = (char*)realloc(pars, sizeof(char)*cap)) == NULL) {
+				fprintf(stderr, "memory error!\n");
+				exit(1);
+			}
+		}
 
-                if(cnt && cnt % 3 == 0)
-                        pars[size++] = '.';
-                pars[size++] = str[i];
-                cnt++;
-        }
+		if(cnt && cnt % 3 == 0)
+			pars[size++] = '.';
+		pars[size++] = str[i];
+		cnt++;
+	}
 
-        pars[size++] = '\0';
-        reverse(pars, size-1);
-        return pars;
+	pars[size++] = '\0';
+	reverse(pars, size-1);
+	return pars;
 }
 
 void print_bignum(const bignum_t *bignum) {
@@ -125,9 +133,12 @@ int data_less(const void *a1, const void *a2) {
 	const bignum_t *x = (const bignum_t*)a1;
 	const bignum_t *y = (const bignum_t*)a2;
 
-	if(x->size == y->size)
-		return strcmp(x->data, y->data) > 0;
-	return x->size > y->size;
+	size_t l1 = x->size, l2 = y->size;
+
+	if(l1 == l2)
+		return strcmp(x->data, y->data) < 0;
+
+	return l1 < l2;
 }
 
 int data_greater(const void *a1, const void *a2) {

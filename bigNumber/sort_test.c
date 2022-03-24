@@ -4,7 +4,8 @@
 #include <time.h>
 
 #include "big_number.h"
-#define SIZE 5
+
+#define SIZE 10
 
 int main() {
 	srand((unsigned)time(NULL));
@@ -13,12 +14,12 @@ int main() {
 
 	for(size_t i=0;i<SIZE;i++) {
 		array[i] = random_big_number();
-		printf("%s\n", array[i].data);
+		print_bignum(array+i);
 	}
 
-	qsort(array, SIZE, sizeof(bignum_t), data_less);
+	sort_array(array, SIZE, data_greater);
 
-	printf("\n\n");
+	printf("\n\nafter sort\n\n");
 
 	for(size_t i=0;i<SIZE;i++)
 		print_bignum(array+i);
