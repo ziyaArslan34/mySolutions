@@ -9,20 +9,20 @@
 #define DEFAULT_SIZE 20
 
 struct Bignum {
-        char *data;
-        size_t size, cap;
+	char *data;
+	size_t size, cap;
 };
 
 struct Data {
-        int carry, step;
-        size_t len1, len2;
-        size_t maxLen, minLen;
-        const char *sMax, *sMin;
+	int carry, step;
+	size_t len1, len2;
+	size_t maxLen, minLen;
+	const char *sMax, *sMin;
 };
 
 typedef struct Bignum bignum_t;
 typedef struct Data   data_t;
-typedef int (*comp)(const void*, const void*);
+typedef int    (*Comp)(const void*, const void*);
 
 bignum_t   init(size_t);
 data_t     init_data(const char*, const char*);
@@ -32,7 +32,7 @@ void       push_back(bignum_t *, char);
 void       destroy(bignum_t*);
 void       swap(char*, char*);
 void       reverse(char*, size_t);
-void       sort_array(bignum_t*, size_t size, comp);
+void       sort_array(bignum_t*, size_t size, Comp);
 bignum_t   random_big_number(void);
 int        my_rand(int, int);
 

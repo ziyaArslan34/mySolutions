@@ -35,7 +35,7 @@ bignum_t init(size_t length) {
 	return bignum;
 }
 
-void sort_array(bignum_t *array,size_t size, comp fptr) {
+void sort_array(bignum_t *array,size_t size, Comp fptr) {
 	for(size_t i=0;i<size;i++) {
 		for(size_t j=0;j<size;j++) {
 			if(fptr(array+i, array+j)) {
@@ -56,7 +56,7 @@ bignum_t random_big_number(void) {
 	int step = my_rand(10,40);
 	push_back(&number, (char)my_rand('1', '9'));
 
-	for(int i=1;i<step;i++)
+	while(step--)
 		push_back(&number, (char)my_rand('0', '9'));
 
 	push_back(&number, '\0');
@@ -133,12 +133,26 @@ int data_less(const void *a1, const void *a2) {
 	const bignum_t *x = (const bignum_t*)a1;
 	const bignum_t *y = (const bignum_t*)a2;
 
-	size_t l1 = x->size, l2 = y->size;
-
-	if(l1 == l2)
+	if(x->size == y->size)
 		return strcmp(x->data, y->data) < 0;
 
-	return l1 < l2;
+/* for qsort
+	size_t cmp = strcmp(x->data, y->data);
+
+	if(x->size == y->size) {
+		if(cmp < 0)
+			return -1;
+		else if(cmp > 0)
+			return 1;
+		else
+			return 0;
+	}
+	if(x->size < y->size)
+		return -1;
+	else if(x->size > y->size)
+		return 1;
+*/
+	return x->size < y->size;
 }
 
 int data_greater(const void *a1, const void *a2) {
@@ -374,7 +388,6 @@ void swap(char *i, char *j) {
 
 void reverse(char *array, size_t len) {
 	char *pend = array+len;
-
 	while(array < pend)
 		swap(array++, --pend);
 }
