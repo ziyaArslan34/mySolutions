@@ -142,10 +142,7 @@ int data_less(const void *a1, const void *a2) {
 int data_greater(const void *a1, const void *a2) {
 	int cmp = data_less(a1,a2);
 
-	if(cmp == 0)
-		return 0;
-	return cmp == 1 ? -1 : 1;
-
+	return cmp == 0 ? 0 : (cmp == 1 ? -1 : 1);
 }
 
 int data_equal(const void *a1, const void *a2) {
