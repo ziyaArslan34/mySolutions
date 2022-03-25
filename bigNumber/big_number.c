@@ -134,29 +134,18 @@ int data_less(const void *a1, const void *a2) {
 	const bignum_t *y = (const bignum_t*)a2;
 
 	if(x->size == y->size)
-		return strcmp(x->data, y->data) < 0;
+		return (int)strcmp(x->data, y->data);
 
-/* for qsort
-	size_t cmp = strcmp(x->data, y->data);
-
-	if(x->size == y->size) {
-		if(cmp < 0)
-			return -1;
-		else if(cmp > 0)
-			return 1;
-		else
-			return 0;
-	}
-	if(x->size < y->size)
-		return -1;
-	else if(x->size > y->size)
-		return 1;
-*/
-	return x->size < y->size;
+	return x->size < y->size ? -1 : 1;
 }
 
 int data_greater(const void *a1, const void *a2) {
-	return !data_less(a1,a2) && !data_equal(a1,a2);
+	int cmp = data_less(a1,a2);
+
+	if(cmp == 0)
+		return 0;
+	return cmp == 1 ? -1 : 1;
+
 }
 
 int data_equal(const void *a1, const void *a2) {

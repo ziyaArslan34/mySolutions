@@ -17,8 +17,8 @@ int main() {
 		print_bignum(array+i);
 	}
 
-	sort_array(array, SIZE, data_greater);
-	//qsort(array, SIZE, sizeof(bignum_t), data_less);
+	//sort_array(array, SIZE, data_greater);
+	qsort(array, SIZE, sizeof(bignum_t), data_greater);
 
 	printf("\n\nafter sort\n\n");
 
