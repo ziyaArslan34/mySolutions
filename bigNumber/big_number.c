@@ -30,7 +30,23 @@ bignum_t init(size_t length) {
 		exit(1);
 	}
 
-	memset(bignum.data, 0, bignum.cap);
+	memset(bignum.data, 0, length);
+
+	return bignum;
+}
+
+bignum_t init_initValue(const char *initValue) {
+	bignum_t bignum;
+	size_t len = strlen(initValue);
+	bignum.size = len;
+	bignum.cap = len+1;
+
+	if((bignum.data = (char*)malloc(sizeof(char)*bignum.cap)) == NULL) {
+		perror("");
+		exit(1);
+	}
+
+	strcpy(bignum.data, initValue);
 
 	return bignum;
 }
@@ -134,15 +150,13 @@ int data_less(const void *a1, const void *a2) {
 	const bignum_t *y = (const bignum_t*)a2;
 
 	if(x->size == y->size)
-		return (int)strcmp(x->data, y->data);
+		return strcmp(x->data, y->data);
 
 	return x->size < y->size ? -1 : 1;
 }
 
 int data_greater(const void *a1, const void *a2) {
-	int cmp = data_less(a1,a2);
-
-	return cmp == 0 ? 0 : (cmp == 1 ? -1 : 1);
+	return data_less(a1,a2) * -1;
 }
 
 int data_equal(const void *a1, const void *a2) {
@@ -259,7 +273,7 @@ bignum_t* division(bignum_t *result, const char *num1, const char *num2) {
 
 	data_t data = init_data(num1, num2);
 
-	bignum_t max = init(10), cnt = init(10), min = init(10);
+	bignum_t max = init(10), cnt = init_initValue("0"), min = init(10);
 
 	for(size_t i=0;i<data.maxLen;i++)
 		push_back(&max, data.sMax[i]);

@@ -25,6 +25,7 @@ typedef struct Data   data_t;
 typedef int    (*Comp)(const void*, const void*);
 
 bignum_t   init(size_t);
+bignum_t   init_initValue(const char *);
 data_t     init_data(const char*, const char*);
 void       print_bignum(const bignum_t*);
 char*      parsing_number(const char*);
