@@ -3,6 +3,13 @@
 #include <stdlib.h>
 #include <time.h>
 
+void clear_input_buffer(void)
+{
+   int c;
+   while( (c=getchar()) != '\n' && c != EOF )
+     ;
+}
+
 int main() {
 	char num1[50]={0}, num2[50]={0};
 	bignum_t result = init(50);
@@ -24,6 +31,7 @@ int main() {
 	scanf("%d", &islem);
 
 	clock_t start = clock();
+	clear_input_buffer();
 
 	switch(islem) {
 		case 1:

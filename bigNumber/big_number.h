@@ -34,7 +34,7 @@ void       destroy(bignum_t*);
 void       swap(char*, char*);
 void       reverse(char*, size_t);
 void       sort_array(bignum_t*, size_t size, Comp);
-bignum_t   random_big_number(void);
+bignum_t   random_big_number(int, int);
 int        my_rand(int, int);
 
 bignum_t*  addition(bignum_t*, const char*, const char*);

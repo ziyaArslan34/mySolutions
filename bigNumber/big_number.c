@@ -38,15 +38,16 @@ bignum_t init(size_t length) {
 bignum_t init_initValue(const char *initValue) {
 	bignum_t bignum;
 	size_t len = strlen(initValue);
-	bignum.size = len;
-	bignum.cap = len+1;
+	bignum.size = 0;
+	bignum.cap = DEFAULT_SIZE;
 
 	if((bignum.data = (char*)malloc(sizeof(char)*bignum.cap)) == NULL) {
 		perror("");
 		exit(1);
 	}
 
-	strcpy(bignum.data, initValue);
+	for(size_t i=0;i<len;i++)
+		push_back(&bignum, initValue[i]);
 
 	return bignum;
 }
@@ -67,9 +68,9 @@ int my_rand(int min, int max) {
 	return (int)rand()%(max-min+1)+min;
 }
 
-bignum_t random_big_number(void) {
+bignum_t random_big_number(int min, int max) {
 	bignum_t number = init(DEFAULT_SIZE);
-	int step = my_rand(10,40);
+	int step = my_rand(min, max);
 	push_back(&number, (char)my_rand('1', '9'));
 
 	while(step--)
@@ -149,14 +150,17 @@ int data_less(const void *a1, const void *a2) {
 	const bignum_t *x = (const bignum_t*)a1;
 	const bignum_t *y = (const bignum_t*)a2;
 
-	if(x->size == y->size)
-		return strcmp(x->data, y->data);
+	size_t l1 = strlen(x->data);
+	size_t l2 = strlen(y->data);
 
-	return x->size < y->size ? -1 : 1;
+	if(l1 == l2)
+		return strcmp(x->data, y->data) < 0;
+
+	return l1 < l2;
 }
 
 int data_greater(const void *a1, const void *a2) {
-	return data_less(a1,a2) * -1;
+	return !data_less(a1,a2);
 }
 
 int data_equal(const void *a1, const void *a2) {
@@ -257,7 +261,6 @@ bignum_t* subtraction(bignum_t *result, const char *num1, const char *num2) {
 	for(size_t i=0;result->data[i] == '0';i++)
 		counter++;
 	prefix_del_zero(sizeof(char), result->data, result->size, counter-1, "left");
-	//suffix_del_bad_char(result->data, result->size);
 
 	free(sMax);
 	free(sMin);
@@ -273,23 +276,25 @@ bignum_t* division(bignum_t *result, const char *num1, const char *num2) {
 
 	data_t data = init_data(num1, num2);
 
-	bignum_t max = init(10), cnt = init_initValue("0"), min = init(10);
+	bignum_t min = init(DEFAULT_SIZE);
+	bignum_t max = init(DEFAULT_SIZE);
+	bignum_t counter = init(DEFAULT_SIZE);
 
+	for(size_t i=0;i<data.minLen;i++)
+		push_back(&min, data.sMin[i]);
 	for(size_t i=0;i<data.maxLen;i++)
 		push_back(&max, data.sMax[i]);
-	push_back(&max, '\0');
 
-	while(data_less(&min, &max) || data_equal(&max, &min)) {
+	while(data_less(&min, &max)) {
 		operator_plus(&min, data.sMin);
-		operator_plus(&cnt, "1");
+		operator_plus(&counter, "1");
 	}
 
-	operator_mines(&cnt, "1");
-	destroy(result);
-	destroy(&max);
 	destroy(&min);
+	destroy(&max);
+	destroy(result);
 
-	*result = cnt;
+	*result = counter;
 
 	return result;
 }

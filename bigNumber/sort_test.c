@@ -13,12 +13,12 @@ int main() {
 	bignum_t array[SIZE];
 
 	for(size_t i=0;i<SIZE;i++) {
-		array[i] = random_big_number();
+		array[i] = random_big_number(1,2);
 		print_bignum(array+i);
 	}
 
-	//sort_array(array, SIZE, data_greater);
-	qsort(array, SIZE, sizeof(bignum_t), data_greater);
+	sort_array(array, SIZE, data_less);
+	//qsort(array, SIZE, sizeof(bignum_t), data_greater);
 
 	printf("\n\nafter sort\n\n");
 
