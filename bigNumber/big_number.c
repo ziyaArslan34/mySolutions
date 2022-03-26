@@ -68,6 +68,16 @@ int my_rand(int min, int max) {
 	return (int)rand()%(max-min+1)+min;
 }
 
+int for_qsort_compare(const void *a, const void *b) {
+	const bignum_t *x = (const bignum_t*)a;
+	const bignum_t *y = (const bignum_t*)b;
+
+	if(x->size == y->size)
+		return strcmp(x->data, y->data);
+
+	return x->size < y->size ? -1 : 1;
+}
+
 bignum_t random_big_number(int min, int max) {
 	bignum_t number = init(DEFAULT_SIZE);
 	int step = my_rand(min, max);

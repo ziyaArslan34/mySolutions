@@ -46,6 +46,7 @@ int        input_control(const char*);
 int        data_equal(const void*, const void*);
 int        data_less(const void*, const void*);
 int        data_greater(const void*, const void*);
+int        for_qsort_compare(const void *, const void *);
 
 bignum_t*  operator_plus(bignum_t *, const char*);
 bignum_t*  operator_mines(bignum_t*, const char*);
