@@ -16,7 +16,7 @@ int my_rand(int min, int max) {
 	return (int)rand()%(max-min+1)+min;
 }
 
-int f(const void* a, const void* b) {
+int cmp(const void* a, const void* b) {
 	return ((struct test*)a)->x < ((struct test*)b)->x;
 }
 
@@ -30,7 +30,7 @@ int main() {
 		add_element(&array, &t);
 	}
 
-	sort_array(&array, f);
+	sort_array(&array, cmp);
 	print_array(&array, print);
 
 	struct test del;
@@ -38,7 +38,7 @@ int main() {
 	printf("\nsil: ");
 	scanf("%d%d", &del.x, &del.y);
 
-	del_element(&array, &del);
-	print_array(&array,print);
+	print_array(del_element(&array, &del), print);
+
 	destroy(&array);
 }
