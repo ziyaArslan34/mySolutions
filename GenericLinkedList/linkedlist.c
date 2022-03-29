@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "linkedlist.h"
+#include "../GenericDynamicArray/dynamic_array.h"
 
 linkedList *create_node(const void *src, size_t typeSize) {
 	linkedList *root;
@@ -23,8 +24,21 @@ linkedList *create_node(const void *src, size_t typeSize) {
 	return root;
 }
 
-linkedList *init(const void *src, size_t typeSize) {
+linkedList *init_root(const void *src, size_t typeSize) {
 	return create_node(src, typeSize);
+}
+
+linkedList *get_node_idx(linkedList **list, size_t idx) {
+	if(idx < 0 || idx > list_size(list)) {
+		fprintf(stderr, "invalid index\n");
+		return NULL;
+	}
+
+	linkedList *tmp = *list;
+	for(size_t i=0;i<idx;i++)
+		tmp = tmp->next;
+
+	return tmp->next;
 }
 
 linkedList *add_to_end(linkedList **list, const void *src) {
@@ -34,6 +48,33 @@ linkedList *add_to_end(linkedList **list, const void *src) {
 
 	while(iter->next != NULL)
 		iter = iter->next;
+	iter->next = tmp;
+
+	return *list;
+}
+
+linkedList *add_to_idx(linkedList **list, const void *src, size_t idx) {
+	if(idx == 0) {
+		if(*list == NULL) {
+			fprintf(stderr, "list is null\n");
+			return NULL;
+		}
+
+		linkedList *newNode = init_root(src, (*list)->typeSize);
+		linkedList *tmp = *list;
+
+		*list = newNode;
+		(*list)->next = tmp;
+		return *list;
+	}
+
+	linkedList *tmp = create_node(src, (*list)->typeSize);
+	linkedList *iter = *list;
+
+	for(size_t i=0;i<idx-1;i++)
+		iter = iter->next;
+
+	tmp->next = iter->next;
 	iter->next = tmp;
 
 	return *list;
@@ -52,6 +93,57 @@ linkedList *del_to_end(linkedList **list) {
 	iter->next = NULL;
 
 	return *list;
+}
+
+linkedList *del_to_idx(linkedList **list, size_t idx) {
+	if(*list == NULL) {
+		fprintf(stderr, "list is null\n");
+		return *list;
+	}
+
+	if(idx == 0) {
+		linkedList *tmp = *list;
+		*list = (*list)->next;
+		free(tmp);
+		return *list;
+	}
+
+	linkedList *iter = *list;
+
+	for(size_t i=0;i<idx-1;i++)
+		iter = iter->next;
+
+	linkedList *tmp = iter->next;
+	iter->next = iter->next->next;
+	free(tmp);
+
+	return *list;
+}
+
+void sort_list(linkedList **list, int (*comp)(const void*, const void*)) {
+	dynamicArray_t array = init((*list)->typeSize, list_size(list)+1);
+
+	linkedList *iter = *list;
+
+	while(iter->next != NULL) {
+		add_element(&array, iter->data);
+		iter = iter->next;
+	}
+
+	sort_array(&array, comp);
+
+	linkedList *newList = init_root(get_index_element(&array, 0), (*list)->typeSize);
+
+	for(size_t i=1;i<array.size;i++) {
+		void *x = get_index_element(&array, i);
+		add_to_end(&newList, x);
+		printf("eklendi %d\n", *(int*)x);
+	}
+
+	destroy(&array);
+	destroy_list(list);
+
+	*list = newList;
 }
 
 size_t list_size(linkedList **list) {
@@ -82,7 +174,7 @@ void print_list(linkedList **list, void (*print)(const void*)) {
 	printf("\n");
 }
 
-void destroy(linkedList **list) {
+void destroy_list(linkedList **list) {
 	if(*list == NULL)
 		return;
 

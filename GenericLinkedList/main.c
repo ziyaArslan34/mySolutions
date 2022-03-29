@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "linkedlist.h"
 
@@ -6,18 +8,27 @@ void print(const void *data) {
 	printf("%d ", *(int*)data);
 }
 
+int cmp(const void *a, const void *b) {
+	return (*(int*)a < *(int*)b);
+}
+
 int main() {
-	int val = 500;
+	srand((unsigned)time(NULL));
 
-	linkedList *root = init(&val, sizeof(int));
+	int x = 1;
 
-	for(int i=100;i<110;i++)
-		add_to_end(&root, &i);
+	linkedList *root = init_root(&x, sizeof(int));
+
+	for(int i=100;i<115;i++) {
+		int val = (int)rand()%(100-10+1)+10;
+		add_to_end(&root, &val);
+	}
 
 	print_list(&root, print);
 
-	for(int i=0;i<5;i++)
-		del_to_end(&root);
+	sort_list(&root, cmp);
+
 	print_list(&root, print);
-	destroy(&root);
+
+	destroy_list(&root);
 }
