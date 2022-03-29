@@ -130,15 +130,14 @@ void sort_list(linkedList **list, int (*comp)(const void*, const void*)) {
 		iter = iter->next;
 	}
 
+	add_element(&array, iter->data);
+
 	sort_array(&array, comp);
 
 	linkedList *newList = init_root(get_index_element(&array, 0), (*list)->typeSize);
 
-	for(size_t i=1;i<array.size;i++) {
-		void *x = get_index_element(&array, i);
-		add_to_end(&newList, x);
-		printf("eklendi %d\n", *(int*)x);
-	}
+	for(size_t i=1;i<array.size;i++)
+		add_to_end(&newList, get_index_element(&array, i));
 
 	destroy(&array);
 	destroy_list(list);
@@ -170,6 +169,7 @@ void print_list(linkedList **list, void (*print)(const void*)) {
 		print(tmp->data);
 		tmp = tmp->next;
 	}
+	print(tmp->data);
 
 	printf("\n");
 }
