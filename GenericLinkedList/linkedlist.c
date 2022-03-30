@@ -29,7 +29,7 @@ linkedList *init_root(const void *src, size_t typeSize) {
 }
 
 linkedList *get_node_idx(linkedList **list, size_t idx) {
-	if(idx < 0 || idx > list_size(list)) {
+	if(idx > list_size(list)) {
 		fprintf(stderr, "invalid index\n");
 		return NULL;
 	}
@@ -180,9 +180,14 @@ void destroy_list(linkedList **list) {
 
 	linkedList *iter = *list;
 	while(iter->next != NULL) {
+		free(iter->data);
+		iter->data = NULL;
 		free(iter);
 		iter = iter->next;
 	}
+
+	free(iter->data);
+	free(iter);
 
 	free(*list);
 	*list = NULL;
