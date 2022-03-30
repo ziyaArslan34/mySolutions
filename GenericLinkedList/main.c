@@ -9,7 +9,7 @@ void print(const void *data) {
 }
 
 int cmp(const void *a, const void *b) {
-	return (*(int*)a < *(int*)b);
+	return (*(int*)a > *(int*)b);
 }
 
 int main() {
@@ -21,14 +21,11 @@ int main() {
 
 	for(int i=100;i<115;i++) {
 		int val = (int)rand()%(100-10+1)+10;
-		add_to_end(&root, &val);
+		printf("%d\n", val);
+
+		add_to_sort(&root, &val, cmp);
 	}
 
 	print_list(&root, print);
-
-	sort_list(&root, cmp);
-
-	print_list(&root, print);
-
 	destroy_list(&root);
 }

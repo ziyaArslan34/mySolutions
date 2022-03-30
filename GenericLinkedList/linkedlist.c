@@ -28,7 +28,7 @@ linkedList *init_root(const void *src, size_t typeSize) {
 	return create_node(src, typeSize);
 }
 
-linkedList *get_node_idx(linkedList **list, size_t idx) {
+linkedList *get_node_index(linkedList **list, size_t idx) {
 	if(idx > list_size(list)) {
 		fprintf(stderr, "invalid index\n");
 		return NULL;
@@ -53,7 +53,27 @@ linkedList *add_to_end(linkedList **list, const void *src) {
 	return *list;
 }
 
-linkedList *add_to_idx(linkedList **list, const void *src, size_t idx) {
+linkedList *add_to_sort(linkedList **list, const void *src, int (*cmp)(const void*, const void*)) {
+	if(cmp(src, (*list)->data)) {
+		linkedList *tmp = create_node(src, (*list)->typeSize);
+
+		tmp->next = *list;
+		*list = tmp;
+		return *list;
+	} else {
+		linkedList *tmp = create_node(src, (*list)->typeSize);
+
+		linkedList *iter = *list;
+		while(iter->next != NULL && cmp(iter->next->data, src))
+			iter = iter->next;
+		tmp->next = iter->next;
+		iter->next = tmp;
+	}
+
+	return *list;
+}
+
+linkedList *add_to_index(linkedList **list, const void *src, size_t idx) {
 	if(idx == 0) {
 		if(*list == NULL) {
 			fprintf(stderr, "list is null\n");
@@ -95,7 +115,7 @@ linkedList *del_to_end(linkedList **list) {
 	return *list;
 }
 
-linkedList *del_to_idx(linkedList **list, size_t idx) {
+linkedList *del_to_index(linkedList **list, size_t idx) {
 	if(*list == NULL) {
 		fprintf(stderr, "list is null\n");
 		return *list;
