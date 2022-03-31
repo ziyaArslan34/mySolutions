@@ -3,8 +3,8 @@
 #include <string.h>
 #include "split.h"
 
-type_t init(size_t defaultSize) {
-	type_t arr;
+split_t init(size_t defaultSize) {
+	split_t arr;
 	arr.size = 0;
 	arr.cap = defaultSize;
 
@@ -24,14 +24,14 @@ int expr_find(const char *expr, char ch) {
 	return 0;
 }
 
-int search(const type_t *type, const char *src) {
+int search(const split_t *type, const char *src) {
 	for(size_t i=0;i<type->size;i++)
 		if(!strcmp(type->array[i], src))
 			return 1;
 	return 0;
 }
 
-const char * return_ip(const type_t* type) {
+const char * return_ip(const split_t* type) {
 	for(size_t i=0;i<type->size;i++) {
 		size_t len = strlen(type->array[i])-1;
 
@@ -43,7 +43,7 @@ const char * return_ip(const type_t* type) {
 	return NULL;
 }
 
-void push_back_split(type_t *type, const char *src) {
+void push_back_split(split_t *type, const char *src) {
 	size_t len = strlen(src)+1;
 
 	if(type->size >= type->cap) {
@@ -55,7 +55,7 @@ void push_back_split(type_t *type, const char *src) {
 	strcpy(type->array[type->size++], src);
 }
 
-void split_str(type_t *arr, const char *str, const char *expr) {
+void split_str(split_t *arr, const char *str, const char *expr) {
 	size_t len = strlen(str);
 
 	for(size_t i=0;i<len;) {
@@ -79,14 +79,14 @@ void split_str(type_t *arr, const char *str, const char *expr) {
 	}
 }
 
-void print_split(const type_t *type) {
+void print_split(const split_t *type) {
 	printf("\nsize : %zu\n", type->size);
 	for(size_t i=0;i<type->size;i++)
 		printf(" [%s] ", type->array[i]);
 	printf("\n\n");
 }
 
-void destroy_split(type_t *type) {
+void destroy_split(split_t *type) {
 	for(size_t i=0;i<type->size;i++) {
 		free(type->array[i]);
 		type->array[i] = NULL;
