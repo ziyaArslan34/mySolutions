@@ -3,18 +3,21 @@
 #include <string.h>
 #include "split.h"
 
-split_t init(size_t defaultSize) {
+split_t init_split(size_t defaultSize) {
 	split_t arr;
 	arr.size = 0;
 	arr.cap = defaultSize;
 
-	arr.array = (char**)malloc(sizeof(char*)*arr.cap);
+	if((arr.array = (char**)malloc(sizeof(char*)*arr.cap)) == NULL) {
+		perror("");
+		exit(1);
+	}
 
 	return arr;
 }
 
 int is_alpha(char ch) {
-	return (ch >= 97 && ch <= 122) || (ch >= 65 && ch <= 90);
+	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z');
 }
 
 int expr_find(const char *expr, char ch) {
@@ -31,41 +34,47 @@ int search(const split_t *type, const char *src) {
 	return 0;
 }
 
-const char * return_ip(const split_t* type) {
-	for(size_t i=0;i<type->size;i++) {
-		size_t len = strlen(type->array[i])-1;
-
-		if((type->array[i][0] >= 48 && type->array[i][0] <= 57)
-			&& (type->array[i][len] >= 48 && type->array[i][len] <= 57))
-			return type->array[i];
-	}
-
-	return NULL;
-}
-
 void push_back_split(split_t *type, const char *src) {
 	size_t len = strlen(src)+1;
 
 	if(type->size >= type->cap) {
 		type->cap *= 2;
-		type->array = (char**)realloc(type->array, sizeof(char*)*type->cap);
+		if((type->array = (char**)realloc(type->array, sizeof(char*)*type->cap)) == NULL) {
+			perror("");
+			free(type->array);
+			exit(1);
+		}
 	}
 
-	type->array[type->size] = (char*)malloc(sizeof(char)*len);
+	if((type->array[type->size] = (char*)malloc(sizeof(char)*len)) == NULL) {
+		perror("");
+		free(type->array[type->size]);
+		free(type->array);
+		exit(1);
+	}
 	strcpy(type->array[type->size++], src);
 }
 
-void split_str(split_t *arr, const char *str, const char *expr) {
+split_t* str_split(split_t *arr, const char *str, const char *expr) {
 	size_t len = strlen(str);
 
 	for(size_t i=0;i<len;) {
 		size_t idx=0, cap=50;
-		char *tmp = (char*)malloc(sizeof(char)*cap);
+		char *tmp;
+		if((tmp = (char*)malloc(sizeof(char)*cap)) == NULL) {
+			perror("");
+			destroy_split(arr);
+			exit(1);
+		}
 
 		for(size_t j=i; (expr == NULL ? is_alpha(str[i++]) : !expr_find(expr, str[i++])) && j < len;j++) {
 			if(idx >= cap) {
 				cap *= 2;
-				tmp = (char*)realloc(tmp, sizeof(char)*cap);
+				if((tmp = (char*)realloc(tmp, sizeof(char)*cap)) == NULL) {
+					perror("");
+					destroy_split(arr);
+					exit(1);
+				}
 			}
 			tmp[idx++] = str[j];
 		}
@@ -77,6 +86,8 @@ void split_str(split_t *arr, const char *str, const char *expr) {
 		}
 		free(tmp);
 	}
+
+	return arr;
 }
 
 void print_split(const split_t *type) {

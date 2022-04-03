@@ -7,13 +7,12 @@ typedef struct {
 	size_t size, cap;
 }split_t;
 
-split_t      init(size_t);
+split_t      init_split(size_t);
 int          is_alpha(char);
 int          expr_find(const char*, char);
-int          search(const split_t*, const char*);
-const char*  return_ip(const split_t*);
+int          search_split(const split_t*, const char*);
 void         push_back_split(split_t*, const char*);
-void         split_str(split_t *, const char*, const char*);
+split_t*     str_split(split_t *, const char*, const char*);
 void         print_split(const split_t*);
 void         destroy_split(split_t*);
 
