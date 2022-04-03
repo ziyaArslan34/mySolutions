@@ -6,7 +6,7 @@
 
 void debug_function(int val) { printf("debug: %d\n", val); }
 
-dynamicArray_t init(size_t typeSize, size_t capacity) {
+dynamicArray_t init_array(size_t typeSize, size_t capacity) {
 	dynamicArray_t array;
 
 	array.size = 0;
@@ -53,9 +53,23 @@ dynamicArray_t* add_element(dynamicArray_t *array, const void *src) {
 	return array;
 }
 
-dynamicArray_t* del_element(dynamicArray_t *array, const void *src) {
-	if(empty(array))
+dynamicArray_t* insert_element(dynamicArray_t *array, size_t idx, const void *src) {
+	if(idx >= array->size) {
+		fprintf(stderr, "invalid index\n");
 		return array;
+	}
+
+	(void)src;
+
+	return array;
+}
+
+dynamicArray_t* del_element(dynamicArray_t *array, const void *src) {
+	if(empty(array)) {
+		fprintf(stderr, "array is empty\n");
+		return array;
+	}
+
 
 	size_t find = search_element(array, src);
 
@@ -66,6 +80,7 @@ dynamicArray_t* del_element(dynamicArray_t *array, const void *src) {
 
 	restore_array(array, find);
 	--array->size;
+
 	return array;
 }
 
@@ -95,6 +110,7 @@ void sort_array(dynamicArray_t *array, int (*comp)(const void*, const void*)) {
 				void *tmp;
 				if((tmp = malloc(array->typeSize)) == NULL) {
 					perror("");
+					destroy_array(array);
 					exit(1);
 				}
 
@@ -115,7 +131,7 @@ void restore_array(dynamicArray_t *array, size_t cnt) {
 		void *tmp;
 		if((tmp = malloc(array->typeSize)) == NULL) {
 			perror("");
-			destroy(array);
+			destroy_array(array);
 			exit(1);
 		}
 
@@ -126,7 +142,7 @@ void restore_array(dynamicArray_t *array, size_t cnt) {
 	}
 }
 
-void destroy(dynamicArray_t *array) {
+void destroy_array(dynamicArray_t *array) {
 	array->size = 0;
 	array->cap = 0;
 	array->typeSize = 0;

@@ -4,12 +4,8 @@
 
 #include "dynamic_array.h"
 
-struct test { int x,y; };
-
 void print(const void *val) {
-	struct test tmp = *(struct test*)val;
-
-	printf("[%d][%d] ", tmp.x, tmp.y);
+	printf("%s ", (char*)val);
 }
 
 int my_rand(int min, int max) {
@@ -17,28 +13,29 @@ int my_rand(int min, int max) {
 }
 
 int cmp(const void* a, const void* b) {
-	return ((struct test*)a)->x < ((struct test*)b)->x;
+	return strcmp((const char*)a, (const char*)b);
 }
 
 int main() {
 	srand((unsigned)time(NULL));
 
-	dynamicArray_t array = init(sizeof(struct test), 10);
+	dynamicArray_t array = init_array(4, 10);
 
-	for(int i=0;i<15;i++) {
-		struct test t = {my_rand(0,100), my_rand(0,100)};
-		add_element(&array, &t);
+	const char *str[] = {"bir", "iki", "uc1", "dor", "bes", NULL};
+
+	for(int i=0;str[i] != NULL;i++) {
+		add_element(&array, str[i]);
 	}
 
 	sort_array(&array, cmp);
 	print_array(&array, print);
 
-	struct test del;
+	char s[10];
 
 	printf("\nsil: ");
-	scanf("%d%d", &del.x, &del.y);
+	scanf("%s", s);
 
-	print_array(del_element(&array, &del), print);
+	print_array(del_element(&array, s), print);
 
-	destroy(&array);
+	destroy_array(&array);
 }
