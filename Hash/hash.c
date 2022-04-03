@@ -2,7 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+
 #include "hash.h"
+#include "../GenericDynamicArray/dynamic_array.h"
 
 int my_rand(int min, int max) {
 	return (int)rand()%(max-min+1)+min;
@@ -15,32 +17,22 @@ hash_t init_hash() {
 	hash.cap = 16;
 	hash.key = my_rand(2,9);
 
-	hash.data = (int*)malloc(sizeof(int)*hash.cap);
-	return hash;
-}
-
-array_t init_array(size_t capacity) {
-	array_t array;
-	array.size = 0;
-	array.cap = capacity;
-
-	array.data = (int*)malloc(sizeof(int)*array.cap);
-	return array;
-}
-
-void push_back_array(array_t *arr, int val) {
-	if(arr->size >= arr->cap) {
-		arr->cap *= 2;
-		arr->data = (int*)realloc(arr->data, sizeof(int)*arr->cap);
+	if((hash.data = (int*)malloc(sizeof(int)*hash.cap)) == NULL) {
+		perror("");
+		exit(1);
 	}
 
-	arr->data[arr->size++] = val;
+	return hash;
 }
 
 void push_back_hash(hash_t *hash, int val) {
 	if(hash->size >= hash->cap) {
 		hash->cap *= 2;
-		hash->data = (int*)realloc(hash->data, sizeof(int)*hash->cap);
+		if((hash->data = (int*)realloc(hash->data, sizeof(int)*hash->cap)) == NULL) {
+			perror("");
+			free(hash->data);
+			exit(1);
+		}
 	}
 	hash->data[hash->size++] = val;
 }
@@ -58,35 +50,22 @@ int comp_hash(const hash_t *h1, const hash_t *h2) {
 	return 1;
 }
 
-void swap(void *val1, void *val2, size_t type) {
-	void *temp = malloc(type);
-	memcpy(temp, val1, type);
-	memcpy(val1, val2, type);
-	memcpy(val2, temp, type);
-}
-
-void reverse_array(int *array, size_t size) {
-	if(size < 2)
-		return;
-
-	for(int i=0, j=(int)size-1;i<(int)size && j >= 0;j--, i++)
-		swap(&array[i], &array[j], sizeof(int));
-}
-
 void encrypt(hash_t *hash, const char *value) {
 	for(size_t i=0;i<strlen(value);i++) {
 		int num = (int)value[i];
-		array_t array = init_array(5);
+		dynamicArray_t array = init_array(sizeof(int), 5);
 
 		while(num) {
-			push_back_array(&array, num%10+hash->key);
+			int step = num%10+hash->key;
+
+			add_element(&array, &step);
 			num /= 10;
 		}
 
-		reverse_array(array.data, array.size);
+		reverse_array(&array);
 
 		for(size_t idx=0;idx<array.size;idx++)
-			push_back_hash(hash, array.data[idx]);
+			push_back_hash(hash, *(int*)get_index_element(&array, idx));
 
 		push_back_hash(hash, -1);
 		destroy_array(&array);
@@ -140,8 +119,4 @@ void print_hash(const hash_t *hash) {
 
 void destroy_hash(hash_t *hash) {
 	free(hash->data);
-}
-
-void destroy_array(array_t *array) {
-	free(array->data);
 }

@@ -44,6 +44,6 @@ void parsing(const char *str, size_t n) {
 }
 
 int main() {
-	const char *str = "his anyone learning C++.";
-	parsing(str,7);
+	const char *str = "7010987596263049368";
+	parsing(str,strlen(str)/3);
 }

@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "hash.h"
-#include "../split/split.h"
+#include "../Hash/hash.h"
+#include "../Split/split.h"
 
 typedef struct {
 	char username[30];
