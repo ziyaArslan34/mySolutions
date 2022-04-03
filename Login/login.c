@@ -3,7 +3,7 @@
 #include <time.h>
 
 #include "hash.h"
-#include "split.h"
+#include "../split/split.h"
 
 typedef struct {
 	char username[30];
@@ -17,7 +17,7 @@ void menu() {
 	printf("\nexit  [0]\n");
 }
 
-void debug(size_t x) { printf("debug: %zu\n", x); }
+void debug(const char *dbg) { printf("debug: %s\n", dbg); }
 
 void sing_in() {
 	user_t user;
@@ -31,35 +31,36 @@ void sing_in() {
 	scanf("%s", user.password);
 
 	while(!feof(fptr)) {
-		char line[1024];
+		char line[1024] = {0};
+
 		fgets(line, sizeof(line), fptr);
 		line[strlen(line)-1] = '\0';
-		type_t split = split_str(line, " {");
 
-		if(search(&split, user.username)) {
-			hash_t hash = init_hash();
-			type_t pass = split_str(line, "[]");
-			hash.size--;
+		split_t spl1 = init_split(10);
+		str_split(&spl1, line, NULL);
+		if(search_split(&spl1, user.username)) {
+			hash_t passw = init_hash();
+			split_t psw = init_split(10);
+			str_split(&psw, line, "{[]}()");
 
-			for(size_t i=0;i<pass.size-1;i++)
-				push_back_hash(&hash, atoi(pass.array[i]));
-			type_t get_key = split_str(line, "()");
+			for(size_t i=1;i<psw.size-1;i++) {
+				push_back_hash(&passw, (int)atoi(psw.array[i]));
+			}
+			passw.key = atoi(psw.array[psw.size-1]);
+			char *str = decrypt(&passw);
 
-			hash.key = atoi(get_key.array[1]);
-			destroy_split(&get_key);
-			char *passw = decrypt(&hash);
-
-			if(strcmp(passw, user.password) == 0)
+			if(strcmp(user.password, str) == 0) {
 				flag = 1;
+				destroy_split(&spl1);
+				destroy_split(&psw);
 
-			free(passw);
-			destroy_hash(&hash);
-			destroy_split(&pass);
-			destroy_split(&split);
-
-			break;
+				break;
+			}
+			free(str);
+			destroy_split(&psw);
+			destroy_hash(&passw);
 		}
-		destroy_split(&split);
+		destroy_split(&spl1);
 	}
 
 	if(!flag) {
