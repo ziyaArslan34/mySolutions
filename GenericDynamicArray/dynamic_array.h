@@ -21,6 +21,7 @@ void*            get_index_element(const dynamicArray_t*, size_t);
 void             print_array(const dynamicArray_t*, void (*)(const void*));
 void             destroy_array(dynamicArray_t*);
 void             sort_array(dynamicArray_t*, int (*)(const void*, const void*));
+void             reverse_array(dynamicArray_t*);
 void             restore_array(dynamicArray_t*, size_t);
 
 void             debug_function(int);

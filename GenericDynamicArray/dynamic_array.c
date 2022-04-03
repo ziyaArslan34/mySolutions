@@ -142,6 +142,24 @@ void restore_array(dynamicArray_t *array, size_t cnt) {
 	}
 }
 
+static void swap(void *a, void *b, size_t type) {
+	void *tmp;
+	if((tmp = malloc(type)) == NULL) {
+		perror("");
+		exit(1);
+	}
+
+	memcpy(tmp, a, type);
+	memcpy(a, b, type);
+	memcpy(b, tmp, type);
+	free(tmp);
+}
+
+void reverse_array(dynamicArray_t *array) {
+	for(size_t i=0, j=array->size-1;i<array->size/2;i++, j--)
+		swap(get_index_element(array, i), get_index_element(array, j), array->typeSize);
+}
+
 void destroy_array(dynamicArray_t *array) {
 	array->size = 0;
 	array->cap = 0;
