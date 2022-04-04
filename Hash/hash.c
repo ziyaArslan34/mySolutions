@@ -57,15 +57,14 @@ void encrypt(hash_t *hash, const char *value) {
 
 		while(num) {
 			int step = num%10+hash->key;
-
 			add_element(&array, &step);
 			num /= 10;
 		}
 
-		reverse_array(&array);
-
-		for(size_t idx=0;idx<array.size;idx++)
-			push_back_hash(hash, *(int*)get_index_element(&array, idx));
+		for(size_t idx=0;idx<array.size;idx++) {
+			int val = *(int*)get_index_element(&array, idx);
+			push_back_hash(hash, val);
+		}
 
 		push_back_hash(hash, -1);
 		destroy_array(&array);
@@ -113,10 +112,11 @@ char* decrypt(const hash_t *hash) {
 
 void print_hash(const hash_t *hash) {
 	for(size_t i=0;i<hash->size;i++)
-		printf(" [%d] ", hash->data[i]);
+		printf("%d", hash->data[i]);
 	printf("\n");
 }
 
 void destroy_hash(hash_t *hash) {
 	free(hash->data);
+	hash->data = NULL;
 }

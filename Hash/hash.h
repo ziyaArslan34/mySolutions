@@ -22,4 +22,5 @@ void     encrypt(hash_t*, const char*);
 char*    decrypt(const hash_t *);
 void     print_hash(const hash_t*);
 void     destroy_hash(hash_t*);
+
 #endif
