@@ -48,14 +48,14 @@ void sing_in() {
 			}
 			passw.key = atoi(psw.array[psw.size-1]);
 			char *str = decrypt(&passw);
-
 			if(strcmp(user.password, str) == 0) {
 				flag = 1;
 				destroy_split(&spl1);
 				destroy_split(&psw);
-
+				free(str);
 				break;
 			}
+
 			free(str);
 			destroy_split(&psw);
 			destroy_hash(&passw);
