@@ -14,6 +14,7 @@ dynamicArray_t   init_array(size_t, size_t);
 dynamicArray_t*  add_element(dynamicArray_t*, const void*);
 dynamicArray_t*  del_element(dynamicArray_t*, const void*);
 dynamicArray_t*  insert_element(dynamicArray_t*, size_t, const void*);
+dynamicArray_t*  del_idx_element(dynamicArray_t*, size_t);
 
 int              empty(const dynamicArray_t*);
 size_t           search_element(const dynamicArray_t*, const void*);
@@ -23,6 +24,7 @@ void             destroy_array(dynamicArray_t*);
 void             sort_array(dynamicArray_t*, int (*)(const void*, const void*));
 void             reverse_array(dynamicArray_t*);
 void             restore_array(dynamicArray_t*, size_t);
+void             clear_array(dynamicArray_t*, const void*);
 
 void             debug_function(const char*);
 

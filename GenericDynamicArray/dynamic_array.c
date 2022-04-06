@@ -79,6 +79,20 @@ dynamicArray_t* insert_element(dynamicArray_t *array, size_t idx, const void *sr
 	return array;
 }
 
+dynamicArray_t* del_idx_element(dynamicArray_t* array, size_t idx) {
+	if(idx >= array->size) {
+		fprintf(stderr, "invalid index\n");
+		return array;
+	}
+
+	for(size_t i=idx;i<array->size-1;i++)
+		memcpy((char*)array->data+i*array->typeSize, (char*)array->data+(i+1)*array->typeSize, array->typeSize);
+
+	--array->size;
+
+	return array;
+}
+
 dynamicArray_t* del_element(dynamicArray_t *array, const void *src) {
 	if(empty(array)) {
 		fprintf(stderr, "array is empty\n");
@@ -183,3 +197,10 @@ void destroy_array(dynamicArray_t *array) {
 	free(array->data);
 	array->data = NULL;
 }
+
+void clear_array(dynamicArray_t *array, const void *clr) {
+	for(size_t i=0;i<array->size;i++)
+		memcpy((char*)array->data+i*array->typeSize, clr, array->typeSize);
+	array->size = 0;
+}
+

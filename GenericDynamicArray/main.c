@@ -26,11 +26,8 @@ int main() {
 		add_element(&array, &val);
 	}
 
-	sort_array(&array, cmp);
 	print_array(&array, print);
-
-	int val = 500;
-	insert_element(&array, 5, &val);
+	sort_array(&array, cmp);
 	print_array(&array, print);
 
 	destroy_array(&array);
