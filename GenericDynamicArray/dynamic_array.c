@@ -4,7 +4,7 @@
 
 #include "dynamic_array.h"
 
-void debug_function(int val) { printf("debug: %d\n", val); }
+void debug_function(const char *dbg) { printf("debug: %s\n", dbg); }
 
 dynamicArray_t init_array(size_t typeSize, size_t capacity) {
 	dynamicArray_t array;
@@ -43,6 +43,7 @@ dynamicArray_t* add_element(dynamicArray_t *array, const void *src) {
 		array->cap *= 2;
 		if((array->data = realloc(array->data, array->typeSize*array->cap)) == NULL) {
 			perror("");
+			free(array->data);
 			exit(1);
 		}
 	}
@@ -59,7 +60,21 @@ dynamicArray_t* insert_element(dynamicArray_t *array, size_t idx, const void *sr
 		return array;
 	}
 
-	(void)src;
+	if(array->size >= array->cap) {
+		array->cap *= 2;
+		if((array->data = realloc(array->data, array->cap*array->typeSize)) == NULL) {
+			perror("");
+			free(array->data);
+			exit(1);
+		}
+	}
+
+	size_t i=0;
+
+	for(i=array->size-1;i>idx;i--)
+		memcpy((char*)array->data+(i+1)*array->typeSize, (char*)array->data+i*array->typeSize, array->typeSize);
+	memcpy((char*)array->data+i*array->typeSize, src, array->typeSize);
+	++array->size;
 
 	return array;
 }

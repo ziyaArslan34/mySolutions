@@ -24,6 +24,6 @@ void             sort_array(dynamicArray_t*, int (*)(const void*, const void*));
 void             reverse_array(dynamicArray_t*);
 void             restore_array(dynamicArray_t*, size_t);
 
-void             debug_function(int);
+void             debug_function(const char*);
 
 #endif /* dynamic_array.h */

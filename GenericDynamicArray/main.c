@@ -13,7 +13,7 @@ int my_rand(int min, int max) {
 }
 
 int cmp(const void* a, const void* b) {
-	return *(int*)a > *(int*)b;
+	return *(int*)a < *(int*)b;
 }
 
 int main() {
@@ -27,7 +27,11 @@ int main() {
 	}
 
 	sort_array(&array, cmp);
-	reverse_array(&array);
 	print_array(&array, print);
+
+	int val = 500;
+	insert_element(&array, 5, &val);
+	print_array(&array, print);
+
 	destroy_array(&array);
 }
