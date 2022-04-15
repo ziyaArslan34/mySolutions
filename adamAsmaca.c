@@ -18,10 +18,10 @@ void print() {
 	printf("\n");
 }
 
-int foo(char *myWord, const char *str, const char ch, const int len) {
+int foo(char *myWord, const char *str, char ch, size_t len) {
 	int flag=0;
 
-	for(int i=0;i<len;i++) {
+	for(size_t i=0;i<len;i++) {
 		if(str[i] == ch) {
 			myWord[i] = ch;
 			flag=1;
@@ -34,7 +34,7 @@ int main() {
 	int hang=29;
 
 	const char *kelime = "adamasmaca";
-	int len = strlen(kelime);
+	size_t len = strlen(kelime);
 
 	char *myWord = (char*)malloc(sizeof(char)*len);
 	memset(myWord, '_', len);
