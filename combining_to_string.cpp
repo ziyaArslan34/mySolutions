@@ -32,11 +32,10 @@ std::string to_string<std::bitset<8>>(const std::bitset<8>&arg) {
 
 template <typename ...Args>
 std::string comb_norm(Args &&... args) {
-	using list_str = std::initializer_list<std::string>;
 	std::string str{""};
-	list_str strs{((void)"", to_string(args))...};
+	std::vector<std::string> vec{((void)"", to_string(args))...};
 
-	for(const auto &i : strs)
+	for(const auto &i : vec)
 		str += i;
 	return str;
 }
