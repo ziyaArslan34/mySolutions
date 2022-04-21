@@ -132,6 +132,7 @@ int main() {
 		strcpy(prev, tmp.ozelKod);
 	}
 
+	printf(" name\tno\tvize|odev|final\t prev\t spec\n");
 	print_list(&root, print);
 
 	int no;
@@ -143,7 +144,10 @@ int main() {
 	if(find != -1) {
 		del_to_index(&root, (size_t)find);
 		edit_prev_code(&root);
+		printf(" name\tno\tvize|odev|final\t prev\t spec\n");
 		print_list(&root, print);
+	} else {
+		fprintf(stderr, "not found\n");
 	}
 
 	destroy_list(&root);
