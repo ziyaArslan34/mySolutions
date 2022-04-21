@@ -18,6 +18,13 @@ std::string to_string<int>(const int& arg) {
     return s;
 }
 
+template<>
+std::string to_string<char>(const char &arg) {
+	std::string s{""};
+	s += arg;
+	return s;
+}
+
 template <>
 std::string to_string<double>(const double& arg) {
 	char s[10];
@@ -25,8 +32,8 @@ std::string to_string<double>(const double& arg) {
 	return s;
 }
 
-template <>
-std::string to_string<std::bitset<8>>(const std::bitset<8>&arg) {
+template <size_t N>
+std::string to_string(const std::bitset<N>&arg) {
 	return arg.to_string();
 }
 
