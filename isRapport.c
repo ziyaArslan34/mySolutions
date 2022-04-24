@@ -138,17 +138,18 @@ size_t findMaxSize(const char *str[], size_t size) {
 int main() {
 	srand((unsigned)time(NULL));
 
-	const char *str[] = {"({[{{}sifir}][{(<><bir>)}][iki][{uc}]})",
-						 "({[{{<}sifir}][{(<><bir>)}][iki][{uc}]})",
-						 "{[(<>)]}",
-						 "((a[scope1] * b[scope2]) (a[{scope3}{scope4}]))",
-						 "{{()[]{}}}",
-						 "merhabalar"
+	const char *str[] = {
+			"({[{{}sifir}][{(<><bir>)}][iki][{uc}]})",
+			"({[{{<}sifir}][{(<><bir>)}][iki][{uc}]})",
+			"{[(<>)]}",
+			"((a[scope1] * b[scope2]) (a[{scope3}{scope4}]))",
+			"{{()[]{}}}",
+			"merhabalar", NULL
 	};
 
 	size_t maxSize = findMaxSize(str, 6); //for setw
 
-	for(size_t i=0;i<6;i++) {
+	for(size_t i=0;str[i] != NULL;i++) {
 		size_t len = strlen(str[i]);
 
 		if(isRapport(str[i])) {
