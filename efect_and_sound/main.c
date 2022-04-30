@@ -9,8 +9,11 @@ int main() {
 
 	pthread_create(&th1, NULL, play_efect, "efect");
 	pthread_create(&th2, NULL, play_song, "efect");
-	sleep(255);
 
-	pthread_join(&th1, NULL);
-	pthread_join(&th2, NULL);
+	void *res = NULL;
+	pthread_join(th2, &res);
+
+	if(res) {
+		return 0;
+	}
 }
