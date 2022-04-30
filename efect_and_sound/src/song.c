@@ -15,7 +15,7 @@
 
 #include "../include/song.h"
 
-void* play_song(void* name) {
+void* play_song(void* data) {
 	pa_simple *device = NULL;
 	int error = 0;
 	struct mad_stream mad_stream;
@@ -70,7 +70,9 @@ void* play_song(void* name) {
 	if(device)
 		pa_simple_free(device);
 
-	return name;
+	*(int*)data = 1;
+
+	return NULL;
 }
 
 static int scale(mad_fixed_t sample) {

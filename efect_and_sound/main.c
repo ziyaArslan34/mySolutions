@@ -7,13 +7,10 @@
 int main() {
 	pthread_t th1, th2;
 
-	pthread_create(&th1, NULL, play_efect, "efect");
-	pthread_create(&th2, NULL, play_song, "efect");
+	int eof = 0;
 
-	void *res = NULL;
-	pthread_join(th2, &res);
+	pthread_create(&th1, NULL, play_song, &eof);
+	pthread_create(&th2, NULL, play_efect, &eof);
 
-	if(res) {
-		return 0;
-	}
+	sleep(255);
 }

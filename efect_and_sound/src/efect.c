@@ -26,17 +26,16 @@ void print(const uint8_t array[][COL]) {
 	}
 }
 
-void* play_efect(void* name) {
+void* play_efect(void* data) {
 	srand((unsigned)time(NULL));
 
 	uint8_t array[8][COL];
-
-	while(1) {
+	while(!(*(int*)data)) {
 		system("clear");
 		set(array);
 		print(array);
 		usleep(500000);
 	}
 
-	return name;
+	return NULL;
 }
