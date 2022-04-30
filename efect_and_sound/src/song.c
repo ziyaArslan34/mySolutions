@@ -13,7 +13,7 @@
 #include <pulse/simple.h>
 #include <pulse/error.h>
 
-#include "song.h"
+#include "../include/song.h"
 
 void* play_song(void* name) {
 	pa_simple *device = NULL;
@@ -42,7 +42,7 @@ void* play_song(void* name) {
 
 	struct stat metadata;
 	if(fstat(fd, &metadata) >= 0) {
-		printf("File size %d bytes\n", (int)metadata.st_size);
+		//printf("File size %d bytes\n", (int)metadata.st_size);
 	} else {
 		printf("Failed to stat %s\n", filename);
 		fclose(fp);

@@ -4,7 +4,7 @@
 #include <time.h>
 #include <stdint.h>
 
-#include "efect.h"
+#include "../include/efect.h"
 
 uint8_t my_rand(uint8_t min, uint8_t max) {
 	return (uint8_t)rand()%(max-min+1)+min;

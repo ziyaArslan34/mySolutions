@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include "efect.h"
+#include "include/efect.h"
 #include <pthread.h>
 #include <unistd.h>
-#include "song.h"
+#include "include/song.h"
 
 #include <sys/stat.h>
 #include <sys/mman.h>
