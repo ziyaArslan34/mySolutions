@@ -74,6 +74,9 @@ linkedList *add_to_sort(linkedList **list, const void *src, int (*cmp)(const voi
 }
 
 linkedList *add_to_index(linkedList **list, const void *src, size_t idx) {
+	if(idx >= list_size(list))
+		return *list;
+
 	if(idx == 0) {
 		if(*list == NULL) {
 			fprintf(stderr, "list is null\n");
@@ -121,6 +124,9 @@ linkedList *del_to_index(linkedList **list, size_t idx) {
 		return *list;
 	}
 
+	if(idx >= list_size(list))
+		return *list;
+
 	if(idx == 0) {
 		linkedList *tmp = *list;
 		*list = (*list)->next;
@@ -141,7 +147,7 @@ linkedList *del_to_index(linkedList **list, size_t idx) {
 }
 
 void sort_list(linkedList **list, int (*comp)(const void*, const void*)) {
-	dynamicArray_t array = init((*list)->typeSize, list_size(list)+1);
+	dynamicArray_t array = init_array((*list)->typeSize, list_size(list)+1);
 
 	linkedList *iter = *list;
 
@@ -159,7 +165,7 @@ void sort_list(linkedList **list, int (*comp)(const void*, const void*)) {
 	for(size_t i=1;i<array.size;i++)
 		add_to_end(&newList, get_index_element(&array, i));
 
-	destroy(&array);
+	destroy_array(&array);
 	destroy_list(list);
 
 	*list = newList;

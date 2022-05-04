@@ -21,8 +21,6 @@ int main() {
 
 	for(int i=100;i<115;i++) {
 		int val = (int)rand()%(100-10+1)+10;
-		printf("%d\n", val);
-
 		add_to_sort(&root, &val, cmp);
 	}
 
