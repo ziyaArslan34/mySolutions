@@ -25,13 +25,17 @@ typedef struct _PLAYERTANK {
 	int hp, gun;
 }playerTank;
 
+int my_rand(int min, int max) {
+	return (int)rand()%(max-min+1)+min;
+}
+
 void initPCTank(enemyTank (*enemyTanks)[]) {
 	for(size_t i=0;i<TANKSIZE;i++) {
-		char name[3];
+		char name[4];
 		memset(name, ' ', sizeof(name));
 		for(size_t j=0;j<3;j++)
-			name[j] = rand()%(122-97+1)+97;
-
+			name[j] = (char)my_rand('a', 'z');
+		name[3] = '\0';
 		strcpy((*enemyTanks)[i].name, name);
 		(*enemyTanks)[i].hp = 10;
 		(*enemyTanks)[i].gun = 10;
@@ -40,9 +44,10 @@ void initPCTank(enemyTank (*enemyTanks)[]) {
 
 void initPlayerTank(playerTank (*playerTanks)[]) {
 	for(size_t i=0;i<TANKSIZE;i++) {
-		char name[3] = {0};
+		char name[4] = {0};
 		for(size_t j=0;j<3;j++)
-			name[j] = rand()%(122-97+1)+97;
+			name[j] = (char)my_rand('a','z');
+		name[3] = '\0';
 		strcpy((*playerTanks)[i].name, name);
 		(*playerTanks)[i].hp = 10;
 		(*playerTanks)[i].gun = 10;
@@ -61,13 +66,13 @@ void initMain(char (*tankMap)[][MAPSIZE][MAPSIZE], char (*playerMap)[][MAPSIZE][
 
 	int flag=TANKSIZE;
 	while(flag--) {
-		strcpy((*tankMap)[rand()%MAPSIZE+0][rand()%MAPSIZE+0], (*enemyTanks)[index].name);
-		strcpy((*playerMap)[rand()%MAPSIZE+0][rand()%MAPSIZE+0], (*playerTanks)[index].name);
+		strcpy((*tankMap)[my_rand(0,MAPSIZE-1)][my_rand(0,MAPSIZE-1)], (*enemyTanks)[index].name);
+		strcpy((*playerMap)[my_rand(0,MAPSIZE-1)][my_rand(0,MAPSIZE-1)], (*playerTanks)[index].name);
 		index++;
 	}
 }
 
-void printEnemyMap(char (*map)[][MAPSIZE][MAPSIZE]) {
+void printEnemyMap(const char (*map)[][MAPSIZE][MAPSIZE]) {
 	printf("    ");
 	for(size_t i=0;i<MAPSIZE;i++)
 		printf("  %zu  |", i);
@@ -82,7 +87,7 @@ void printEnemyMap(char (*map)[][MAPSIZE][MAPSIZE]) {
 	printf("______________________________________________\n");
 }
 
-void printYourMap(char (*map)[][MAPSIZE][MAPSIZE]) {
+void printYourMap(const char (*map)[][MAPSIZE][MAPSIZE]) {
 	printf("    ");
 	for(size_t i=0;i<MAPSIZE;i++)
 		printf("  %zu  |", i);
@@ -97,7 +102,7 @@ void printYourMap(char (*map)[][MAPSIZE][MAPSIZE]) {
 	printf("______________________________________________\n");
 }
 
-static int deadTank(char (*tankMap)[][MAPSIZE][MAPSIZE], const size_t row, const size_t col, enemyTank (*enemyTanks)[]) {
+static int deadTank(char (*tankMap)[][MAPSIZE][MAPSIZE], size_t row, size_t col, enemyTank (*enemyTanks)[]) {
 	size_t i;
 
 	for(i=0;i<TANKSIZE;i++) {
@@ -150,10 +155,10 @@ static int ctrlYourTank(char (*playerMap)[][MAPSIZE][MAPSIZE], playerTank (*play
 	return 0;
 }
 
-static int entryCtrl(char *row, char *column) {
+static int entryCtrl(const char *row, const char *column) {
 	if(strlen(row) != 1 || strlen(column) != 1)
 		return 1;
-	if(!(row[0] >= 48 && row[0] <= 54) || !(column[0] >= 48 && column[0] <= 54))
+	if(!(row[0] >= '0' && row[0] <= '6') || !(column[0] >= '0' && column[0] <= '6'))
 		return 1;
 	return 0;
 }
