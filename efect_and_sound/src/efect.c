@@ -11,17 +11,20 @@ uint8_t my_rand(uint8_t min, uint8_t max) {
 }
 
 void set(uint8_t array[][COL]) {
-	for(uint8_t i=0;i<8;i++)
+	for(uint8_t i=0;i<ROW;i++)
 		for(uint8_t j=0;j<COL;j++)
-			array[i][j] = my_rand(0,1);
+			array[i][j] = my_rand(' ', 'z');
+
+	size_t n = COL-1;
+	while(n--)
+		array[my_rand(0,ROW-1)][my_rand(0,COL-1)] = ' ';
 }
 
 void print(const uint8_t array[][COL]) {
-	printf("\n\n");
-	for(uint8_t i=0;i<8;i++) {
+	for(uint8_t i=0;i<ROW;i++) {
 		printf("\t");
 		for(uint8_t j=0;j<COL;j++)
-			printf("%d ", array[i][j]);
+			printf("%c ", array[i][j]);
 		printf("\n");
 	}
 }
@@ -29,12 +32,12 @@ void print(const uint8_t array[][COL]) {
 void* play_efect(void* data) {
 	srand((unsigned)time(NULL));
 
-	uint8_t array[8][COL];
+	uint8_t array[ROW][COL];
 	while(!(*(int*)data)) {
-		system("clear");
+		//system("clear");
 		set(array);
 		print(array);
-		usleep(500000);
+		usleep(400000);
 	}
 
 	return NULL;
