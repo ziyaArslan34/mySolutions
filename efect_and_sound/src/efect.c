@@ -15,16 +15,16 @@ void set(uint8_t array[][COL]) {
 		for(uint8_t j=0;j<COL;j++)
 			array[i][j] = my_rand(' ', 'z');
 
-	size_t n = COL-1;
+	size_t n = (COL*ROW)/2;
 	while(n--)
 		array[my_rand(0,ROW-1)][my_rand(0,COL-1)] = ' ';
 }
 
 void print(const uint8_t array[][COL]) {
 	for(uint8_t i=0;i<ROW;i++) {
-		printf("\t");
+		printf("  ");
 		for(uint8_t j=0;j<COL;j++)
-			printf("%c ", array[i][j]);
+			printf("%c  ", array[i][j]);
 		printf("\n");
 	}
 }

@@ -1,7 +1,7 @@
 #ifndef _EFECT_H_
 #define _EFECT_H_
 
-#define COL 24
+#define COL 20
 #define ROW 10
 
 #include <stdint.h>
