@@ -1,5 +1,0 @@
-
-
-compile:
-
-gcc main.c src/song.c src/efect.c -lpulse -lpulse-simple -lmad -lpthread
