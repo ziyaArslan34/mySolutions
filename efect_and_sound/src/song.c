@@ -1,9 +1,3 @@
-/*
-	* information: linux terminal sound/mp3 player
-	* compile: gcc file.c -lpulse -lpulse-simple -lmad -g
-	* requirements: apt install pulseaudio libmad
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
