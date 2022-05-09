@@ -16,8 +16,6 @@ void* play_song(void* data) {
 	struct mad_frame mad_frame;
 	struct mad_synth mad_synth;
 
-	printf("%d\n", error);
-
 	static const pa_sample_spec ss = { .format = PA_SAMPLE_S16LE, .rate = 44100, .channels = 2 };
 
 	if(!(device = pa_simple_new(NULL, "MP3 player", PA_STREAM_PLAYBACK, NULL, "playback", &ss, NULL, NULL, &error))) {
@@ -45,8 +43,9 @@ void* play_song(void* data) {
 
 	unsigned char *input_stream = mmap(0, metadata.st_size, PROT_READ, MAP_SHARED, fd, 0);
 	mad_stream_buffer(&mad_stream, input_stream, metadata.st_size);
+	int flag = (int)metadata.st_size;
 
-	while(1) {
+	while(flag--) {
 		if(mad_frame_decode(&mad_frame, &mad_stream)) {
 			if(MAD_RECOVERABLE(mad_stream.error)) continue;
 			else if (mad_stream.error == MAD_ERROR_BUFLEN) continue;
@@ -63,8 +62,8 @@ void* play_song(void* data) {
 
 	if(device)
 		pa_simple_free(device);
-
 	*(int*)data = 1;
+
 	return NULL;
 }
 

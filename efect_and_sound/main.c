@@ -5,20 +5,14 @@
 #include "include/song.h"
 #include <stdlib.h>
 
-int main(int argc, char **argv) {
-	if(argc != 2) {
-		fprintf(stderr, "usage: { a.out <music_second> }\n");
-		return 1;
-	}
-
+int main(void) {
 	pthread_t th1, th2;
 
 	int flag = 0;
 
-	pthread_create(&th1, NULL, play_song, &flag);
-	pthread_create(&th2, NULL, play_efect, &flag);
-	sleep(atoi(argv[1]));
+	pthread_create(&th1, NULL, play_efect, &flag);
+	pthread_create(&th2, NULL, play_song, &flag);
 
-	//pthread_join(th1, NULL);
-	//pthread_join(th2, NULL);
+	pthread_join(th1, NULL);
+	pthread_join(th2, NULL);
 }
