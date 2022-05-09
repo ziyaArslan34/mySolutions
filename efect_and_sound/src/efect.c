@@ -23,19 +23,19 @@ void set(uint8_t **array, size_t row, size_t col) {
 
 void print(uint8_t **array, size_t row, size_t col, uint8_t cnt) {
 	for(uint8_t i=0;i<row;i++) {
-		printf(" %s| ", CYAN);
+		printf(" %s| ", GRAY);
 		for(uint8_t j=0;j<col-3;j++)
-			printf("%s%c",YELLOW, array[i][j]);
-		printf(" %s|\n", CYAN);
+			printf("%s%c",CYAN, array[i][j]);
+		printf(" %s|\n", GRAY);
 	}
 	printf(" ");
 	for(uint8_t i=0;i<col+1;i++)
-		printf("%s=", CYAN);
+		printf("%s=", GRAY);
 	printf("\n");
 	printf("\n [");
 	for(uint8_t i=0;i<col-7;i++)
-		printf("%s%c",YELLOW,  (i < cnt ? '#' : ' '));
-	printf(" %s][%s%c%lu%s]\n",CYAN, YELLOW, '%', (100*cnt/col) <= 100 ? 100*cnt/col : 100, CYAN);
+		printf("%s%c",CYAN,  (i < cnt ? '#' : ' '));
+	printf(" %s][%s%c%lu%s]\n",GRAY, CYAN, '%', (100*cnt/col) <= 100 ? 100*cnt/col : 100, GRAY);
 }
 
 void* play_efect(void* data) {
