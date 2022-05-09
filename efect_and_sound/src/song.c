@@ -12,7 +12,7 @@
 
 void* play_song(void* data) {
 	pa_simple *device = NULL;
-	int error = 0;
+	int error = 0, val = 1;
 	struct mad_stream mad_stream;
 	struct mad_frame mad_frame;
 	struct mad_synth mad_synth;
@@ -31,6 +31,11 @@ void* play_song(void* data) {
 	char *filename = (char*)data;
 
 	FILE *fp = fopen((char*)&*(filename+sizeof(int)*2), "r");
+	if(!fp) {
+		fprintf(stderr, "file cannot open\n");
+    	memcpy(data, &val, sizeof(int));
+		return NULL;
+	}
 	int fd = fileno(fp);
 
 	struct stat metadata;
@@ -80,7 +85,6 @@ void* play_song(void* data) {
 
 	if(device)
 		pa_simple_free(device);
-	int val = 1;
 	memcpy(data, &val, sizeof(int));
 
 	return NULL;
