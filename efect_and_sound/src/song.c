@@ -57,7 +57,7 @@ void* play_song(void* data) {
 	int x = 0;
 
 	while(cnt < max_cnt) {
-		if((cnt % ((100*max_cnt/40000)/sc_wid)) == 0) {
+		if((cnt % ((100*max_cnt/38000)/sc_wid)) == 0) {
 			int *ptr = (int*)((char*)data+sizeof(int));
 			*ptr = x++;
 		}
