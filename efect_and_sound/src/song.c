@@ -65,7 +65,6 @@ void* play_song(void* data) {
 		pa_simple_free(device);
 
 	*(int*)data = 1;
-
 	return NULL;
 }
 
