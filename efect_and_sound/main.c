@@ -31,6 +31,5 @@ int main(int argc, char **argv) {
 	pthread_join(th1, NULL);
 	pthread_join(th2, NULL);
 
-
 	return 0;
 }

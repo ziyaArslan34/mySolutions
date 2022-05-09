@@ -43,13 +43,14 @@ void* play_song(void* data) {
 	unsigned char *input_stream = mmap(0, metadata.st_size, PROT_READ, MAP_SHARED, fd, 0);
 	mad_stream_buffer(&mad_stream, input_stream, metadata.st_size);
 	size_t cnt = 0;
+	size_t max_cnt = metadata.st_size;
+
 	int x = 0;
 
-	while(cnt < metadata.st_size) {
-		if((cnt % (3039/60)) == 0) {
-			x++;
+	while(cnt < max_cnt) {
+		if((cnt % ((100*max_cnt/40000)/60)) == 0) {
 			int *ptr = (int*)((char*)data+sizeof(int));
-			*ptr = x;
+			*ptr = x++;
 		}
 		cnt++;
 		if(mad_frame_decode(&mad_frame, &mad_stream)) {
@@ -59,7 +60,6 @@ void* play_song(void* data) {
 		}
 		mad_synth_frame(&mad_synth, &mad_frame);
 		output(&mad_frame.header, &mad_synth.pcm, &error, device);
-		//printf("cnt -> %zu\n", cnt);
 	}
 	fclose(fp);
 
