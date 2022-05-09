@@ -27,16 +27,15 @@ void* play_song(void* data) {
 	mad_synth_init(&mad_synth);
 	mad_frame_init(&mad_frame);
 
-	char *filename = "song.mp3";
+	char *filename = (char*)data;
 
-	FILE *fp = fopen(filename, "r");
+	FILE *fp = fopen((char*)&*(filename+sizeof(int)), "r");
 	int fd = fileno(fp);
 
 	struct stat metadata;
 	if(fstat(fd, &metadata) >= 0) {
 		//printf("File size %d bytes\n", (int)metadata.st_size);
 	} else {
-		printf("Failed to stat %s\n", filename);
 		fclose(fp);
 		return NULL;
 	}
@@ -62,7 +61,8 @@ void* play_song(void* data) {
 
 	if(device)
 		pa_simple_free(device);
-	*(int*)data = 1;
+	int val = 1;
+	memcpy(data, &val, sizeof(int));
 
 	return NULL;
 }

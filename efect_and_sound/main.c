@@ -4,11 +4,24 @@
 #include <unistd.h>
 #include "include/song.h"
 #include <stdlib.h>
+#include <string.h>
 
-int main(void) {
+struct data {
+	int flag;
+	char name[15];
+};
+
+int main(int argc, char **argv) {
+	if(argc != 2) {
+		fprintf(stderr, "usage: { a.out <filename> }\n");
+		return 255;
+	}
+
+	struct data flag;
+	flag.flag = 0;
+	strcpy(flag.name, argv[1]);
+
 	pthread_t th1, th2;
-
-	int flag = 0;
 
 	pthread_create(&th1, NULL, play_efect, &flag);
 	pthread_create(&th2, NULL, play_song, &flag);
