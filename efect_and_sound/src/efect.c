@@ -23,12 +23,16 @@ void set(uint8_t **array, size_t row, size_t col) {
 
 void print(uint8_t **array, size_t row, size_t col, uint8_t cnt) {
 	for(uint8_t i=0;i<row;i++) {
-		printf("  ");
-		for(uint8_t j=0;j<col;j++)
+		printf(" | ");
+		for(uint8_t j=0;j<col-3;j++)
 			printf("%c", array[i][j]);
-		printf("\n");
+		printf(" |\n");
 	}
-	printf("\n[ ");
+	printf(" ");
+	for(uint8_t i=0;i<col+1;i++)
+		printf("=");
+	printf("\n");
+	printf("\n [");
 	for(uint8_t i=0;i<col-7;i++)
 		printf("%c", (i < cnt ? '.' : ' '));
 	printf(" ][%c%lu]\n", '%', (100*cnt/col) <= 100 ? 100*cnt/col : 100);
