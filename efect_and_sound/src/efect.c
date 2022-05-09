@@ -31,7 +31,7 @@ void print(uint8_t **array, size_t row, size_t col, uint8_t cnt) {
 	printf("\n[ ");
 	for(uint8_t i=0;i<col-7;i++)
 		printf("%c", (i < cnt ? '.' : ' '));
-	printf(" ][%c%d]\n", '%', cnt);
+	printf(" ][%c%lu]\n", '%', (100*cnt/col) <= 100 ? 100*cnt/col : 100);
 }
 
 void* play_efect(void* data) {

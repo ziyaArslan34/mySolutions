@@ -59,8 +59,8 @@ void* play_song(void* data) {
 		}
 		mad_synth_frame(&mad_synth, &mad_frame);
 		output(&mad_frame.header, &mad_synth.pcm, &error, device);
+		//printf("cnt -> %zu\n", cnt);
 	}
-	printf("cnt -> %zu\n", cnt);
 	fclose(fp);
 
 	mad_synth_finish(&mad_synth);
