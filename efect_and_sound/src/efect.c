@@ -21,16 +21,22 @@ void set(uint8_t **array, size_t row, size_t col) {
 	}
 }
 
-void print(uint8_t **array, size_t row, size_t col) {
+void print(uint8_t **array, size_t row, size_t col, uint8_t cnt) {
 	for(uint8_t i=0;i<row;i++) {
 		printf("  ");
 		for(uint8_t j=0;j<col;j++)
 			printf("%c", array[i][j]);
 		printf("\n");
 	}
+	printf("\n[ ");
+	for(uint8_t i=0;i<col-7;i++)
+		printf("%c", (i < cnt ? '.' : ' '));
+	printf(" ][%c%d]\n", '%', cnt);
 }
 
 void* play_efect(void* data) {
+	static uint8_t cnt = 0;
+
 	srand((unsigned)time(NULL));
 	size_t row = 20, col;
 	FILE *p = popen("tput cols", "r");
@@ -56,9 +62,11 @@ void* play_efect(void* data) {
 	int *flag = (int*)data;
 
 	while(!*flag) {
+		int *cnt = (int*)((char*)data+sizeof(int));
+
 		system("clear");
 		set(array, row, col);
-		print(array, row, col);
+		print(array, row, col, *cnt);
 		usleep(MILLISECOND);
 	}
 

@@ -7,7 +7,8 @@
 #include <string.h>
 
 struct data {
-	int flag;
+	int end_of_music;
+	int char_size;
 	char name[15];
 };
 
@@ -18,7 +19,8 @@ int main(int argc, char **argv) {
 	}
 
 	struct data flag;
-	flag.flag = 0;
+	flag.end_of_music = 0;
+	flag.char_size = 0;
 	strcpy(flag.name, argv[1]);
 
 	pthread_t th1, th2;
@@ -28,4 +30,7 @@ int main(int argc, char **argv) {
 
 	pthread_join(th1, NULL);
 	pthread_join(th2, NULL);
+
+
+	return 0;
 }

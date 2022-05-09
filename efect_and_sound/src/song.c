@@ -29,7 +29,7 @@ void* play_song(void* data) {
 
 	char *filename = (char*)data;
 
-	FILE *fp = fopen((char*)&*(filename+sizeof(int)), "r");
+	FILE *fp = fopen((char*)&*(filename+sizeof(int)*2), "r");
 	int fd = fileno(fp);
 
 	struct stat metadata;
@@ -42,9 +42,16 @@ void* play_song(void* data) {
 
 	unsigned char *input_stream = mmap(0, metadata.st_size, PROT_READ, MAP_SHARED, fd, 0);
 	mad_stream_buffer(&mad_stream, input_stream, metadata.st_size);
-	int flag = (int)metadata.st_size;
+	size_t cnt = 0;
+	int x = 0;
 
-	while(flag--) {
+	while(cnt < metadata.st_size) {
+		if((cnt % (3039/60)) == 0) {
+			x++;
+			int *ptr = (int*)((char*)data+sizeof(int));
+			*ptr = x;
+		}
+		cnt++;
 		if(mad_frame_decode(&mad_frame, &mad_stream)) {
 			if(MAD_RECOVERABLE(mad_stream.error)) continue;
 			else if (mad_stream.error == MAD_ERROR_BUFLEN) continue;
@@ -53,6 +60,7 @@ void* play_song(void* data) {
 		mad_synth_frame(&mad_synth, &mad_frame);
 		output(&mad_frame.header, &mad_synth.pcm, &error, device);
 	}
+	printf("cnt -> %zu\n", cnt);
 	fclose(fp);
 
 	mad_synth_finish(&mad_synth);
