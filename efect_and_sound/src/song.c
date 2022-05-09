@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
@@ -44,11 +45,19 @@ void* play_song(void* data) {
 	mad_stream_buffer(&mad_stream, input_stream, metadata.st_size);
 	size_t cnt = 0;
 	size_t max_cnt = metadata.st_size;
+	int sc_wid = 0;
+	{
+		FILE *p = popen("tput cols", "r");
+		char sz[5];
+		fgets(sz, 5, p);
+		sc_wid = atoi(sz) - 4;
+		pclose(p);
+	}
 
 	int x = 0;
 
 	while(cnt < max_cnt) {
-		if((cnt % ((100*max_cnt/40000)/60)) == 0) {
+		if((cnt % ((100*max_cnt/40000)/sc_wid)) == 0) {
 			int *ptr = (int*)((char*)data+sizeof(int));
 			*ptr = x++;
 		}

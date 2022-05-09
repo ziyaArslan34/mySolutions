@@ -21,6 +21,7 @@ int main(int argc, char **argv) {
 	struct data flag;
 	flag.end_of_music = 0;
 	flag.char_size = 0;
+
 	strcpy(flag.name, argv[1]);
 
 	pthread_t th1, th2;
