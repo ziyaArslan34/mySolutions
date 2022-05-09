@@ -57,9 +57,11 @@ void* play_song(void* data) {
 	int x = 0;
 
 	while(cnt < max_cnt) {
-		if((cnt % ((100*max_cnt/38000)/sc_wid)) == 0) {
+		if((cnt % ((100*max_cnt/45000)/sc_wid)) == 0) {
 			int *ptr = (int*)((char*)data+sizeof(int));
 			*ptr = x++;
+			if(x >= sc_wid+sizeof(int))
+				break;
 		}
 		cnt++;
 		if(mad_frame_decode(&mad_frame, &mad_stream)) {
