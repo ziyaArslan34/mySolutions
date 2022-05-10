@@ -14,7 +14,7 @@ struct data {
 
 int main(int argc, char **argv) {
 	if(argc != 2) {
-		fprintf(stderr, "usage: { a.out <filename> }\n");
+		fprintf(stderr, "usage: { ./a.out <filename> }\n");
 		return 255;
 	}
 
