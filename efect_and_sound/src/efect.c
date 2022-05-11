@@ -17,7 +17,7 @@ void set(uint8_t **array, size_t row, size_t col) {
 
 	for(uint8_t i=0;i<col;i++) {
 		for(uint8_t j=row-1;j>=my_rand(0,row);j--)
-			array[j][i] = my_rand(' ', 'z');
+			array[j][i] = '=' /*my_rand(' ', 'z')*/;
 	}
 }
 
