@@ -3,14 +3,14 @@
 #include <time.h>
 
 #include "../Hash/hash.h"
-#include "../Split/split.h"
+#include "../split/split.h"
 
 typedef struct {
 	char username[30];
 	char password[30];
 }user_t;
 
-void menu() {
+void menu(void) {
 	printf("\nWELCOME\n");
 	printf("sing in [1]\n");
 	printf("sing up [2]\n");
@@ -19,7 +19,7 @@ void menu() {
 
 void debug(const char *dbg) { printf("debug: %s\n", dbg); }
 
-void sing_in() {
+void sing_in(void) {
 	user_t user;
 	size_t flag=0;
 
@@ -94,7 +94,7 @@ void sing_up(FILE *fptr) {
 	destroy_hash(&hash);
 }
 
-int main() {
+int main(void) {
 	srand((unsigned)time(NULL));
 
 	FILE *users = fopen("users.txt", "a+");
