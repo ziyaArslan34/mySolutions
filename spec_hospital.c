@@ -225,9 +225,7 @@ void menu(void) {
 }
 
 int entry_control(const char *e) {
-	if(strlen(e) > 1)
-		return 0;
-	return (e[0] > '0' && e[0] < '9');
+	return strlen(e) > 1 ? 0 : (e[0] > '0' && e[0] < '9');
 }
 
 int clinic_control(const char *clinic) {
