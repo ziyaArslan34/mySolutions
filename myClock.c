@@ -118,55 +118,25 @@ const char *get_current_time() {
 	return get;
 }
 
-mytime_t get_current_clock(const char *tm_) {
-	mytime_t myTime;
-	int array[3];
-	size_t index=0;
+mytime_t get_current_clock(const char *time) {
+        mytime_t tm = {0,0,0};
+        char s[10];
+        size_t idx = 0;
+        int cnt = 0;
 
-	size_t idx=0, cap=10;
-	char *currentClock = (char*)malloc(sizeof(char)*cap);
+        for(size_t i=0;i<strlen(time);i++) {
+                if(time[i] == ' ')
+                        cnt++;
+                if(cnt == 3) {
+                        for(size_t j=i+1;time[j] != ' ';j++)
+                                s[idx++] = time[j];
+                        break;
+                }
+        }
+        s[idx++] = '\0';
 
-	int flag = 0;
-
-	for(size_t i=0;i<strlen(tm_);i++) {
-		if(tm_[i] >= 48 && tm_[i] <= 57)
-			flag++;
-		if(flag == 2) {
-			for(size_t j=i;tm_[j] != ' ' && j < strlen(tm_);j++) {
-				if(idx >= cap) {
-					cap *= 2;
-					currentClock = (char*)realloc(currentClock, sizeof(char)*cap);
-				}
-				currentClock[idx++] = tm_[j];
-			}
-			currentClock[idx++] = '\0';
-			break;
-		}
-	}
-
-	for(size_t i=0;i<strlen(currentClock);) {
-		size_t t_idx = 0, t_cap = 5;
-		char *tmp = (char*)malloc(sizeof(char)*t_cap);
-
-		for(size_t j=i;currentClock[i++] != ':' && j < strlen(currentClock);j++) {
-			if(t_idx >= t_cap) {
-				t_cap *= 2;
-				tmp = (char*)realloc(tmp, sizeof(char)*t_cap);
-			}
-			tmp[t_idx++] = currentClock[j];
-		}
-
-		tmp[t_idx++] = '\0';
-		array[index++] = atoi(tmp);
-		free(tmp);
-	}
-
-	myTime.hour = array[0];
-	myTime.min = array[1];
-	myTime.sec = array[2];
-
-	free(currentClock);
-	return myTime;
+        sscanf(s, "%d:%d:%d", &tm.hour, &tm.min, &tm.sec);
+        return tm;
 }
 
 void print_clock(const mytime_t *myTime) {
@@ -193,7 +163,7 @@ int main() {
 	mytime_t systemClock = get_current_clock(currentTime);
 	print_clock(&systemClock);
 
-
+	getchar();
 	mytime_t *array = (mytime_t*)malloc(sizeof(mytime_t)*10);
 	size_t idx=0;
 
