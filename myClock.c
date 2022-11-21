@@ -10,12 +10,12 @@ typedef struct {
 }mytime_t;
 
 int          my_rand(int,int);
-mytime_t     random_clock();
+mytime_t     random_clock(void);
 int          comp_less(const mytime_t*, const mytime_t*);
 size_t       clock_to_second(const mytime_t*);
 void         clock_sort(mytime_t **, size_t, int(*)(const mytime_t*, const mytime_t*));
 mytime_t     get_difference_time(const mytime_t*, const mytime_t*);
-const char*  get_current_time();
+const char*  get_current_time(void);
 mytime_t     get_current_clock(const char*);
 void         print_clock(const mytime_t*);
 
@@ -24,9 +24,8 @@ int my_rand(int min, int max) {
 	return (int)rand()%(max-min+1)+min;
 }
 
-mytime_t random_clock() {
-	mytime_t tm_ = {my_rand(1,24),my_rand(1,59), my_rand(1,59)};
-	return tm_;
+mytime_t random_clock(void) {
+	return (mytime_t){my_rand(1,24), my_rand(1,59), my_rand(1,59)};
 }
 
 int comp_less(const mytime_t *t1, const mytime_t *t2) {
@@ -112,31 +111,30 @@ mytime_t get_difference_time(const mytime_t *t1, const mytime_t *t2) {
 	return dftime;
 }
 
-const char *get_current_time() {
+const char *get_current_time(void) {
 	time_t start = time(NULL);
-	const char *get = ctime(&start);
-	return get;
+	return ctime(&start);
 }
 
 mytime_t get_current_clock(const char *time) {
-        mytime_t tm = {0,0,0};
-        char s[10];
-        size_t idx = 0;
-        int cnt = 0;
+	mytime_t tm = {0,0,0};
+	char s[10];
 
-        for(size_t i=0;i<strlen(time);i++) {
-                if(time[i] == ' ')
-                        cnt++;
-                if(cnt == 3) {
-                        for(size_t j=i+1;time[j] != ' ';j++)
-                                s[idx++] = time[j];
-                        break;
-                }
-        }
-        s[idx++] = '\0';
+	size_t idx = 0, cnt = 0;
 
-        sscanf(s, "%d:%d:%d", &tm.hour, &tm.min, &tm.sec);
-        return tm;
+	for(size_t i=0;i<strlen(time);i++) {
+		if(time[i] == ' ')
+			cnt++;
+		if(cnt == 3) {
+			for(size_t j=i+1;time[j] != ' ';j++)
+				s[idx++] = time[j];
+			break;
+		}
+	}
+	s[idx++] = '\0';
+
+	sscanf(s, "%d:%d:%d", &tm.hour, &tm.min, &tm.sec);
+	return tm;
 }
 
 void print_clock(const mytime_t *myTime) {
@@ -154,7 +152,7 @@ void print_clock(const mytime_t *myTime) {
 	printf(" ]\n\n");
 }
 
-int main() {
+int main(void) {
 	srand((unsigned)time(NULL));
 
 	const char* currentTime = get_current_time();
