@@ -94,8 +94,7 @@ void del_record(const record_t *rc) {
 		return;
 	}
 
-	int del = rc->name[0] - 'a';
-	node_t *iter = rec_array[del].ptr;
+	node_t *iter = rec_array[rc->name[0] - 'a'].ptr;
 
 	for(int i=0;i<idx-1;i++)
 		iter = iter->next;
@@ -263,9 +262,7 @@ int main(void) {
 			continue;
 		}
 
-		int ent = atoi(entry);
-
-		switch(ent) {
+		switch(atoi(entry)) {
 			case 1:
 				printf("isim : "); scanf("%s", rc.name);
 				printf("soyisim: "); scanf("%s", rc.surname);
@@ -307,7 +304,7 @@ int main(void) {
 				sort_record("soyisim");
 				break;
 			case 6:
-				sort_record("policlinic");
+				sort_record("poliklinik");
 				break;
 			case 7:
 				system("clear");
