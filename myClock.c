@@ -13,7 +13,7 @@ int          my_rand(int,int);
 mytime_t     random_clock(void);
 int          comp_less(const mytime_t*, const mytime_t*);
 size_t       clock_to_second(const mytime_t*);
-void         clock_sort(mytime_t **, size_t, int(*)(const mytime_t*, const mytime_t*));
+void         clock_sort(mytime_t *, size_t, int(*)(const mytime_t*, const mytime_t*));
 mytime_t     get_difference_time(const mytime_t*, const mytime_t*);
 const char*  get_current_time(void);
 mytime_t     get_current_clock(const char*);
@@ -52,22 +52,16 @@ int comp_less(const mytime_t *t1, const mytime_t *t2) {
 }
 
 size_t clock_to_second(const mytime_t *mytime) {
-	size_t second=0;
-
-	second += (size_t)mytime->sec;
-	second += (size_t)mytime->min*60;
-	second += (size_t)mytime->hour*60*60;
-
-	return second;
+	return (size_t)(mytime->sec + (mytime->min*60) + (mytime->hour*60*60));
 }
 
-void clock_sort(mytime_t **array, size_t size, int (*comp)(const mytime_t*, const mytime_t*)) {
-	for(size_t i=0;i<size;i++) {
-		for(size_t j=0;j<size;j++) {
-			if(comp(&((*array)[i]), &((*array)[j]))) {
-				mytime_t temp = (*array)[i];
-				(*array)[i] = (*array)[j];
-				(*array)[j] = temp;
+void clock_sort(mytime_t *array, size_t size, int (*comp)(const mytime_t*, const mytime_t*)) {
+	for(size_t i=0;i<size-1;i++) {
+		for(size_t j=0;j<size-1;j++) {
+			if(comp(&array[i], &array[j])) {
+				mytime_t temp = array[i];
+				array[i] = array[j];
+				array[j] = temp;
 			}
 		}
 	}
@@ -155,27 +149,23 @@ void print_clock(const mytime_t *myTime) {
 int main(void) {
 	srand((unsigned)time(NULL));
 
-	const char* currentTime = get_current_time();
-	printf("\n%s\n\n", currentTime);
-
-	mytime_t systemClock = get_current_clock(currentTime);
+	mytime_t systemClock = get_current_clock(get_current_time());
 	print_clock(&systemClock);
 
-	getchar();
-	mytime_t *array = (mytime_t*)malloc(sizeof(mytime_t)*10);
-	size_t idx=0;
+	mytime_t array[10];
 
 	for(size_t i=0;i<10;i++)
-		array[idx++] = random_clock();
+		array[i] = random_clock();
 
-	for(size_t i=0;i<idx;i++)
+	for(size_t i=0;i<10;i++)
 		print_clock(&array[i]);
-	clock_sort(&array, idx, comp_less);
+
+	clock_sort(array, 10, comp_less);
+
 	printf("\n\nSiralamadan sonra\n\n");
 
-	for(size_t i=0;i<idx;i++)
+	for(size_t i=0;i<10;i++)
 		print_clock(&array[i]);
 
-	free(array);
 	return 0;
 }
