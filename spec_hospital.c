@@ -18,7 +18,7 @@ struct Node {
 struct Rec {
 	char ch;
 	struct Node *ptr;
-}*rec_array;
+}*rec_array = NULL;
 
 typedef struct Record record_t;
 typedef struct Node node_t;
@@ -36,8 +36,8 @@ void destroy(void) {
 	}
 }
 
-node_t *get_node_index(node_t **list, int idx) {
-	node_t *tmp = *list;
+node_t *get_node_index(node_t **nd, int idx) {
+	node_t *tmp = *nd;
 
 	if(!idx)
 		return tmp;
@@ -244,6 +244,7 @@ int clinic_control(const char *clinic) {
 
 int main(void) {
 	rec_array = (struct Rec*)malloc(sizeof(struct Rec)*REC_ARRAY_SIZE);
+
 	if(!rec_array)
 		return -1;
 
@@ -324,6 +325,5 @@ int main(void) {
 		}
 	}
 
-	free(rec_array);
 	return 0;
 }
