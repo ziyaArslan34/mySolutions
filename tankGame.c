@@ -120,7 +120,7 @@ static int deadTank(char (*tankMap)[][MAPSIZE][MAPSIZE], size_t row, size_t col,
 	return 0;
 }
 
-static int ctrlGunEnemy(enemyTank (*enemyTanks)[], char (*enemyMap)[][MAPSIZE][MAPSIZE], const size_t row, const size_t col) {
+static int ctrlGunEnemy(enemyTank (*enemyTanks)[], char (*enemyMap)[][MAPSIZE][MAPSIZE], size_t row, size_t col) {
 	for(size_t i=0;i<TANKSIZE;i++) {
 		if(strcmp((*enemyTanks)[i].name, (*enemyMap)[row][col]) == 0) {
 			if((*enemyTanks)[i].gun <= 0) {
@@ -133,7 +133,7 @@ static int ctrlGunEnemy(enemyTank (*enemyTanks)[], char (*enemyMap)[][MAPSIZE][M
 	return 0;
 }
 
-static int ctrlGunYour(playerTank (*playerTanks)[], char (*playerMap)[][MAPSIZE][MAPSIZE], const size_t row, const size_t col) {
+static int ctrlGunYour(playerTank (*playerTanks)[], char (*playerMap)[][MAPSIZE][MAPSIZE], size_t row, size_t col) {
 	return 0;
 }
 
