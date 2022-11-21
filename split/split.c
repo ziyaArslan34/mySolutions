@@ -27,7 +27,7 @@ int expr_find(const char *expr, char ch) {
 	return 0;
 }
 
-int search(const split_t *type, const char *src) {
+int search_split(const split_t *type, const char *src) {
 	for(size_t i=0;i<type->size;i++)
 		if(!strcmp(type->array[i], src))
 			return 1;
