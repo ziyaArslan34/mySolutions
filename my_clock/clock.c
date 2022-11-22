@@ -14,7 +14,13 @@ mytime_t random_clock(void) {
 }
 
 int comp_less(const mytime_t *t1, const mytime_t *t2) {
-	return (t1->hour == t2->hour && t1->min == t2->min && t1->sec == t2->sec) ? EQUAL : ((t1->hour < t2->hour) ? 1 : (!(t1->hour == t2->hour) ? 0 : (t1->min < t2->min) ? 1 : (t1->min == t2->min) ? ((t1->sec < t2->sec) ? 1 : 0) : 0));
+	// /* kotu gozukmesin diye bu iptal :) */return (t1->hour == t2->hour && t1->min == t2->min && t1->sec == t2->sec) ? EQUAL : ((t1->hour < t2->hour) ? 1 : (!(t1->hour == t2->hour) ? 0 : (t1->min < t2->min) ? 1 : (t1->min == t2->min) ? ((t1->sec < t2->sec) ? 1 : 0) : 0));
+
+	if (t1->hour != t2->hour) return t1->hour < t2->hour;
+	if (t1->min != t2->min) return t1->min < t2->min;
+	if (t1->sec != t2->sec) return t1->sec < t2->sec;
+
+	return EQUAL;
 }
 
 int comp_greater(const mytime_t *t1, const mytime_t *t2) {
