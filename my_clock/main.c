@@ -31,11 +31,6 @@ int main(void) {
 	print_array(array);
 
 	printf("\n--------- comp_less ---------\n\n");
-	clock_sort(array, SIZE, comp_less);
+	clock_sort(array, SIZE, time_cmp);
 	print_array(array);
-
-	printf("\n--------- comp_greater ---------\n\n");
-	clock_sort(array, SIZE, comp_greater);
-	print_array(array);
-
 }

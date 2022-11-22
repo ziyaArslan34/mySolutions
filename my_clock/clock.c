@@ -13,18 +13,17 @@ mytime_t random_clock(void) {
 	return (mytime_t){my_rand(1,24), my_rand(1,59), my_rand(1,59)};
 }
 
-int comp_less(const mytime_t *t1, const mytime_t *t2) {
+int time_cmp(const void *tm1, const void *tm2) {
 	// /* kotu gozukmesin diye bu iptal :) */return (t1->hour == t2->hour && t1->min == t2->min && t1->sec == t2->sec) ? EQUAL : ((t1->hour < t2->hour) ? 1 : (!(t1->hour == t2->hour) ? 0 : (t1->min < t2->min) ? 1 : (t1->min == t2->min) ? ((t1->sec < t2->sec) ? 1 : 0) : 0));
 
-	if (t1->hour != t2->hour) return t1->hour < t2->hour;
-	if (t1->min != t2->min) return t1->min < t2->min;
-	if (t1->sec != t2->sec) return t1->sec < t2->sec;
+	const mytime_t *t1 = (const mytime_t*)tm1;
+	const mytime_t *t2 = (const mytime_t*)tm2;
 
-	return EQUAL;
-}
-
-int comp_greater(const mytime_t *t1, const mytime_t *t2) {
-	return !comp_less(t1, t2);
+	if(t1->hour != t2->hour)
+		return t1->hour - t2->hour;
+	if(t1->min != t2->min)
+		return t1->min - t2->min;
+	return t1->sec - t2->sec;
 }
 
 size_t clock_to_second(const mytime_t *mytime) {
@@ -35,10 +34,10 @@ mytime_t second_to_clock(size_t second) {
 	return (mytime_t){second / (60*60), (second/60)%60, second%60};
 }
 
-void clock_sort(mytime_t *array, size_t size, int (*comp)(const mytime_t*, const mytime_t*)) {
+void clock_sort(mytime_t *array, size_t size, int (*comp)(const void*, const void*)) {
 	for(size_t i=0;i<size;i++) {
 		for(size_t j=0;j<size-1;j++) {
-			if(comp(&array[i], &array[j])) {
+			if(comp(&array[i], &array[j]) < 0) {
 				mytime_t temp = array[i];
 				array[i] = array[j];
 				array[j] = temp;
@@ -51,14 +50,14 @@ mytime_t get_difference_time(const mytime_t *t1, const mytime_t *t2) {
 	mytime_t dftime = {0,0,0};
 	mytime_t maxClock = {0,0,0};
 
-	if(comp_less(t1, t2) == EQUAL)
+	if(!time_cmp(t1, t2))
 		return dftime;
 
-	comp_less(t1, t2) ? ({maxClock = *t2 ; dftime = *t1;}) : ({maxClock = *t1 ; dftime = *t2;});
+	time_cmp(t1, t2) < 0 ? ({maxClock = *t2 ; dftime = *t1;}) : ({maxClock = *t1 ; dftime = *t2;});
 
 	size_t second = 0;
 
-	while(comp_less(&dftime, &maxClock) != EQUAL) {
+	while(time_cmp(&dftime, &maxClock) < 0) {
 		second++;
 		dftime.sec++;
 
