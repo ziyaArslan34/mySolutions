@@ -13,6 +13,7 @@ int          my_rand(int,int);
 mytime_t     random_clock(void);
 int          comp_less(const mytime_t*, const mytime_t*);
 size_t       clock_to_second(const mytime_t*);
+mytime_t     second_to_clock(size_t);
 void         clock_sort(mytime_t *, size_t, int(*)(const mytime_t*, const mytime_t*));
 mytime_t     get_difference_time(const mytime_t*, const mytime_t*);
 const char*  get_current_time(void);
@@ -55,6 +56,10 @@ size_t clock_to_second(const mytime_t *mytime) {
 	return (size_t)(mytime->sec + (mytime->min*60) + (mytime->hour*60*60));
 }
 
+mytime_t second_to_clock(size_t second) {
+	return (mytime_t){second / (60*60), (second/60)%60, second%60};
+}
+
 void clock_sort(mytime_t *array, size_t size, int (*comp)(const mytime_t*, const mytime_t*)) {
 	for(size_t i=0;i<size-1;i++) {
 		for(size_t j=0;j<size-1;j++) {
@@ -82,10 +87,10 @@ mytime_t get_difference_time(const mytime_t *t1, const mytime_t *t2) {
 		dftime = *t2;
 	}
 
-	int res = 0;
+	size_t second = 0;
 
 	while(comp_less(&dftime, &maxClock) != EQUAL) {
-		res++;
+		second++;
 		dftime.sec++;
 
 		if(dftime.sec == 60) {
@@ -98,11 +103,7 @@ mytime_t get_difference_time(const mytime_t *t1, const mytime_t *t2) {
 		}
 	}
 
-	dftime.hour = res / (60*60);
-	dftime.min = (res/60)%60;
-	dftime.sec = res % 60;
-
-	return dftime;
+	return second_to_clock(second);
 }
 
 const char *get_current_time(void) {
