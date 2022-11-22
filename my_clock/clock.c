@@ -17,6 +17,10 @@ int comp_less(const mytime_t *t1, const mytime_t *t2) {
 	return (t1->hour == t2->hour && t1->min == t2->min && t1->sec == t2->sec) ? EQUAL : ((t1->hour < t2->hour) ? 1 : (!(t1->hour == t2->hour) ? 0 : (t1->min < t2->min) ? 1 : (t1->min == t2->min) ? ((t1->sec < t2->sec) ? 1 : 0) : 0));
 }
 
+int comp_greater(const mytime_t *t1, const mytime_t *t2) {
+	return !comp_less(t1, t2);
+}
+
 size_t clock_to_second(const mytime_t *mytime) {
 	return (size_t)(mytime->sec + (mytime->min*60) + (mytime->hour*60*60));
 }
