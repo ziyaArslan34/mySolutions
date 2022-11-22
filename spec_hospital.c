@@ -105,13 +105,11 @@ void del_record(const record_t *rc) {
 }
 
 void add_record(const record_t *rc) {
-	int idx = rc->name[0] - 'a';
-
 	node_t *tmp = create_node(rc);
-	node_t *iter = rec_array[idx].ptr;
+	node_t *iter = rec_array[rc->name[0] - 'a'].ptr;
 
 	if(!iter) {
-		rec_array[idx].ptr = tmp;
+		rec_array[rc->name[0] - 'a'].ptr = tmp;
 		return;
 	}
 
@@ -128,9 +126,9 @@ int cmp(const record_t* r1, const record_t* r2) {
 }
 
 int search_record(const record_t *rc) {
-	int idx = rc->name[0] - 'a', i=0;
+	int i=0;
 
-	node_t *iter = rec_array[idx].ptr;
+	node_t *iter = rec_array[rc->name[0] - 'a'].ptr;
 	while(iter != NULL) {
 		if(cmp(&iter->rec, rc))
 			return i;
@@ -159,6 +157,10 @@ void display_sorted(node_t *iter, const char* type) {
 	}
 
 	record_t *array = (record_t*)malloc(sizeof(record_t)*(size_t)(cap+1));
+
+	if(!array)
+		exit(-1);
+
 	tmp = iter;
 	while(tmp != NULL) {
 		rc_copy(array, tmp, idx++);
@@ -240,9 +242,7 @@ int clinic_control(const char *clinic) {
 }
 
 int main(void) {
-	rec_array = (struct Rec*)malloc(sizeof(struct Rec)*REC_ARRAY_SIZE);
-
-	if(!rec_array)
+	if((rec_array = (struct Rec*)malloc(sizeof(struct Rec)*REC_ARRAY_SIZE)) == NULL)
 		return -1;
 
 	for(size_t i=0;i<REC_ARRAY_SIZE;i++) {
