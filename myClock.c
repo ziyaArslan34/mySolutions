@@ -66,13 +66,7 @@ mytime_t get_difference_time(const mytime_t *t1, const mytime_t *t2) {
 	if(comp_less(t1, t2) == EQUAL)
 		return dftime;
 
-	if(comp_less(t1, t2)) {
-		maxClock = *t2;
-		dftime = *t1;
-	} else {
-		maxClock = *t1;
-		dftime = *t2;
-	}
+	comp_less(t1, t2) ? ({maxClock = *t2 ; dftime = *t1;}) : ({maxClock = *t1 ; dftime = *t2;});
 
 	size_t second = 0;
 
