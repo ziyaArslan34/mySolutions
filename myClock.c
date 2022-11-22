@@ -36,20 +36,7 @@ int comp_less(const mytime_t *t1, const mytime_t *t2) {
 	if(t1->hour < t2->hour)
 		return 1;
 
-	if(t1->hour == t2->hour) {
-		if(t1->min < t2->min)
-			return 1;
-		else if(t1->min == t2->min) {
-			if(t1->sec < t2->sec)
-				return 1;
-			else
-				return 0;
-		}
-		else
-			return 0;
-	}
-
-	return 0;
+	return !(t1->hour == t2->hour) ? 0 : (t1->min < t2->min) ? 1 : (t1->min == t2->min) ? ((t1->sec < t2->sec) ? 1 : 0) : 0;
 }
 
 size_t clock_to_second(const mytime_t *mytime) {
@@ -61,7 +48,7 @@ mytime_t second_to_clock(size_t second) {
 }
 
 void clock_sort(mytime_t *array, size_t size, int (*comp)(const mytime_t*, const mytime_t*)) {
-	for(size_t i=0;i<size-1;i++) {
+	for(size_t i=0;i<size;i++) {
 		for(size_t j=0;j<size-1;j++) {
 			if(comp(&array[i], &array[j])) {
 				mytime_t temp = array[i];
