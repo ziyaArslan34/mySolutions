@@ -133,7 +133,7 @@ mytime_t get_current_clock(const char *time) {
 }
 
 void print_clock(const mytime_t *myTime) {
-	printf("\n\n[ ");
+	printf(" [ ");
 
 	if(myTime->hour <= 9) printf(" 0%d:", myTime->hour);
 	else printf(" %d:", myTime->hour);
@@ -151,6 +151,8 @@ int main(void) {
 	srand((unsigned)time(NULL));
 
 	mytime_t systemClock = get_current_clock(get_current_time());
+
+	printf("system_clock: ");
 	print_clock(&systemClock);
 
 	mytime_t array[10];
