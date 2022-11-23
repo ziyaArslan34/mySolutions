@@ -19,19 +19,15 @@ int time_cmp(const void *tm1, const void *tm2) {
 	const mytime_t *t1 = (const mytime_t*)tm1;
 	const mytime_t *t2 = (const mytime_t*)tm2;
 
-	if(t1->hour != t2->hour)
-		return t1->hour - t2->hour;
-	if(t1->min != t2->min)
-		return t1->min - t2->min;
-	return t1->sec - t2->sec;
+	return clock_to_second(t1) - clock_to_second(t2);
 }
 
-size_t clock_to_second(const mytime_t *mytime) {
-	return (size_t)(mytime->sec + (mytime->min*60) + (mytime->hour*60*60));
+size_t clock_to_second(const mytime_t *t) {
+	return (size_t)(t->sec + (t->min*60) + (t->hour*3600));
 }
 
-mytime_t second_to_clock(size_t second) {
-	return (mytime_t){second / (60*60), (second/60)%60, second%60};
+mytime_t second_to_clock(size_t sec) {
+	return (mytime_t){sec / 3600, (sec/60)%60, sec % 60};
 }
 
 void clock_sort(mytime_t *array, size_t size, int (*comp)(const void*, const void*)) {
@@ -53,7 +49,8 @@ mytime_t get_difference_time(const mytime_t *t1, const mytime_t *t2) {
 	if(!time_cmp(t1, t2))
 		return dftime;
 
-	time_cmp(t1, t2) < 0 ? ({maxClock = *t2 ; dftime = *t1;}) : ({maxClock = *t1 ; dftime = *t2;});
+	time_cmp(t1, t2) < 0 ? ({maxClock = *t2 ; dftime = *t1;})
+							: ({maxClock = *t1 ; dftime = *t2;});
 
 	size_t second = 0;
 
