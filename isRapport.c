@@ -25,13 +25,15 @@ size_t      findMaxSize(const char*[], size_t size);
 
 mystack_t *init(size_t typeSize) {
 	mystack_t *st = (mystack_t*)malloc(sizeof(mystack_t));
+	if(!st)
+		return NULL;
 
 	st->size = 0;
 	st->cap = 4;
 	st->typeSize = typeSize;
 
-	st->array = malloc(st->cap*st->typeSize);
-
+	if((st->array = malloc(st->cap*st->typeSize)) == NULL)
+		return NULL;
 	return st;
 }
 
@@ -42,7 +44,12 @@ int empty(const mystack_t *stack) {
 void push(mystack_t *st, const void *data) {
 	if(st->size >= st->cap) {
 		st->cap *= 2;
-		st->array = realloc(st->array, st->cap*st->typeSize);
+		if((st->array = realloc(st->array, st->cap*st->typeSize)) == NULL) {
+			fprintf(stderr, "memory error\n");
+			free(st->array);
+			exit(1);
+		}
+
 	}
 
 	memcpy((char*)st->array+st->size*st->typeSize, data, st->typeSize);
@@ -80,6 +87,10 @@ int isRapport(const char *str) {
 		return 0;
 
 	mystack_t *stack = init(sizeof(char));
+	if(!stack) {
+		fprintf(stderr, "memory error\n");
+		exit(1);
+	}
 
 	for(size_t i=0;i<strlen(str);i++) {
 		if(isOpen(str[i]))
