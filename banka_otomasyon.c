@@ -118,7 +118,7 @@ void add_user(account_t *account, const user_t *user) {
 		exit(2);
 	}
 
-	snprintf(account->line_log, 1024, "Kullanici eklendi [{%s} {%s} {%d} {%.3lf}] [%.*s]\n",user->name, user->surname, user->id, user->balance, (int)strlen(current_date())-1, current_date());
+	snprintf(account->line_log, 1024, "Kullanici eklendi [{%s} {%s} {%d} {%.2lf}] [%.*s]\n",user->name, user->surname, user->id, user->balance, (int)strlen(current_date())-1, current_date());
 	write_log(account);
 
 	if(account->size >= account->cap) {
@@ -160,7 +160,7 @@ void del_user(account_t *account, user_t *user) {
 		exit(2);
 	}
 
-	snprintf(account->line_log, 1024, "Kullanici silindi [{%s} {%s} {%d} {%.3lf}] [%.*s]\n",user->name, user->surname, user->id, user->balance, (int)strlen(current_date())-1, current_date());
+	snprintf(account->line_log, 1024, "Kullanici silindi [{%s} {%s} {%d} {%.2lf}] [%.*s]\n",user->name, user->surname, user->id, user->balance, (int)strlen(current_date())-1, current_date());
 	write_log(account);
 
 	if(!left_shift(account->user, sizeof(user_t), account->size, (int)idx+1)) {
@@ -175,7 +175,7 @@ void print_function(const user_t *user) {
 	printf("\nIsim    : %s\n", user->name);
 	printf("Soyisim : %s\n", user->surname);
 	printf("Id      : %d\n", user->id);
-	printf("Bakiye  : %.3lf\n", user->balance);
+	printf("Bakiye  : %.2lf\n", user->balance);
 }
 
 void print_user(const account_t *account, size_t idx) {
@@ -191,7 +191,7 @@ double add_balance(account_t *account, const user_t *user, double balance) {
 	size_t res = find_user(account, user);
 	if(res != account->size) {
 		account->user[res].balance += balance;
-		snprintf(account->line_log, 1024, "Kullanici[{%s} {%s} {%d} {%.3lf}] hesaba %.3lf tl para yatirdi.[%.*s]\n", user->name, user->surname, user->id, user->balance, balance, (int)strlen(current_date())-1, current_date());
+		snprintf(account->line_log, 1024, "Kullanici[{%s} {%s} {%d} {%.2lf}] hesaba %.2lf tl para yatirdi.[%.*s]\n", user->name, user->surname, user->id, user->balance, balance, (int)strlen(current_date())-1, current_date());
 		write_log(account);
 	} else {
 		return 0.0;
@@ -205,7 +205,7 @@ double sub_balance(account_t *account, const user_t *user, double balance) {
 		if(account->user[res].balance < balance)
 			return 0.0;
 		account->user[res].balance -= balance;
-		snprintf(account->line_log, 1024, "Kullanici[{%s} {%s} {%d} {%.3lf}] hesaptan %.3lf tl para cekti.[%.*s]\n", user->name, user->surname, user->id, user->balance, balance, (int)strlen(current_date())-1, current_date());
+		snprintf(account->line_log, 1024, "Kullanici[{%s} {%s} {%d} {%.2lf}] hesaptan %.2lf tl para cekti.[%.*s]\n", user->name, user->surname, user->id, user->balance, balance, (int)strlen(current_date())-1, current_date());
 		write_log(account);
 	} else {
 		return 0.0;
@@ -236,7 +236,7 @@ int money_transfer(account_t *account) {
 	}
 
 	if(add_balance(account, &u2, sub_balance(account, &u1, balance)) == balance) {
-		snprintf(account->line_log, 1024, "[{%s} {%s} {%d}] -> [{%s} {%s} {%d}] -> %.3lf [%.*s]\n", u1.name, u1.surname, u1.id, u2.name, u2.surname, u2.id, balance, (int)strlen(current_date())-1, current_date());
+		snprintf(account->line_log, 1024, "[{%s} {%s} {%d}] -> [{%s} {%s} {%d}] -> %.2lf [%.*s]\n", u1.name, u1.surname, u1.id, u2.name, u2.surname, u2.id, balance, (int)strlen(current_date())-1, current_date());
 		write_log(account);
 		return 1;
 	}
