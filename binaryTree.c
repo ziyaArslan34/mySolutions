@@ -1,55 +1,87 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
+#include <stddef.h>
 
-struct tr {
-	int data;
-	struct tr *left;
-	struct tr *right;
+struct Tree {
+	void *data;
+	size_t type;
+	struct Tree *left, *right;
 };
 
-void inorder(struct tr *root) {
-	if(root == NULL) {
+typedef struct Tree binary_t;
+
+void inorder(binary_t *root, void(*p)(const void*)) {
+	if(!root)
 		return;
-	}
 
-	inorder(root->left);
-	printf("%d\n", root->data);
-	inorder(root->right);
+	inorder(root->left, p);
+	p(root->data);
+	inorder(root->right, p);
 }
 
-struct tr *newTree(int data) {
-	struct tr *newTr = (struct tr*)malloc(sizeof(struct tr));
+binary_t *new_tree(const void *data, size_t type) {
+	binary_t *new_tr = (binary_t*)malloc(sizeof(binary_t));
+	new_tr->data = malloc(type);
 
-	newTr->data = data;
-	newTr->right = NULL;
-	newTr->left = NULL;
+	if(!new_tr || !new_tr->data)
+		return NULL;
 
-	return newTr;
+	new_tr->type = type;
+
+	memcpy(new_tr->data, data, type);
+	new_tr->left = NULL;
+	new_tr->right = NULL;
+
+	return new_tr;
 }
 
-struct tr *insert(struct tr *root, int data) {
-	if(root == NULL) {
-		return newTree(data);
-	}
+binary_t *insert(binary_t *root, const void *data, size_t type, int (*cmp)(const void*, const void*)) {
+	if(!root)
+		return new_tree(data, type);
 
-	if(data < root->data) {
-		root->left = insert(root->left, data);
-	} else if(data > root->data) {
-		root->right = insert(root->right, data);
-	}
+	if(cmp(data, root->data))
+		root->left = insert(root->left, data, type, cmp);
+	else if(cmp(root->data, data))
+		root->right = insert(root->right, data, type, cmp);
 
 	return root;
 }
 
-int main() {
-	srand(time(NULL));
+void print(const void *data) {
+	printf("%d ", *(int*)data);
+}
 
-	struct tr *root = newTree(1);
+int comp(const void *a, const void *b) {
+	return *(int*)a < *(int*)b;
+}
 
-	for(int i=0;i<30;i++) {
-		insert(root, rand()%50+i);
+void destroy_tree(binary_t *root) {
+	if(!root)
+		return;
+	destroy_tree(root->left);
+	free(root->data);
+	destroy_tree(root->right);
+}
+
+int my_rand(int min, int max) {
+	return (int)rand()%(max-min+1)+min;
+}
+
+int main(void) {
+	srand((unsigned)time(NULL));
+
+	int val = my_rand(10,99);
+
+	binary_t *root = new_tree(&val, sizeof(int));
+
+	for(int i=0;i<10;i++) {
+		val = my_rand(10,99);
+		insert(root, &val, sizeof(val), comp);
 	}
 
-	inorder(root);
+	inorder(root, print);
+	destroy_tree(root);
+
 }
