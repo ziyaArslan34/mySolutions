@@ -10,6 +10,7 @@ struct Tree {
 };
 
 typedef struct Tree binary_t;
+typedef int (*Compare)(const void*, const void*);
 
 binary_t *min_value_tree(binary_t *root) {
 	binary_t *current = root;
@@ -43,7 +44,7 @@ binary_t *new_tree(const void *data, size_t type) {
 	return new_tr;
 }
 
-binary_t *insert_node(binary_t *root, const void *data, size_t type, int (*cmp)(const void*, const void*)) {
+binary_t *insert_node(binary_t *root, const void *data, size_t type, Compare cmp) {
 	if(!root)
 		return new_tree(data, type);
 
@@ -55,7 +56,7 @@ binary_t *insert_node(binary_t *root, const void *data, size_t type, int (*cmp)(
 	return root;
 }
 
-binary_t *delete_node(binary_t *root, const void *data, size_t type, int (*cmp)(const void*, const void*)) {
+binary_t *delete_node(binary_t *root, const void *data, size_t type, Compare cmp) {
 	if(!root)
 		return root;
 
@@ -85,7 +86,7 @@ binary_t *delete_node(binary_t *root, const void *data, size_t type, int (*cmp)(
 }
 
 void print(const void *data) {
-	printf("%d ", *(int*)data);
+	printf("%d ->  %p\n", *(int*)data, data);
 }
 
 int comp(const void *a, const void *b) {
@@ -95,9 +96,10 @@ int comp(const void *a, const void *b) {
 void destroy_tree(binary_t *root) {
 	if(!root)
 		return;
-	destroy_tree(root->left);
-	free(root->data);
 	destroy_tree(root->right);
+	free(root->data);
+	destroy_tree(root->left);
+	free(root);
 }
 
 int my_rand(int min, int max) {
@@ -122,7 +124,7 @@ int main(void) {
 
 	inorder(root, print);
 	printf("\n");
-
+/*
 	int del;
 	printf("silmek istedigin veri: ");
 	scanf("%d", &del);
@@ -130,7 +132,7 @@ int main(void) {
 
 	inorder(root, print);
 	printf("\n");
-
+*/
 	destroy_tree(root);
 
 }
