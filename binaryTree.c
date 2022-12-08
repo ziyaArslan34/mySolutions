@@ -26,6 +26,7 @@ void inorder(binary_t *root, void(*p)(const void*)) {
 		return;
 
 	inorder(root->left, p);
+	printf("alloc -> %p [", root);
 	p(root->data);
 	inorder(root->right, p);
 }
@@ -86,7 +87,7 @@ binary_t *delete_node(binary_t *root, const void *data, size_t type, Compare cmp
 }
 
 void print(const void *data) {
-	printf("%d ->  %p\n", *(int*)data, data);
+	printf("%d ->  %p]\n", *(int*)data, data);
 }
 
 int comp(const void *a, const void *b) {
@@ -94,12 +95,14 @@ int comp(const void *a, const void *b) {
 }
 
 void destroy_tree(binary_t *root) {
-	if(!root)
-		return;
-	destroy_tree(root->right);
-	free(root->data);
-	destroy_tree(root->left);
-	free(root);
+	if(root) {
+		destroy_tree(root->right);
+		destroy_tree(root->left);
+		printf("free -> %p [", root);
+		print(root->data);
+		free(root->data);
+		free(root);
+	}
 }
 
 int my_rand(int min, int max) {
@@ -109,30 +112,15 @@ int my_rand(int min, int max) {
 int main(void) {
 	srand((unsigned)time(NULL));
 
-	int val = my_rand(10,99);
-
-	binary_t *root = new_tree(&val, sizeof(int));
-	if(!root) {
-		fprintf(stderr, "memory error\n");
-		return -1;
-	}
+	binary_t *root = NULL;
 
 	for(int i=0;i<10;i++) {
-		val = my_rand(10,99);
-		insert_node(root, &val, sizeof(val), comp);
+		int val = my_rand(10,99);
+		root = insert_node(root, &val, sizeof(val), comp);
 	}
 
 	inorder(root, print);
 	printf("\n");
-/*
-	int del;
-	printf("silmek istedigin veri: ");
-	scanf("%d", &del);
-	delete_node(root, &del, sizeof(del), comp);
 
-	inorder(root, print);
-	printf("\n");
-*/
 	destroy_tree(root);
-
 }
