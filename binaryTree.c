@@ -6,11 +6,19 @@
 
 struct Tree {
 	void *data;
-	size_t type;
 	struct Tree *left, *right;
 };
 
 typedef struct Tree binary_t;
+
+binary_t *min_value_tree(binary_t *root) {
+	binary_t *current = root;
+
+	while(current && current->left != NULL)
+		current = current->left;
+
+	return current;
+}
 
 void inorder(binary_t *root, void(*p)(const void*)) {
 	if(!root)
@@ -28,8 +36,6 @@ binary_t *new_tree(const void *data, size_t type) {
 	if(!new_tr || !new_tr->data)
 		return NULL;
 
-	new_tr->type = type;
-
 	memcpy(new_tr->data, data, type);
 	new_tr->left = NULL;
 	new_tr->right = NULL;
@@ -37,15 +43,44 @@ binary_t *new_tree(const void *data, size_t type) {
 	return new_tr;
 }
 
-binary_t *insert(binary_t *root, const void *data, size_t type, int (*cmp)(const void*, const void*)) {
+binary_t *insert_node(binary_t *root, const void *data, size_t type, int (*cmp)(const void*, const void*)) {
 	if(!root)
 		return new_tree(data, type);
 
-	if(cmp(data, root->data))
-		root->left = insert(root->left, data, type, cmp);
-	else if(cmp(root->data, data))
-		root->right = insert(root->right, data, type, cmp);
+	if(cmp(data, root->data) < 0)
+		root->left = insert_node(root->left, data, type, cmp);
+	else
+		root->right = insert_node(root->right, data, type, cmp);
 
+	return root;
+}
+
+binary_t *delete_node(binary_t *root, const void *data, size_t type, int (*cmp)(const void*, const void*)) {
+	if(!root)
+		return root;
+
+	if(cmp(data, root->data) < 0)
+		root->left = delete_node(root->left, data, type, cmp);
+	else if(cmp(data, root->data) > 0)
+		root->right = delete_node(root->right, data, type, cmp);
+	else {
+		if(!root->left) {
+			binary_t *tmp = root->right;
+			free(root->data);
+			free(root);
+			return tmp;
+		} else if(!root->right) {
+			binary_t *tmp = root->left;
+			free(root->data);
+			free(root);
+			return tmp;
+		}
+
+		binary_t *tmp = min_value_tree(root->right);
+		memcpy(root->data, tmp->data, type);
+
+		root->right = delete_node(root->right, tmp->data, type, cmp);
+	}
 	return root;
 }
 
@@ -54,7 +89,7 @@ void print(const void *data) {
 }
 
 int comp(const void *a, const void *b) {
-	return *(int*)a < *(int*)b;
+	return *(int*)a - *(int*)b;
 }
 
 void destroy_tree(binary_t *root) {
@@ -75,13 +110,27 @@ int main(void) {
 	int val = my_rand(10,99);
 
 	binary_t *root = new_tree(&val, sizeof(int));
+	if(!root) {
+		fprintf(stderr, "memory error\n");
+		return -1;
+	}
 
 	for(int i=0;i<10;i++) {
 		val = my_rand(10,99);
-		insert(root, &val, sizeof(val), comp);
+		insert_node(root, &val, sizeof(val), comp);
 	}
 
 	inorder(root, print);
+	printf("\n");
+
+	int del;
+	printf("silmek istedigin veri: ");
+	scanf("%d", &del);
+	delete_node(root, &del, sizeof(del), comp);
+
+	inorder(root, print);
+	printf("\n");
+
 	destroy_tree(root);
 
 }
